@@ -5,7 +5,7 @@ import { ThemeProvider, CssBaseline } from "@mui/material";
 
 import createEmotionCache from "../utils/createEmotionCache";
 import theme from "../src/theme";
-// import "../styles/globals.css";
+
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }

@@ -1,5 +1,7 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, useTheme } from "@mui/material";
+import { AppBar, Toolbar } from "@mui/material";
+
+import { Header } from "../common";
 
 const NavBar: React.FunctionComponent = () => {
   return (
@@ -7,7 +9,7 @@ const NavBar: React.FunctionComponent = () => {
       <AppBar position="static">
         <Toolbar>
           <div style={{ flexGrow: 1 }}>
-            <Typography variant="h6">ThunderDome</Typography>
+            <Header text="ThunderDome" variant="h5" />
           </div>
         </Toolbar>
       </AppBar>

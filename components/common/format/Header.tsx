@@ -1,10 +1,14 @@
 import React from "react";
-import { Typography } from "@mui/material/";
+import { Typography, TypographyProps } from "@mui/material/";
 
-const Header: React.FunctionComponent<{ text: string }> = ({ text }) => {
+interface IHeader extends TypographyProps {
+  text: string;
+}
+
+const Header: React.FunctionComponent<IHeader> = ({ text, variant = "h3" }) => {
   return (
     <Typography
-      variant="h3"
+      variant={variant}
       sx={{
         margin: "20px 0 10px",
       }}
