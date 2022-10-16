@@ -2,7 +2,7 @@ import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { yellow } from "@mui/material/colors/";
 
 const headerFont = {
-  fontFamily: "'Press Start 2P', Roboto, monospace",
+  fontFamily: "VT323, Roboto, monospace",
 };
 
 const theme = createTheme({

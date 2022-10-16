@@ -5,14 +5,13 @@ interface IHeader extends TypographyProps {
   text: string;
 }
 
-const Header: React.FunctionComponent<IHeader> = ({ text, variant = "h3" }) => {
+const Header: React.FunctionComponent<IHeader> = ({
+  text,
+  variant = "h3",
+  ...props
+}) => {
   return (
-    <Typography
-      variant={variant}
-      sx={{
-        margin: "20px 0 10px",
-      }}
-    >
+    <Typography variant={variant} {...props}>
       {text}
     </Typography>
   );

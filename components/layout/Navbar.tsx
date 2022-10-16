@@ -1,16 +1,22 @@
 import React from "react";
-import { AppBar, Toolbar } from "@mui/material";
+import { AppBar, Box, BoxProps, Toolbar } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
 import { Header } from "../common";
+import theme from "../../src/theme";
+
+const StyledBox = styled(Box)<BoxProps>(() => ({
+  flexGrow: 1,
+}));
 
 const NavBar: React.FunctionComponent = () => {
   return (
     <div style={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <div style={{ flexGrow: 1 }}>
-            <Header text="ThunderDome" variant="h5" />
-          </div>
+          <StyledBox>
+            <Header text="ThunderDome" variant="h4" />
+          </StyledBox>
         </Toolbar>
       </AppBar>
     </div>
