@@ -5,11 +5,15 @@ import Button, { ButtonProps } from "@mui/material/Button";
 import Image from "next/image";
 import { styled } from "@mui/material/styles";
 
+import useConnectWallet from "../../../utils/hooks/useConnectWallet";
+
 const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(1),
 }));
 
 const TransactionsButton: React.FunctionComponent = () => {
+  const { account, chainId } = useConnectWallet();
+
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -24,6 +28,13 @@ const TransactionsButton: React.FunctionComponent = () => {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+
+  if (
+    !account ||
+    chainId !== parseInt(process.env.NEXT_PUBLIC_NETWORK_CHAIN_ID || "31337")
+  ) {
+    return null;
+  }
 
   return (
     <>

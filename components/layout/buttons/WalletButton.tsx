@@ -42,7 +42,7 @@ const WalletButton: React.FunctionComponent = () => {
     window.open("https://metamask.io/", "_blank");
   };
 
-  if (!account)
+  if (!provider)
     return (
       <MetaMaskButton
         handleClick={handleInstallMetamask}
