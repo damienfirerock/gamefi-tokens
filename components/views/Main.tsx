@@ -11,6 +11,7 @@ import { fetchProducts } from "../../features/ProductsSlice";
 
 import { IProduct } from "../../interfaces/IProduct";
 import { AppDispatch } from "../../store";
+import usePurchaseNFT from "../../utils/hooks/usePurchaseNFT";
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
@@ -28,13 +29,13 @@ const CardsBox = styled(Container)<ContainerProps>(({ theme }) => ({
   justifyContent: "space-around",
 }));
 
-// TODO: conduct sale
-
 const MainPage: React.FunctionComponent<{ data: IProduct[] }> = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const productsSlice = useSelector((state: RootState) => state.products);
   const { loading, data, error } = productsSlice;
+
+  const { purchaseNFT } = usePurchaseNFT();
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -54,7 +55,11 @@ const MainPage: React.FunctionComponent<{ data: IProduct[] }> = () => {
             ? "loading"
             : data?.map((element) => (
                 <div key={element.tokenId}>
-                  <ProductCard key={element.tokenId} {...element} />
+                  <ProductCard
+                    key={element.tokenId}
+                    {...element}
+                    handlePurchase={purchaseNFT}
+                  />
                 </div>
               ))}
         </CardsBox>

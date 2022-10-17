@@ -11,8 +11,6 @@ import useConnectWallet from "../../utils/hooks/useConnectWallet";
 const NavbarButton: React.FunctionComponent = () => {
   const { account, chainId, error } = useConnectWallet();
 
-  console.log({ account, chainId, error });
-
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -30,8 +28,8 @@ const NavbarButton: React.FunctionComponent = () => {
 
   if (!account) return <ConnectMetamask />;
 
-  // TODO: use ENV file
-  if (chainId !== 5 && chainId !== 31337) return <ChangeChainId />;
+  if (chainId !== parseInt(process.env.NEXT_PUBLIC_NETWORK_CHAIN_ID || "31337"))
+    return <ChangeChainId />;
 
   return (
     <>

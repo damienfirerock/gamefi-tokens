@@ -46,8 +46,16 @@ const displayOwner = (address: string) => {
   }
 };
 
-const PokemonCard: React.FunctionComponent<IProduct> = (props) => {
-  const { name, description, image, tokenId, owner } = props;
+interface IPokemonCard extends IProduct {
+  handlePurchase: (tokenId: number) => void;
+}
+
+const PokemonCard: React.FunctionComponent<IPokemonCard> = (props) => {
+  const { name, description, image, tokenId, owner, handlePurchase } = props;
+
+  const handleClick = () => {
+    if (tokenId !== undefined) handlePurchase(tokenId);
+  };
 
   return (
     <StyledCard variant="outlined">
@@ -64,6 +72,7 @@ const PokemonCard: React.FunctionComponent<IProduct> = (props) => {
           disabled={
             !(owner === process.env.NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS)
           }
+          onClick={handleClick}
         >
           Buy
         </Button>
