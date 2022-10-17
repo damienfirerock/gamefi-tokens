@@ -5,11 +5,11 @@ import Image from "next/image";
 
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 
-const ConnectMetamask: React.FunctionComponent = () => {
-  const { requestConnect } = useConnectWallet();
+const ChangeChainID: React.FunctionComponent = () => {
+  const { requestChangeChainId } = useConnectWallet();
 
   const handleClick = () => {
-    requestConnect();
+    requestChangeChainId();
   };
 
   return (
@@ -21,10 +21,10 @@ const ConnectMetamask: React.FunctionComponent = () => {
         height="28"
       />
       <Typography variant="h6" sx={{ marginLeft: 1 }}>
-        Connect Metamask
+        Change to Goerli
       </Typography>
     </Button>
   );
 };
 
-export default ConnectMetamask;
+export default ChangeChainID;

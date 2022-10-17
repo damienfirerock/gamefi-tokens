@@ -50,11 +50,13 @@ const MainPage: React.FunctionComponent<{ data: IProduct[] }> = () => {
 
         {/* Pieces on Sale */}
         <CardsBox>
-          {data?.map((element) => (
-            <div key={element.tokenId}>
-              <ProductCard key={element.tokenId} {...element} />
-            </div>
-          ))}
+          {loading
+            ? "loading"
+            : data?.map((element) => (
+                <div key={element.tokenId}>
+                  <ProductCard key={element.tokenId} {...element} />
+                </div>
+              ))}
         </CardsBox>
       </StyledContainer>
     </Layout>

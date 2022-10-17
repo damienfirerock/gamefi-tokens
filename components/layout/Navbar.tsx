@@ -3,7 +3,7 @@ import { AppBar, Box, BoxProps, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 import { Header } from "../common";
-import ConnectMetamask from "./ConnectMetamask";
+import NavbarButton from "./NavbarButton";
 
 const StyledBox = styled(Box)<BoxProps>(() => ({
   flexGrow: 1,
@@ -17,7 +17,7 @@ const NavBar: React.FunctionComponent = () => {
           <StyledBox>
             <Header text="ThunderDome" variant="h4" />
           </StyledBox>
-          <ConnectMetamask />
+          <NavbarButton />
         </Toolbar>
       </AppBar>
     </div>
