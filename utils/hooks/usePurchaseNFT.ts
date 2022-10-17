@@ -35,6 +35,8 @@ const usePurchaseNFT = () => {
     const transaction = await contract.purchaseNFT(tokenId, { value: 5 });
     const receipt = await transaction.wait();
 
+    // TODO: Error handling
+
     dispatch(toggleLoading());
   };
 

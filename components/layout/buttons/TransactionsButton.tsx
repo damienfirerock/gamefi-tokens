@@ -69,7 +69,9 @@ const TransactionsButton: React.FunctionComponent = () => {
         onClick={handleClick}
       >
         {showIcon()}
-        <Typography variant="h6">Transactions</Typography>
+        <Typography variant="h6" sx={{ marginLeft: 1 }}>
+          {loading ? "Pending..." : "Transactions"}
+        </Typography>
       </StyledButton>
       <Popover
         id={id}
