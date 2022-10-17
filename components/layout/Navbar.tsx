@@ -3,7 +3,8 @@ import { AppBar, Box, BoxProps, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 import { Header } from "../common";
-import NavbarButton from "./buttons/NavbarButton";
+import WalletButton from "./buttons/WalletButton";
+import TransactionsButton from "./buttons/TransactionsButton";
 
 const StyledBox = styled(Box)<BoxProps>(() => ({
   flexGrow: 1,
@@ -17,7 +18,8 @@ const NavBar: React.FunctionComponent = () => {
           <StyledBox>
             <Header text="ThunderDome" variant="h4" />
           </StyledBox>
-          <NavbarButton />
+          <TransactionsButton />
+          <WalletButton />
         </Toolbar>
       </AppBar>
     </div>

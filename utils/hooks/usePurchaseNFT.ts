@@ -4,10 +4,13 @@ import { ethers } from "ethers";
 const NFTSaleJson = require("../abis/NFTSale.json");
 
 const usePurchaseNFT = () => {
+  const [pending, setPending] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const purchaseNFT = async (tokenId: number) => {
     if (!window) return;
+
+    setPending(true);
 
     const { ethereum } = window as any;
 
@@ -28,9 +31,11 @@ const usePurchaseNFT = () => {
     const transaction = await contract.purchaseNFT(tokenId, { value: 5 });
     const receipt = await transaction.wait();
     console.log({ receipt });
+
+    setPending(false);
   };
 
-  return { error, purchaseNFT };
+  return { error, pending, purchaseNFT };
 };
 
 export default usePurchaseNFT;

@@ -1,13 +1,19 @@
 import React from "react";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import Button, { ButtonProps } from "@mui/material/Button";
+import Image from "next/image";
+import { styled } from "@mui/material/styles";
 
 import MetaMaskButton from "./MetaMaskButton";
 
 import useConnectWallet from "../../../utils/hooks/useConnectWallet";
 
-const NavbarButton: React.FunctionComponent = () => {
+const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
+  minWidth: 150,
+}));
+
+const WalletButton: React.FunctionComponent = () => {
   const {
     provider,
     account,
@@ -59,11 +65,16 @@ const NavbarButton: React.FunctionComponent = () => {
 
   return (
     <>
-      <Button aria-describedby={id} variant="contained" onClick={handleClick}>
+      <StyledButton
+        aria-describedby={id}
+        variant="contained"
+        onClick={handleClick}
+      >
+        <Image src="/pokeball.png" alt="me" width="28" height="28" />
         <Typography variant="h6" sx={{ marginLeft: 1 }}>
-          Menu
+          Account
         </Typography>
-      </Button>
+      </StyledButton>
       <Popover
         id={id}
         open={open}
@@ -86,4 +97,4 @@ const NavbarButton: React.FunctionComponent = () => {
   );
 };
 
-export default NavbarButton;
+export default WalletButton;
