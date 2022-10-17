@@ -16,18 +16,18 @@ import { IProduct } from "../../interfaces/IProduct";
 import { truncateWalletAddress } from "../../utils/common";
 import { ZERO_ADDRESS } from "../../constants";
 
-const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
+export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   margin: theme.spacing(1),
   minWidth: 160,
 }));
 
-const StyledCardContent = styled(CardContent)<CardContentProps>(() => ({
+export const StyledCardContent = styled(CardContent)<CardContentProps>(() => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
 }));
 
-const StyledCardActions = styled(CardActions)<CardActionsProps>(
+export const StyledCardActions = styled(CardActions)<CardActionsProps>(
   ({ theme }) => ({
     display: "flex",
     justifyContent: "center",

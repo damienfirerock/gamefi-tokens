@@ -6,11 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import Layout from "../layout/Layout";
 import { Header } from "../common";
 import ProductCard from "../product/ProductCard";
+import LoadingProductCards from "../product/LoadingProductCards";
+
 import { RootState } from "../../store";
 import { fetchProducts } from "../../features/ProductsSlice";
-
-import { IProduct } from "../../interfaces/IProduct";
 import { AppDispatch } from "../../store";
+import { IProduct } from "../../interfaces/IProduct";
 import usePurchaseNFT from "../../utils/hooks/usePurchaseNFT";
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
@@ -46,22 +47,29 @@ const MainPage: React.FunctionComponent<{ data: IProduct[] }> = () => {
       {/* Header */}
       <StyledContainer>
         <StyledBox>
-          <Header text="These Pokemon are fighting fit!" variant="h2" />
+          <Header
+            text={
+              loading ? "Getting Pokemon..." : "These Pokemon are fighting fit!"
+            }
+            variant="h2"
+          />
         </StyledBox>
 
         {/* Pieces on Sale */}
         <CardsBox>
-          {loading
-            ? "loading"
-            : data?.map((element) => (
-                <div key={element.tokenId}>
-                  <ProductCard
-                    key={element.tokenId}
-                    {...element}
-                    handlePurchase={purchaseNFT}
-                  />
-                </div>
-              ))}
+          {loading ? (
+            <LoadingProductCards />
+          ) : (
+            data?.map((element) => (
+              <div key={element.tokenId}>
+                <ProductCard
+                  key={element.tokenId}
+                  {...element}
+                  handlePurchase={purchaseNFT}
+                />
+              </div>
+            ))
+          )}
         </CardsBox>
       </StyledContainer>
     </Layout>
