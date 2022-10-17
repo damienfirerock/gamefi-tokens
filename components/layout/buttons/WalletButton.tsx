@@ -1,7 +1,5 @@
 import React from "react";
-import Popover from "@mui/material/Popover";
-import Typography from "@mui/material/Typography";
-import Button, { ButtonProps } from "@mui/material/Button";
+import { Button, ButtonProps, Popover, Typography } from "@mui/material";
 import Image from "next/image";
 import { styled } from "@mui/material/styles";
 

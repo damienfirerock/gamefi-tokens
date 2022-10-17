@@ -1,6 +1,5 @@
 import React from "react";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import { Button, Typography } from "@mui/material";
 import Image from "next/image";
 
 import useConnectWallet from "../../../utils/hooks/useConnectWallet";

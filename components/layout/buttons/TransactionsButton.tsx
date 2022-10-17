@@ -1,18 +1,31 @@
 import React from "react";
-import Popover from "@mui/material/Popover";
-import Typography from "@mui/material/Typography";
-import Button, { ButtonProps } from "@mui/material/Button";
+import {
+  Button,
+  ButtonProps,
+  CircularProgress,
+  CircularProgressProps,
+  Popover,
+  Typography,
+} from "@mui/material";
 import Image from "next/image";
 import { styled } from "@mui/material/styles";
 
 import useConnectWallet from "../../../utils/hooks/useConnectWallet";
+import usePurchaseNFT from "../../../utils/hooks/usePurchaseNFT";
 
 const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(1),
 }));
 
+const StyledCircularProgress = styled(CircularProgress)<CircularProgressProps>(
+  ({ theme }) => ({
+    marginRight: theme.spacing(0.5),
+  })
+);
+
 const TransactionsButton: React.FunctionComponent = () => {
   const { account, chainId } = useConnectWallet();
+  const { pending } = usePurchaseNFT();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
@@ -29,6 +42,12 @@ const TransactionsButton: React.FunctionComponent = () => {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
+  const showIcon = () => {
+    if (pending) return <StyledCircularProgress color="secondary" size={24} />;
+
+    return <Image src="/player.png" alt="me" width="28" height="28" />;
+  };
+
   if (
     !account ||
     chainId !== parseInt(process.env.NEXT_PUBLIC_NETWORK_CHAIN_ID || "31337")
@@ -43,7 +62,7 @@ const TransactionsButton: React.FunctionComponent = () => {
         variant="contained"
         onClick={handleClick}
       >
-        <Image src="/player.png" alt="me" width="28" height="28" />
+        {showIcon()}
         <Typography variant="h6">Transactions</Typography>
       </StyledButton>
       <Popover
