@@ -13,7 +13,7 @@ const useConnectWallet = () => {
 
     const { ethereum } = window as any;
 
-    const nextProvider = new ethers.providers.Web3Provider(ethereum);
+    const nextProvider = new ethers.providers.Web3Provider(ethereum, "any");
 
     setProvider(nextProvider);
   };
@@ -85,6 +85,27 @@ const useConnectWallet = () => {
 
     checkConnection();
   }, [provider]);
+
+  useEffect((): any => {
+    const { ethereum } = window as any;
+    if (ethereum?.on) {
+      ethereum.on("connect", checkConnection);
+      ethereum.on("disconnect", checkConnection);
+      ethereum.on("chainChanged", enquireChainId);
+      ethereum.on("accountsChanged", checkConnection);
+      ethereum.on("networkChanged", enquireChainId);
+
+      return () => {
+        if (ethereum.removeListener) {
+          ethereum.removeListener("connect", checkConnection);
+          ethereum.removeListener("disconnect", checkConnection);
+          ethereum.removeListener("chainChanged", enquireChainId);
+          ethereum.removeListener("accountsChanged", checkConnection);
+          ethereum.removeListener("networkChanged", enquireChainId);
+        }
+      };
+    }
+  }, [checkConnection]);
 
   return { account, chainId, error, requestConnect, requestChangeChainId };
 };
