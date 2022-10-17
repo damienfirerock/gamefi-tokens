@@ -3,13 +3,19 @@ import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
-import ConnectMetamask from "./ConnectMetamask";
-import ChangeChainId from "./ChangeChainId";
+import MetaMaskButton from "./MetaMaskButton";
 
-import useConnectWallet from "../../utils/hooks/useConnectWallet";
+import useConnectWallet from "../../../utils/hooks/useConnectWallet";
 
 const NavbarButton: React.FunctionComponent = () => {
-  const { account, chainId, error } = useConnectWallet();
+  const {
+    provider,
+    account,
+    chainId,
+    requestConnect,
+    requestChangeChainId,
+    error,
+  } = useConnectWallet();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
@@ -26,10 +32,23 @@ const NavbarButton: React.FunctionComponent = () => {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
-  if (!account) return <ConnectMetamask />;
+  if (!account)
+    return (
+      <MetaMaskButton handleClick={requestConnect} text="Install MetaMask" />
+    );
+
+  if (!account)
+    return (
+      <MetaMaskButton handleClick={requestConnect} text="Connect MetaMask" />
+    );
 
   if (chainId !== parseInt(process.env.NEXT_PUBLIC_NETWORK_CHAIN_ID || "31337"))
-    return <ChangeChainId />;
+    return (
+      <MetaMaskButton
+        handleClick={requestChangeChainId}
+        text="Change to Goerli"
+      />
+    );
 
   return (
     <>

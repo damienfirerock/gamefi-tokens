@@ -3,14 +3,15 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Image from "next/image";
 
-import useConnectWallet from "../../utils/hooks/useConnectWallet";
+import useConnectWallet from "../../../utils/hooks/useConnectWallet";
 
-const ConnectMetamask: React.FunctionComponent = () => {
-  const { requestConnect } = useConnectWallet();
+interface IMetaMaskButton {
+  text: string;
+  handleClick: () => void;
+}
 
-  const handleClick = () => {
-    requestConnect();
-  };
+const MetaMaskButton: React.FunctionComponent<IMetaMaskButton> = (props) => {
+  const { handleClick, text } = props;
 
   return (
     <Button variant="contained" onClick={handleClick}>
@@ -21,10 +22,10 @@ const ConnectMetamask: React.FunctionComponent = () => {
         height="28"
       />
       <Typography variant="h6" sx={{ marginLeft: 1 }}>
-        Connect Metamask
+        {text}
       </Typography>
     </Button>
   );
 };
 
-export default ConnectMetamask;
+export default MetaMaskButton;

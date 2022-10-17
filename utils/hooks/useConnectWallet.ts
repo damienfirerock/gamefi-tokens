@@ -56,7 +56,7 @@ const useConnectWallet = () => {
     if (!window) return;
 
     const { ethereum } = window as any;
-    console.log("requetsing change");
+
     ethereum.request({
       method: "wallet_switchEthereumChain",
       params: [
@@ -84,7 +84,7 @@ const useConnectWallet = () => {
     if (!provider) return;
 
     checkConnection();
-  }, [provider]);
+  }, [provider, checkConnection]);
 
   useEffect((): any => {
     const { ethereum } = window as any;
@@ -105,9 +105,16 @@ const useConnectWallet = () => {
         }
       };
     }
-  }, [checkConnection]);
+  }, [checkConnection, enquireChainId]);
 
-  return { account, chainId, error, requestConnect, requestChangeChainId };
+  return {
+    provider,
+    account,
+    chainId,
+    error,
+    requestConnect,
+    requestChangeChainId,
+  };
 };
 
 export default useConnectWallet;

@@ -3,7 +3,7 @@ import { AppBar, Box, BoxProps, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 import { Header } from "../common";
-import NavbarButton from "./NavbarButton";
+import NavbarButton from "./buttons/NavbarButton";
 
 const StyledBox = styled(Box)<BoxProps>(() => ({
   flexGrow: 1,
