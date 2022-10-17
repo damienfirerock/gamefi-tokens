@@ -30,7 +30,8 @@ const NavbarButton: React.FunctionComponent = () => {
 
   if (!account) return <ConnectMetamask />;
 
-  if (chainId !== 5) return <ChangeChainId />;
+  // TODO: use ENV file
+  if (chainId !== 5 && chainId !== 31337) return <ChangeChainId />;
 
   return (
     <>
