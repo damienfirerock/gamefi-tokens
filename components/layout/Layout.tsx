@@ -14,7 +14,9 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   return (
     <>
       <NavBar />
-      <Container maxWidth="lg">{children}</Container>
+      <Container maxWidth="lg" sx={{ paddingTop: 8 }}>
+        {children}
+      </Container>
     </>
   );
 };

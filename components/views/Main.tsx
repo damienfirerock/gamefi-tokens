@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, BoxProps, Container, ContainerProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { useDispatch, useSelector } from "react-redux";
 
 import Layout from "../layout/Layout";
 import { Header } from "../common";
 import ProductCard from "../product/ProductCard";
+import { RootState } from "../../store";
+import { fetchProducts } from "../../features/ProductsSlice";
 
 import { IProduct } from "../../interfaces/IProduct";
+import { AppDispatch } from "../../store";
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
@@ -24,7 +28,18 @@ const CardsBox = styled(Container)<ContainerProps>(({ theme }) => ({
   justifyContent: "space-around",
 }));
 
-const MainPage: React.FunctionComponent<{ data: IProduct[] }> = ({ data }) => {
+// TODO: conduct sale
+
+const MainPage: React.FunctionComponent<{ data: IProduct[] }> = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const productsSlice = useSelector((state: RootState) => state.products);
+  const { loading, data, error } = productsSlice;
+
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, []);
+
   return (
     <Layout>
       {/* Header */}
@@ -35,7 +50,7 @@ const MainPage: React.FunctionComponent<{ data: IProduct[] }> = ({ data }) => {
 
         {/* Pieces on Sale */}
         <CardsBox>
-          {data.map((element) => (
+          {data?.map((element) => (
             <div key={element.tokenId}>
               <ProductCard key={element.tokenId} {...element} />
             </div>
