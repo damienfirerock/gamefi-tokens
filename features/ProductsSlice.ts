@@ -2,6 +2,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { IProduct } from "../interfaces/IProduct";
 
+const { NEXT_PUBLIC_BACKEND_URL } = process.env;
+const ENDPOINT = "/api/v1/products";
+
 // https://developer.mozilla.org/en-US/docs/Web/API/AbortController
 let abortController: any;
 let abortControllerObj: any;
@@ -22,9 +25,12 @@ export const fetchProducts = createAsyncThunk("get/fetchProducts", async () => {
   abortController.abort(); // cancel previous request
   abortController = abortControllerObj && new abortControllerObj();
 
-  const response: any = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL || "", {
-    signal: abortControllerObj && abortController.signal,
-  }).then((res) => res.json());
+  const response: any = await fetch(
+    `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "",
+    {
+      signal: abortControllerObj && abortController.signal,
+    }
+  ).then((res) => res.json());
 
   // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
   //The fetch() method returns a Promise that resolves regardless of whether the request is successful,
