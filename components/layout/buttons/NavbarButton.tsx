@@ -32,9 +32,16 @@ const NavbarButton: React.FunctionComponent = () => {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
+  const handleInstallMetamask = () => {
+    window.open("https://metamask.io/", "_blank");
+  };
+
   if (!account)
     return (
-      <MetaMaskButton handleClick={requestConnect} text="Install MetaMask" />
+      <MetaMaskButton
+        handleClick={handleInstallMetamask}
+        text="Install MetaMask"
+      />
     );
 
   if (!account)
