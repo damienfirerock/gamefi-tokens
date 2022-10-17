@@ -9,12 +9,15 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import { styled } from "@mui/material/styles";
+import { useSelector } from "react-redux";
 
+import { RootState } from "../../../store";
 import useConnectWallet from "../../../utils/hooks/useConnectWallet";
 import usePurchaseNFT from "../../../utils/hooks/usePurchaseNFT";
 
 const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(1),
+  minWidth: 150,
 }));
 
 const StyledCircularProgress = styled(CircularProgress)<CircularProgressProps>(
@@ -25,7 +28,10 @@ const StyledCircularProgress = styled(CircularProgress)<CircularProgressProps>(
 
 const TransactionsButton: React.FunctionComponent = () => {
   const { account, chainId } = useConnectWallet();
-  const { pending } = usePurchaseNFT();
+  const transactionsSlice = useSelector(
+    (state: RootState) => state.transactions
+  );
+  const { loading } = transactionsSlice;
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
@@ -43,7 +49,7 @@ const TransactionsButton: React.FunctionComponent = () => {
   const id = open ? "simple-popover" : undefined;
 
   const showIcon = () => {
-    if (pending) return <StyledCircularProgress color="secondary" size={24} />;
+    if (loading) return <StyledCircularProgress color="secondary" size={24} />;
 
     return <Image src="/player.png" alt="me" width="28" height="28" />;
   };

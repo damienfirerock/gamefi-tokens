@@ -1,17 +1,21 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
+import { useDispatch } from "react-redux";
+
+import { AppDispatch } from "../../store";
+import { toggleLoading } from "../../features/TransactionsSlice";
 
 const NFTSaleJson = require("../abis/NFTSale.json");
 
 const usePurchaseNFT = () => {
-  const [pending, setPending] = useState<boolean>(false);
+  const dispatch = useDispatch<AppDispatch>();
+
   const [error, setError] = useState<string | null>(null);
 
   const purchaseNFT = async (tokenId: number) => {
     if (!window) return;
 
-    setPending(true);
-
+    dispatch(toggleLoading());
     const { ethereum } = window as any;
 
     const provider = new ethers.providers.Web3Provider(ethereum, "any");
@@ -30,12 +34,11 @@ const usePurchaseNFT = () => {
 
     const transaction = await contract.purchaseNFT(tokenId, { value: 5 });
     const receipt = await transaction.wait();
-    console.log({ receipt });
 
-    setPending(false);
+    dispatch(toggleLoading());
   };
 
-  return { error, pending, purchaseNFT };
+  return { error, purchaseNFT };
 };
 
 export default usePurchaseNFT;
