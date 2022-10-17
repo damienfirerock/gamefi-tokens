@@ -1,8 +1,9 @@
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
-import { yellow } from "@mui/material/colors/";
+import { yellow, brown } from "@mui/material/colors/";
 
 const headerFont = {
   fontFamily: "VT323, Roboto, monospace",
+  color: brown[600],
 };
 
 const theme = createTheme({
@@ -16,10 +17,10 @@ const theme = createTheme({
   },
   palette: {
     primary: {
-      main: yellow[800],
+      main: yellow[900],
     },
     secondary: {
-      main: yellow[50],
+      main: yellow[500],
     },
   },
 });

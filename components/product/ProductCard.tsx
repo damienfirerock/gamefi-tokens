@@ -18,6 +18,7 @@ import { ZERO_ADDRESS } from "../../constants";
 
 const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   margin: theme.spacing(1),
+  minWidth: 160,
 }));
 
 const StyledCardContent = styled(CardContent)<CardContentProps>(() => ({
@@ -26,10 +27,13 @@ const StyledCardContent = styled(CardContent)<CardContentProps>(() => ({
   alignItems: "center",
 }));
 
-const StyledCardActions = styled(CardActions)<CardActionsProps>(() => ({
-  display: "flex",
-  justifyContent: "center",
-}));
+const StyledCardActions = styled(CardActions)<CardActionsProps>(
+  ({ theme }) => ({
+    display: "flex",
+    justifyContent: "center",
+    paddingBottom: theme.spacing(3),
+  })
+);
 
 const displayOwner = (address: string) => {
   switch (address) {
@@ -51,11 +55,12 @@ const PokemonCard: React.FunctionComponent<IProduct> = (props) => {
         <Typography variant="h4">{description}</Typography>
         <Typography variant="h5">{name}</Typography>
         <Image src={image} alt={image} width={125} height={125} />
-        <Typography>{displayOwner(owner)}</Typography>
+        <Typography variant="h6">{displayOwner(owner)}</Typography>
       </StyledCardContent>
       <StyledCardActions>
         <Button
           size="large"
+          variant="outlined"
           disabled={
             !(owner === process.env.NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS)
           }
