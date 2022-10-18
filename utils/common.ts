@@ -1,14 +1,8 @@
-const totalLength = 8;
-const revealedLength = totalLength / 2;
+export const truncateString = (address: string, show = 4) => {
+  if (address.length <= show * 2) return address;
 
-export const truncateWalletAddress = (address: string) => {
-  if (address.length <= totalLength) return address;
-
-  const start = address.substring(0, revealedLength);
-  const end = address.substring(
-    address.length - revealedLength,
-    address.length
-  );
+  const start = address.substring(0, show);
+  const end = address.substring(address.length - show, address.length);
 
   return `${start}...${end}`;
 };
