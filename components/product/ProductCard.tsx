@@ -13,7 +13,7 @@ import Image from "next/image";
 import { styled } from "@mui/material/styles";
 
 import { IProduct } from "../../interfaces/IProduct";
-import { truncateWalletAddress } from "../../utils/common";
+import { truncateString } from "../../utils/common";
 import { ZERO_ADDRESS } from "../../constants";
 
 export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
@@ -42,7 +42,7 @@ const displayOwner = (address: string) => {
     case process.env.NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS:
       return "Available";
     default:
-      return truncateWalletAddress(address);
+      return truncateString(address);
   }
 };
 

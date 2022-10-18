@@ -13,7 +13,7 @@ const StyledBox = styled(Box)<BoxProps>(() => ({
 const NavBar: React.FunctionComponent = () => {
   return (
     <div style={{ flexGrow: 1 }}>
-      <AppBar position="fixed" color="secondary">
+      <AppBar position="fixed" color="secondary" elevation={5}>
         <Toolbar>
           <StyledBox>
             <Header text="ThunderDome" variant="h4" />

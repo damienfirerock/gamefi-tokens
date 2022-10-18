@@ -29,15 +29,13 @@ export const fetchTransactions = createAsyncThunk(
 
     const body = JSON.stringify({ address });
 
-    const response: any = await fetch(
-      `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "",
-      {
+    const response: { success: boolean; data: ITransaction[]; error?: any } =
+      await fetch(`${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "", {
         method: "POST",
         signal: abortControllerObj && abortController.signal,
         headers: new Headers({ "content-type": "application/json" }),
         body,
-      }
-    ).then((res) => res.json());
+      }).then((res) => res.json());
 
     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
     //The fetch() method returns a Promise that resolves regardless of whether the request is successful,
@@ -45,7 +43,16 @@ export const fetchTransactions = createAsyncThunk(
     // In other words, the Promise isn't rejected even when the response has an HTTP 400 or 500 status code.
     if (response.error) return Promise.reject(response.error);
 
-    return response.data;
+    const nextData = response.data.map(
+      ({ from, to, transactionHash, category }) => ({
+        from,
+        to,
+        transactionHash,
+        category,
+      })
+    );
+
+    return nextData;
   }
 );
 

@@ -1,9 +1,14 @@
 import React, { useEffect } from "react";
 import {
+  Box,
+  BoxProps,
   Button,
   ButtonProps,
+  Card,
+  CardProps,
   CircularProgress,
   CircularProgressProps,
+  Link,
   Popover,
   Typography,
 } from "@mui/material";
@@ -14,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store";
 import { fetchTransactions } from "../../../features/TransactionsSlice";
 import useConnectWallet from "../../../utils/hooks/useConnectWallet";
+import { truncateString } from "../../../utils/common";
 
 const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(1),
@@ -25,6 +31,18 @@ const StyledCircularProgress = styled(CircularProgress)<CircularProgressProps>(
     marginRight: theme.spacing(0.5),
   })
 );
+
+const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
+  padding: theme.spacing(1),
+  overflow: "hidden",
+}));
+
+export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  padding: theme.spacing(1),
+  marginBottom: theme.spacing(1),
+}));
 
 const TransactionsButton: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -69,7 +87,7 @@ const TransactionsButton: React.FunctionComponent = () => {
   ) {
     return null;
   }
-  console.log({ data });
+
   return (
     <>
       <StyledButton
@@ -92,21 +110,45 @@ const TransactionsButton: React.FunctionComponent = () => {
           vertical: "bottom",
         }}
         keepMounted
-        PaperProps={{ sx: { width: 500 } }}
+        PaperProps={{
+          elevation: 0,
+          variant: "popup",
+          sx: {
+            width: 380,
+          },
+        }}
         transitionDuration={300}
         sx={{
           top: 20,
         }}
       >
-        {data?.length ? (
-          data.map((element) => (
-            <Typography sx={{ p: 2 }} key={element.transactionHash}>
-              {JSON.stringify(element)}
+        <StyledBox>
+          {!!data?.length && (
+            <Typography variant="h5" sx={{ marginBottom: 1 }}>
+              Last {data.length === 5 && "5 "}transactions:
             </Typography>
-          ))
-        ) : (
-          <Typography sx={{ p: 2 }}>No transactions yet</Typography>
-        )}
+          )}
+          {data?.length ? (
+            data.map(({ transactionHash, category }) => (
+              <StyledCard key={transactionHash} variant="outlined">
+                <Typography variant="h6">
+                  {category}:{" "}
+                  <Link
+                    href={`https://goerli.etherscan.io/tx/${transactionHash}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {truncateString(transactionHash, 8)}
+                  </Link>
+                </Typography>
+              </StyledCard>
+            ))
+          ) : (
+            <Box sx={{ textAlign: "center" }}>
+              <Typography variant="h5">No transactions yet</Typography>
+            </Box>
+          )}
+        </StyledBox>
       </Popover>
     </>
   );
