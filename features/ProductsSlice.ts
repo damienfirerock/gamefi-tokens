@@ -61,7 +61,15 @@ export const updateProductsAfterTransaction = createAsyncThunk(
     // In other words, the Promise isn't rejected even when the response has an HTTP 400 or 500 status code.
     if (response.error) return Promise.reject(response.error);
 
-    return response.data;
+    const nextResponse: any = await fetch(
+      `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "",
+      {
+        signal: abortControllerObj && abortController.signal,
+      }
+    ).then((res) => res.json());
+    if (nextResponse.error) return Promise.reject(nextResponse.error);
+
+    return nextResponse.data;
   }
 );
 
@@ -110,23 +118,21 @@ export const ProductsSlice = createSlice({
         state.error = action.error.message;
       }
     });
+    builder.addCase(updateProductsAfterTransaction.pending, (state) => {
+      // Runs 'silently'
+    });
     builder.addCase(
       updateProductsAfterTransaction.fulfilled,
-      (state, action: { payload: IProduct }) => {
-        const { data } = state;
-
-        if (!data) return;
-
-        const index = data.findIndex(
-          (element) => action.payload.tokenId === element.tokenId
-        );
-
-        if (!state?.data?.[index]) return;
-
-        const nextData = [...state.data];
-        nextData[index] = action.payload;
-
-        state.data = nextData;
+      (state, action: { payload: IProduct[] }) => {
+        // Bug: state.data[index] = action.payload; does not update the main
+        // const { data } = state;
+        // if (!data) return;
+        // const index = data.findIndex(
+        //   (element) => action.payload.tokenId === element.tokenId
+        // );
+        // if (!state?.data?.[index]) return;
+        // state.data[index] = action.payload;
+        state.data = action.payload;
       }
     );
     builder.addCase(

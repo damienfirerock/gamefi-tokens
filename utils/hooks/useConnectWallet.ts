@@ -93,7 +93,7 @@ const useConnectWallet = () => {
       ethereum.on("disconnect", checkConnection);
       ethereum.on("chainChanged", enquireChainId);
       ethereum.on("accountsChanged", checkConnection);
-      ethereum.on("networkChanged", enquireChainId);
+      ethereum.on("chainChanged", enquireChainId);
 
       return () => {
         if (ethereum.removeListener) {
@@ -101,7 +101,7 @@ const useConnectWallet = () => {
           ethereum.removeListener("disconnect", checkConnection);
           ethereum.removeListener("chainChanged", enquireChainId);
           ethereum.removeListener("accountsChanged", checkConnection);
-          ethereum.removeListener("networkChanged", enquireChainId);
+          ethereum.removeListener("chainChanged", enquireChainId);
         }
       };
     }
