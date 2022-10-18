@@ -1,6 +1,12 @@
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { yellow, brown } from "@mui/material/colors/";
 
+declare module "@mui/material/Paper" {
+  interface PaperPropsVariantOverrides {
+    popup: true;
+  }
+}
+
 const headerFont = {
   fontFamily: "VT323, Roboto, monospace",
   color: brown[600],
@@ -21,6 +27,18 @@ const theme = createTheme({
     },
     secondary: {
       main: yellow[500],
+    },
+  },
+  components: {
+    MuiPaper: {
+      variants: [
+        {
+          props: { variant: "popup" },
+          style: {
+            border: `4px solid rgba(201, 58, 42, 0.4)`,
+          },
+        },
+      ],
     },
   },
 });
