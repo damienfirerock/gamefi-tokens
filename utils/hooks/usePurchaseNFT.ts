@@ -38,7 +38,14 @@ const usePurchaseNFT = () => {
 
     // TODO: Error handling
 
-    dispatch(updateProductsAfterTransaction(tokenId));
+    const { transactionHash, from, to } = receipt;
+
+    dispatch(
+      updateProductsAfterTransaction({
+        tokenId,
+        txDetails: { transactionHash, from, to },
+      })
+    );
 
     dispatch(toggleLoading());
   };

@@ -55,8 +55,12 @@ export const fetchProducts = createAsyncThunk("get/fetchProducts", async () => {
 
 export const updateProductsAfterTransaction = createAsyncThunk(
   "get/updateProductsAfterTransaction",
-  async (tokenId: number) => {
-    const body = JSON.stringify({ tokenId });
+  async (props: {
+    tokenId: number;
+    txDetails: { transactionHash: string; from: string; to: string };
+  }) => {
+    const { tokenId, txDetails } = props;
+    const body = JSON.stringify({ tokenId, txDetails });
 
     const response: any = await fetch(
       `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}/update-owner` || "",
