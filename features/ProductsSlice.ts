@@ -5,6 +5,14 @@ import { IProduct } from "../interfaces/IProduct";
 const { NEXT_PUBLIC_BACKEND_URL } = process.env;
 const ENDPOINT = "/api/v1/products";
 
+const sortProductsByDescription = (array: IProduct[]) => {
+  const nextArray = array.sort(
+    (a, b) => parseInt(a.description) - parseInt(b.description)
+  );
+
+  return nextArray;
+};
+
 // https://developer.mozilla.org/en-US/docs/Web/API/AbortController
 let abortController: any;
 let abortControllerObj: any;
@@ -38,6 +46,10 @@ export const fetchProducts = createAsyncThunk("get/fetchProducts", async () => {
   // In other words, the Promise isn't rejected even when the response has an HTTP 400 or 500 status code.
   if (response.error) return Promise.reject(response.error);
 
+  if (response.data?.length) {
+    return sortProductsByDescription(response.data);
+  }
+
   return response.data;
 });
 
@@ -68,6 +80,10 @@ export const updateProductsAfterTransaction = createAsyncThunk(
       }
     ).then((res) => res.json());
     if (nextResponse.error) return Promise.reject(nextResponse.error);
+
+    if (response.data?.length) {
+      return sortProductsByDescription(response.data);
+    }
 
     return nextResponse.data;
   }
