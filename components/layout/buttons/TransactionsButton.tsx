@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   ButtonProps,
@@ -9,11 +9,11 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import { styled } from "@mui/material/styles";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { RootState } from "../../../store";
+import { AppDispatch, RootState } from "../../../store";
+import { fetchTransactions } from "../../../features/TransactionsSlice";
 import useConnectWallet from "../../../utils/hooks/useConnectWallet";
-import usePurchaseNFT from "../../../utils/hooks/usePurchaseNFT";
 
 const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(1),
@@ -27,15 +27,24 @@ const StyledCircularProgress = styled(CircularProgress)<CircularProgressProps>(
 );
 
 const TransactionsButton: React.FunctionComponent = () => {
-  const { account, chainId } = useConnectWallet();
+  const dispatch = useDispatch<AppDispatch>();
+
   const transactionsSlice = useSelector(
     (state: RootState) => state.transactions
   );
-  const { loading } = transactionsSlice;
+  const { loading, data } = transactionsSlice;
+
+  const { account, chainId } = useConnectWallet();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
+
+  useEffect(() => {
+    if (account) {
+      dispatch(fetchTransactions(account));
+    }
+  }, [account]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -60,7 +69,7 @@ const TransactionsButton: React.FunctionComponent = () => {
   ) {
     return null;
   }
-
+  console.log({ data });
   return (
     <>
       <StyledButton
@@ -83,14 +92,21 @@ const TransactionsButton: React.FunctionComponent = () => {
           vertical: "bottom",
         }}
         keepMounted
-        PaperProps={{ sx: { width: 300 } }}
+        PaperProps={{ sx: { width: 500 } }}
         transitionDuration={300}
         sx={{
           top: 20,
-          right: 160,
         }}
       >
-        <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
+        {data?.length ? (
+          data.map((element) => (
+            <Typography sx={{ p: 2 }} key={element.transactionHash}>
+              {JSON.stringify(element)}
+            </Typography>
+          ))
+        ) : (
+          <Typography sx={{ p: 2 }}>No transactions yet</Typography>
+        )}
       </Popover>
     </>
   );

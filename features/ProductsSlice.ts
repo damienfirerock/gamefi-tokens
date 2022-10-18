@@ -53,8 +53,8 @@ export const fetchProducts = createAsyncThunk("get/fetchProducts", async () => {
   return response.data;
 });
 
-export const updateProductsAfterTransaction = createAsyncThunk(
-  "get/updateProductsAfterTransaction",
+export const updateDBAfterTokenSalePurchase = createAsyncThunk(
+  "get/updateDBAfterTokenSalePurchase",
   async (props: {
     tokenId: number;
     txDetails: { transactionHash: string; from: string; to: string };
@@ -138,11 +138,11 @@ export const ProductsSlice = createSlice({
         state.error = action.error.message;
       }
     });
-    builder.addCase(updateProductsAfterTransaction.pending, (state) => {
+    builder.addCase(updateDBAfterTokenSalePurchase.pending, (state) => {
       // Runs 'silently'
     });
     builder.addCase(
-      updateProductsAfterTransaction.fulfilled,
+      updateDBAfterTokenSalePurchase.fulfilled,
       (state, action: { payload: IProduct[] }) => {
         // Bug: state.data[index] = action.payload; does not update the main
         // const { data } = state;
@@ -156,7 +156,7 @@ export const ProductsSlice = createSlice({
       }
     );
     builder.addCase(
-      updateProductsAfterTransaction.rejected,
+      updateDBAfterTokenSalePurchase.rejected,
       (state, action) => {
         state.error = action.error.message;
       }

@@ -1,7 +1,16 @@
+export enum TransactionType {
+  TokenSalePurchase = "Token Sale Purchase",
+  MarketPlaceOffer = "MarketPlace Offer",
+  MarketPlaceDeposit = "MarketPlace Deposit",
+  LuckyDrawEnter = "Enter Lucky Draw",
+  StakingDeposit = "Staking Deposit",
+  StakingWithdrawal = "Staking Withdrawal",
+  StakingRedemption = "StakingRedemption",
+}
 export interface ITransaction {
-  name: string;
-  description: string;
-  image: string;
+  from: string;
+  to: string;
+  transactionHash: string;
   tokenId?: number;
-  owner: string;
+  category: TransactionType;
 }

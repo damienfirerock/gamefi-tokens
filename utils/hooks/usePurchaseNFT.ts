@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 
 import { AppDispatch } from "../../store";
 import { toggleLoading } from "../../features/TransactionsSlice";
-import { updateProductsAfterTransaction } from "../../features/ProductsSlice";
+import { updateDBAfterTokenSalePurchase } from "../../features/ProductsSlice";
 
 const NFTSaleJson = require("../abis/NFTSale.json");
 
@@ -41,7 +41,7 @@ const usePurchaseNFT = () => {
     const { transactionHash, from, to } = receipt;
 
     dispatch(
-      updateProductsAfterTransaction({
+      updateDBAfterTokenSalePurchase({
         tokenId,
         txDetails: { transactionHash, from, to },
       })

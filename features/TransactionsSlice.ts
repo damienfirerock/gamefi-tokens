@@ -23,14 +23,19 @@ export const abortFetchTransactions = () => {
 
 export const fetchTransactions = createAsyncThunk(
   "get/fetchTransactions",
-  async () => {
+  async (address: string) => {
     abortController.abort(); // cancel previous request
     abortController = abortControllerObj && new abortControllerObj();
+
+    const body = JSON.stringify({ address });
 
     const response: any = await fetch(
       `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "",
       {
+        method: "POST",
         signal: abortControllerObj && abortController.signal,
+        headers: new Headers({ "content-type": "application/json" }),
+        body,
       }
     ).then((res) => res.json());
 
