@@ -81,7 +81,7 @@ export const updateProductsAfterTransaction = createAsyncThunk(
     ).then((res) => res.json());
     if (nextResponse.error) return Promise.reject(nextResponse.error);
 
-    if (response.data?.length) {
+    if (nextResponse.data?.length) {
       return sortProductsByDescription(response.data);
     }
 
