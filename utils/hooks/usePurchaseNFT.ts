@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 
 import { AppDispatch } from "../../store";
 import { toggleLoading } from "../../features/TransactionsSlice";
+import { updateProductsAfterTransaction } from "../../features/ProductsSlice";
 
 const NFTSaleJson = require("../abis/NFTSale.json");
 
@@ -36,6 +37,8 @@ const usePurchaseNFT = () => {
     const receipt = await transaction.wait();
 
     // TODO: Error handling
+
+    dispatch(updateProductsAfterTransaction(tokenId));
 
     dispatch(toggleLoading());
   };

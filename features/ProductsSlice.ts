@@ -41,6 +41,30 @@ export const fetchProducts = createAsyncThunk("get/fetchProducts", async () => {
   return response.data;
 });
 
+export const updateProductsAfterTransaction = createAsyncThunk(
+  "get/updateProductsAfterTransaction",
+  async (tokenId: number) => {
+    const body = JSON.stringify({ tokenId });
+
+    const response: any = await fetch(
+      `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}/update-owner` || "",
+      {
+        method: "PATCH",
+        headers: new Headers({ "content-type": "application/json" }),
+        body,
+      }
+    ).then((res) => res.json());
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    //The fetch() method returns a Promise that resolves regardless of whether the request is successful,
+    // unless there's a network error.
+    // In other words, the Promise isn't rejected even when the response has an HTTP 400 or 500 status code.
+    if (response.error) return Promise.reject(response.error);
+
+    return response.data;
+  }
+);
+
 type SliceState = {
   error?: null | string;
   loading: boolean;
@@ -86,6 +110,31 @@ export const ProductsSlice = createSlice({
         state.error = action.error.message;
       }
     });
+    builder.addCase(
+      updateProductsAfterTransaction.fulfilled,
+      (state, action: { payload: IProduct }) => {
+        const { data } = state;
+
+        if (!data) return;
+
+        const index = data.findIndex(
+          (element) => action.payload.tokenId === element.tokenId
+        );
+
+        if (!state?.data?.[index]) return;
+
+        const nextData = [...state.data];
+        nextData[index] = action.payload;
+
+        state.data = nextData;
+      }
+    );
+    builder.addCase(
+      updateProductsAfterTransaction.rejected,
+      (state, action) => {
+        state.error = action.error.message;
+      }
+    );
   },
 });
 
