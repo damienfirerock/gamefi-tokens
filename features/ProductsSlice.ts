@@ -82,7 +82,7 @@ export const updateProductsAfterTransaction = createAsyncThunk(
     if (nextResponse.error) return Promise.reject(nextResponse.error);
 
     if (nextResponse.data?.length) {
-      return sortProductsByDescription(response.data);
+      return sortProductsByDescription(nextResponse.data);
     }
 
     return nextResponse.data;
