@@ -15,6 +15,7 @@ import { styled } from "@mui/material/styles";
 import { IProduct } from "../../interfaces/IProduct";
 import { truncateString } from "../../utils/common";
 import { ZERO_ADDRESS } from "../../constants";
+import usePurchaseNFT from "../../utils/hooks/usePurchaseNFT";
 
 export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   margin: theme.spacing(1),
@@ -46,15 +47,13 @@ const displayOwner = (address: string) => {
   }
 };
 
-interface IPokemonCard extends IProduct {
-  handlePurchase: (tokenId: number) => void;
-}
+const PokemonCard: React.FunctionComponent<IProduct> = (props) => {
+  const { name, description, image, tokenId, owner } = props;
 
-const PokemonCard: React.FunctionComponent<IPokemonCard> = (props) => {
-  const { name, description, image, tokenId, owner, handlePurchase } = props;
+  const { purchaseNFT } = usePurchaseNFT();
 
   const handleClick = () => {
-    if (tokenId !== undefined) handlePurchase(tokenId);
+    if (tokenId !== undefined) purchaseNFT(tokenId, description, name);
   };
 
   return (

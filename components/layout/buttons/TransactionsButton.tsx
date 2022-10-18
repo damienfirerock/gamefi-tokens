@@ -50,7 +50,7 @@ const TransactionsButton: React.FunctionComponent = () => {
   const transactionsSlice = useSelector(
     (state: RootState) => state.transactions
   );
-  const { loading, data } = transactionsSlice;
+  const { loading, data, pendingTransactions } = transactionsSlice;
 
   const { account, chainId } = useConnectWallet();
 

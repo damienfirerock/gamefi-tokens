@@ -12,7 +12,6 @@ import { RootState } from "../../store";
 import { fetchProducts } from "../../features/ProductsSlice";
 import { AppDispatch } from "../../store";
 import { IProduct } from "../../interfaces/IProduct";
-import usePurchaseNFT from "../../utils/hooks/usePurchaseNFT";
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
@@ -35,8 +34,6 @@ const MainPage: React.FunctionComponent<{ data: IProduct[] }> = () => {
 
   const productsSlice = useSelector((state: RootState) => state.products);
   const { loading, data, error } = productsSlice;
-
-  const { purchaseNFT } = usePurchaseNFT();
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -62,11 +59,7 @@ const MainPage: React.FunctionComponent<{ data: IProduct[] }> = () => {
           ) : (
             data?.map((element) => (
               <div key={element.tokenId}>
-                <ProductCard
-                  key={element.tokenId}
-                  {...element}
-                  handlePurchase={purchaseNFT}
-                />
+                <ProductCard key={element.tokenId} {...element} />
               </div>
             ))
           )}

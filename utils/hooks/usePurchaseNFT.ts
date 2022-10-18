@@ -3,20 +3,28 @@ import { ethers } from "ethers";
 import { useDispatch } from "react-redux";
 
 import { AppDispatch } from "../../store";
-import { toggleLoading } from "../../features/TransactionsSlice";
+import {
+  addPendingTransaction,
+  removePendingTransaction,
+} from "../../features/TransactionsSlice";
 import { updateDBAfterTokenSalePurchase } from "../../features/ProductsSlice";
 
 const NFTSaleJson = require("../abis/NFTSale.json");
 
 const usePurchaseNFT = () => {
   const dispatch = useDispatch<AppDispatch>();
-
   const [error, setError] = useState<string | null>(null);
 
-  const purchaseNFT = async (tokenId: number) => {
+  const purchaseNFT = async (
+    tokenId: number,
+    description: string,
+    name: string
+  ) => {
     if (!window) return;
 
-    dispatch(toggleLoading());
+    const nextTransaction = { tokenSale: { tokenId, description, name } };
+
+    dispatch(addPendingTransaction(nextTransaction));
     const { ethereum } = window as any;
 
     const provider = new ethers.providers.Web3Provider(ethereum, "any");
@@ -47,7 +55,11 @@ const usePurchaseNFT = () => {
       })
     );
 
-    dispatch(toggleLoading());
+    await setTimeout(() => {
+      dispatch(removePendingTransaction(nextTransaction));
+    }, 10000);
+
+    // dispatch(removePendingTransaction({tokenId}));
   };
 
   return { error, purchaseNFT };
