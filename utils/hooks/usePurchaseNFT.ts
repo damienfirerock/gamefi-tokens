@@ -3,12 +3,10 @@ import { useDispatch } from "react-redux";
 
 import { AppDispatch } from "../../store";
 import {
-  fetchTransactions,
   addPendingTransaction,
   removePendingTransaction,
   setError,
 } from "../../features/TransactionsSlice";
-import useConnectWallet from "./useConnectWallet";
 import { updateDBAfterTokenSalePurchase } from "../../features/ProductsSlice";
 import { TransactionType } from "../../interfaces/ITransaction";
 
@@ -16,8 +14,6 @@ const NFTSaleJson = require("../abis/NFTSale.json");
 
 const usePurchaseNFT = () => {
   const dispatch = useDispatch<AppDispatch>();
-
-  const { account } = useConnectWallet();
 
   const { ethereum } = window as any;
 
@@ -52,7 +48,7 @@ const usePurchaseNFT = () => {
     );
 
     let transaction;
-    let receipt;
+    let receipt: any;
 
     try {
       transaction = await contract.purchaseNFT(tokenId, { value: 5 });
@@ -80,10 +76,7 @@ const usePurchaseNFT = () => {
           txDetails: { transactionHash, from, to },
         })
       );
-      // walletAddress is lower case
-      // either have to send all addresses to be saved in lower-case
-      // or use regex to find transactions in Mongo side
-      dispatch(fetchTransactions(account || ""));
+
       dispatch(removePendingTransaction(nextTransaction));
     };
 
@@ -97,7 +90,7 @@ const usePurchaseNFT = () => {
     } else {
       dispatchAfterFailure();
     }
-    // }, 10000);}
+    // }, 10000);
   };
 
   return { purchaseNFT };

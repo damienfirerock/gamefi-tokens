@@ -24,6 +24,7 @@ import {
   clearError,
 } from "../../../features/TransactionsSlice";
 import useConnectWallet from "../../../utils/hooks/useConnectWallet";
+import usePreviousNumberValue from "../../../utils/hooks/usePreviousNumberValue";
 import { truncateString, capitaliseString } from "../../../utils/common";
 
 const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
@@ -59,6 +60,8 @@ const TransactionsButton: React.FunctionComponent = () => {
 
   const { account, chainId } = useConnectWallet();
 
+  const prevLength = usePreviousNumberValue(pendingTransactions.length);
+
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -68,6 +71,12 @@ const TransactionsButton: React.FunctionComponent = () => {
       dispatch(fetchTransactions(account));
     }
   }, [account]);
+
+  useEffect(() => {
+    if (prevLength > pendingTransactions.length && !!account) {
+      dispatch(fetchTransactions(account));
+    }
+  }, [pendingTransactions.length, account]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
