@@ -22,7 +22,10 @@ const usePurchaseNFT = () => {
     description: string,
     name: string
   ) => {
-    if (!window || !ethereum) return;
+    if (!window || !ethereum) {
+      dispatch(setError("No wallet installed"));
+      return;
+    }
 
     const provider = new ethers.providers.Web3Provider(ethereum, "any");
     const nextTransaction = {
