@@ -64,6 +64,8 @@ const usePurchaseNFT = () => {
         dispatch(setError(`${code}: ${reason}`));
       } else if (message) {
         dispatch(setError(message));
+      } else if (code) {
+        dispatch(setError(code));
       } else {
         dispatch(setError(error));
       }
