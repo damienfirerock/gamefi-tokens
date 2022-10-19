@@ -6,6 +6,7 @@ import { styled } from "@mui/material/styles";
 import MetaMaskButton from "./MetaMaskButton";
 
 import useConnectWallet from "../../../utils/hooks/useConnectWallet";
+import { truncateString } from "../../../utils/common";
 
 const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
   minWidth: 150,
@@ -68,9 +69,9 @@ const WalletButton: React.FunctionComponent = () => {
         variant="contained"
         onClick={handleClick}
       >
-        <Image src="/pokeball.png" alt="me" width="28" height="28" />
+        <Image src="/pokeball.png" alt="me" width="24" height="24" />
         <Typography variant="h6" sx={{ marginLeft: 1 }}>
-          Account
+          {truncateString(account)}
         </Typography>
       </StyledButton>
       <Popover
