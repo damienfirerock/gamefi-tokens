@@ -37,10 +37,22 @@ const usePurchaseNFT = () => {
 
     dispatch(addPendingTransaction(nextTransaction));
 
+    const dispatchAfterFailure = () => {
+      dispatch(removePendingTransaction(nextTransaction));
+    };
+
     const accounts = await ethereum.request({
       method: "eth_requestAccounts",
     });
     const walletAddress = accounts[0]; // first account in MetaMask
+
+    const { chainId } = await provider.getNetwork();
+
+    if (chainId !== parseInt(process.env.NEXT_PUBLIC_NETWORK_CHAIN_ID || "")) {
+      dispatchAfterFailure();
+      dispatch(setError("Please switch to Goerli network"));
+      return;
+    }
 
     const signer = provider.getSigner(walletAddress);
 
@@ -80,10 +92,6 @@ const usePurchaseNFT = () => {
         })
       );
 
-      dispatch(removePendingTransaction(nextTransaction));
-    };
-
-    const dispatchAfterFailure = () => {
       dispatch(removePendingTransaction(nextTransaction));
     };
 
