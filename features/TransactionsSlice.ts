@@ -157,7 +157,7 @@ export const TransactionsSlice = createSlice({
         action.payload
       );
       state.pendingTransactions = nextTransactions;
-      console.log({ nextTransactions });
+
       if (!isPendingTransactionsPresent(nextTransactions))
         state.loading = false;
     },

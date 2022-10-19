@@ -4,30 +4,36 @@ import { useDispatch } from "react-redux";
 
 import { AppDispatch } from "../../store";
 import {
+  fetchTransactions,
   addPendingTransaction,
   removePendingTransaction,
 } from "../../features/TransactionsSlice";
+import useConnectWallet from "./useConnectWallet";
 import { updateDBAfterTokenSalePurchase } from "../../features/ProductsSlice";
 
 const NFTSaleJson = require("../abis/NFTSale.json");
 
 const usePurchaseNFT = () => {
   const dispatch = useDispatch<AppDispatch>();
+
+  const { account } = useConnectWallet();
+
   const [error, setError] = useState<string | null>(null);
+
+  const { ethereum } = window as any;
+
+  const provider = new ethers.providers.Web3Provider(ethereum, "any");
 
   const purchaseNFT = async (
     tokenId: number,
     description: string,
     name: string
   ) => {
-    if (!window) return;
+    if (!window || !provider) return;
 
     const nextTransaction = { tokenSale: { tokenId, description, name } };
 
     dispatch(addPendingTransaction(nextTransaction));
-    const { ethereum } = window as any;
-
-    const provider = new ethers.providers.Web3Provider(ethereum, "any");
 
     const accounts = await ethereum.request({
       method: "eth_requestAccounts",
@@ -54,12 +60,22 @@ const usePurchaseNFT = () => {
         txDetails: { transactionHash, from, to },
       })
     );
+    // walletAddress is lower case
+    // either have to send all addresses to be saved in lower-case
+    // or use regex to find transactions in Mongo side
+    dispatch(fetchTransactions(account || ""));
+    dispatch(removePendingTransaction(nextTransaction));
 
-    await setTimeout(() => {
-      dispatch(removePendingTransaction(nextTransaction));
-    }, 10000);
-
-    // dispatch(removePendingTransaction({tokenId}));
+    // await setTimeout(() => {
+    //   dispatch(
+    //     updateDBAfterTokenSalePurchase({
+    //       tokenId,
+    //       txDetails: { transactionHash, from, to },
+    //     })
+    //   );
+    //   dispatch(fetchTransactions(account || ""));
+    //   dispatch(removePendingTransaction(nextTransaction));
+    // }, 10000);
   };
 
   return { error, purchaseNFT };
