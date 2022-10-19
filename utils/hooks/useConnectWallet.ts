@@ -13,7 +13,9 @@ const useConnectWallet = () => {
 
     const { ethereum } = window as any;
 
-    const nextProvider = new ethers.providers.Web3Provider(ethereum, "any");
+    const nextProvider = ethereum
+      ? new ethers.providers.Web3Provider(ethereum, "any")
+      : ethers.getDefaultProvider();
 
     setProvider(nextProvider);
   };

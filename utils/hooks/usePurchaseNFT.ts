@@ -17,7 +17,9 @@ const usePurchaseNFT = () => {
 
   const { ethereum } = window as any;
 
-  const provider = new ethers.providers.Web3Provider(ethereum, "any");
+  const provider = ethereum
+    ? new ethers.providers.Web3Provider(ethereum, "any")
+    : ethers.getDefaultProvider();
 
   const purchaseNFT = async (
     tokenId: number,
