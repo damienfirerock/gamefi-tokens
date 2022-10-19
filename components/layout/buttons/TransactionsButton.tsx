@@ -17,10 +17,7 @@ import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 
 import { AppDispatch, RootState } from "../../../store";
-import {
-  fetchTransactions,
-  isPendingTransactionsPresent,
-} from "../../../features/TransactionsSlice";
+import { fetchTransactions } from "../../../features/TransactionsSlice";
 import useConnectWallet from "../../../utils/hooks/useConnectWallet";
 import { truncateString, capitaliseString } from "../../../utils/common";
 
@@ -93,11 +90,6 @@ const TransactionsButton: React.FunctionComponent = () => {
     return null;
   }
 
-  const shouldShowPendingTransactions =
-    isPendingTransactionsPresent(pendingTransactions);
-  const flattenPendingTransactions: IPendingTransaction[] =
-    Object.values(pendingTransactions).flat();
-
   return (
     <>
       <StyledButton
@@ -106,7 +98,7 @@ const TransactionsButton: React.FunctionComponent = () => {
         onClick={handleClick}
       >
         {showIcon()}
-        <Typography variant="h6" sx={{ marginLeft: 1 }}>
+        <Typography variant="h6" sx={{ marginLeft: 0.5 }}>
           {loading ? "Pending..." : "Transactions"}
         </Typography>
       </StyledButton>
@@ -132,20 +124,18 @@ const TransactionsButton: React.FunctionComponent = () => {
           top: 20,
         }}
       >
-        {shouldShowPendingTransactions && (
+        {!!pendingTransactions.length && (
           <StyledBox>
             <Typography variant="h5" sx={{ marginBottom: 1 }}>
               Pending transactions:
             </Typography>
-            {flattenPendingTransactions.map(
-              ({ tokenId, name, description, type }) => (
-                <StyledCard key={tokenId + type} variant="outlined">
-                  <Typography variant="h6">
-                    {type}: #{description} - {capitaliseString(name)}
-                  </Typography>
-                </StyledCard>
-              )
-            )}
+            {pendingTransactions.map(({ tokenId, name, description, type }) => (
+              <StyledCard key={tokenId + type} variant="outlined">
+                <Typography variant="h6">
+                  {type}: #{description} - {capitaliseString(name)}
+                </Typography>
+              </StyledCard>
+            ))}
           </StyledBox>
         )}
         <StyledBox>

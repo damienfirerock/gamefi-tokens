@@ -21,7 +21,3 @@ export interface IPendingTransaction {
   name: string;
   type: TransactionType;
 }
-
-export interface IPendingTransactions {
-  tokenSales: IPendingTransaction[];
-}

@@ -34,12 +34,10 @@ const usePurchaseNFT = () => {
     if (!window || !provider) return;
 
     const nextTransaction = {
-      tokenSale: {
-        tokenId,
-        description,
-        name,
-        type: TransactionType.TokenSalePurchase,
-      },
+      tokenId,
+      description,
+      name,
+      type: TransactionType.TokenSalePurchase,
     };
 
     dispatch(addPendingTransaction(nextTransaction));
@@ -77,9 +75,9 @@ const usePurchaseNFT = () => {
       dispatch(removePendingTransaction(nextTransaction));
     };
 
-    // await setTimeout(() => {
-    dispatchAfterSuccess();
-    // }, 10000);
+    await setTimeout(() => {
+      dispatchAfterSuccess();
+    }, 10000);
   };
 
   return { error, purchaseNFT };

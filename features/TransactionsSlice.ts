@@ -1,54 +1,24 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import {
-  ITransaction,
-  IPendingTransaction,
-  IPendingTransactions,
-} from "../interfaces/ITransaction";
-
-export interface IPendingTransactionPayload {
-  tokenSale?: IPendingTransaction;
-}
+import { ITransaction, IPendingTransaction } from "../interfaces/ITransaction";
 
 const { NEXT_PUBLIC_BACKEND_URL } = process.env;
 const ENDPOINT = "/api/v1/transactions";
 
-export const isPendingTransactionsPresent = (
-  pendingTransactions: IPendingTransactions
-) => {
-  return !!Object.values(pendingTransactions).flat().length;
-};
-
 const addPendingTransactionsForState = (
-  pendingTransactions: IPendingTransactions,
-  payload: IPendingTransactionPayload
+  pendingTransactions: IPendingTransaction[],
+  payload: IPendingTransaction
 ) => {
-  const { tokenSales } = pendingTransactions;
-  const { tokenSale: nextTokenSale } = payload;
-
-  const nextTransactions = { ...pendingTransactions };
-
-  if (nextTokenSale)
-    nextTransactions.tokenSales = [...tokenSales, nextTokenSale];
-
-  return nextTransactions;
+  return [payload, ...pendingTransactions];
 };
 
 const removePendingTransactionsForState = (
-  pendingTransactions: IPendingTransactions,
-  payload: IPendingTransactionPayload
+  pendingTransactions: IPendingTransaction[],
+  payload: IPendingTransaction
 ) => {
-  const { tokenSales } = pendingTransactions;
-  const { tokenSale: prevTokenSale } = payload;
-
-  const nextTransactions = { ...pendingTransactions };
-
-  if (prevTokenSale)
-    nextTransactions.tokenSales = [...tokenSales].filter(
-      (element) => element.tokenId != prevTokenSale.tokenId
-    );
-
-  return nextTransactions;
+  return [...pendingTransactions].filter(
+    (element) => element.tokenId != payload.tokenId
+  );
 };
 
 // https://developer.mozilla.org/en-US/docs/Web/API/AbortController
@@ -106,7 +76,7 @@ type SliceState = {
   error?: null | string;
   loading: boolean;
   data: ITransaction[] | null;
-  pendingTransactions: IPendingTransactions;
+  pendingTransactions: IPendingTransaction[];
 };
 
 // First approach: define the initial state using that type
@@ -114,7 +84,7 @@ const initialState: SliceState = {
   error: null,
   loading: false,
   data: null,
-  pendingTransactions: { tokenSales: [] },
+  pendingTransactions: [],
 };
 
 export const TransactionsSlice = createSlice({
@@ -132,7 +102,7 @@ export const TransactionsSlice = createSlice({
     },
     addPendingTransaction: (
       state,
-      action: { payload: IPendingTransactionPayload; type: string }
+      action: { payload: IPendingTransaction; type: string }
     ) => {
       state.loading = true;
 
@@ -144,7 +114,7 @@ export const TransactionsSlice = createSlice({
     },
     removePendingTransaction: (
       state,
-      action: { payload: IPendingTransactionPayload; type: string }
+      action: { payload: IPendingTransaction; type: string }
     ) => {
       const nextTransactions = removePendingTransactionsForState(
         state.pendingTransactions,
@@ -152,8 +122,7 @@ export const TransactionsSlice = createSlice({
       );
       state.pendingTransactions = nextTransactions;
 
-      if (!isPendingTransactionsPresent(nextTransactions))
-        state.loading = false;
+      if (!nextTransactions.length) state.loading = false;
     },
   },
   extraReducers: (builder) => {
@@ -164,8 +133,7 @@ export const TransactionsSlice = createSlice({
       state.error = null;
     });
     builder.addCase(fetchTransactions.fulfilled, (state, action) => {
-      if (!isPendingTransactionsPresent(state.pendingTransactions))
-        state.loading = false;
+      if (!state.pendingTransactions.length) state.loading = false;
       state.data = action.payload;
     });
     builder.addCase(fetchTransactions.rejected, (state, action) => {
