@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { ethers } from "ethers";
 import { useDispatch } from "react-redux";
 
@@ -7,10 +6,10 @@ import {
   fetchTransactions,
   addPendingTransaction,
   removePendingTransaction,
+  setError,
 } from "../../features/TransactionsSlice";
 import useConnectWallet from "./useConnectWallet";
 import { updateDBAfterTokenSalePurchase } from "../../features/ProductsSlice";
-
 import { TransactionType } from "../../interfaces/ITransaction";
 
 const NFTSaleJson = require("../abis/NFTSale.json");
@@ -19,8 +18,6 @@ const usePurchaseNFT = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { account } = useConnectWallet();
-
-  const [error, setError] = useState<string | null>(null);
 
   const { ethereum } = window as any;
 
@@ -54,12 +51,25 @@ const usePurchaseNFT = () => {
       signer
     );
 
-    const transaction = await contract.purchaseNFT(tokenId, { value: 5 });
-    const receipt = await transaction.wait();
+    let transaction;
+    let receipt;
 
-    // TODO: Error handling
+    try {
+      transaction = await contract.purchaseNFT(tokenId, { value: 5 });
+      receipt = await transaction.wait();
+    } catch (error: any) {
+      const { code, reason, message } = error;
 
-    const { transactionHash, from, to } = receipt;
+      if (code && reason) {
+        dispatch(setError(`${code}: ${reason}`));
+      } else if (message) {
+        dispatch(setError(message));
+      } else {
+        dispatch(setError(error));
+      }
+    }
+
+    const { transactionHash, from, to } = receipt || {};
 
     const dispatchAfterSuccess = () => {
       dispatch(
@@ -75,12 +85,20 @@ const usePurchaseNFT = () => {
       dispatch(removePendingTransaction(nextTransaction));
     };
 
-    await setTimeout(() => {
+    const dispatchAfterFailure = () => {
+      dispatch(removePendingTransaction(nextTransaction));
+    };
+
+    // await setTimeout(() => {
+    if (receipt) {
       dispatchAfterSuccess();
-    }, 10000);
+    } else {
+      dispatchAfterFailure();
+    }
+    // }, 10000);}
   };
 
-  return { error, purchaseNFT };
+  return { purchaseNFT };
 };
 
 export default usePurchaseNFT;

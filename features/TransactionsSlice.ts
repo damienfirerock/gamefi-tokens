@@ -124,6 +124,13 @@ export const TransactionsSlice = createSlice({
 
       if (!nextTransactions.length) state.loading = false;
     },
+
+    setError: (state, action) => {
+      state.error = action.payload;
+    },
+    clearError: (state) => {
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     // Fetching Transactions after Search
@@ -150,6 +157,8 @@ export const {
   clearTransactions,
   addPendingTransaction,
   removePendingTransaction,
+  setError,
+  clearError,
 } = TransactionsSlice.actions;
 
 export default TransactionsSlice.reducer;
