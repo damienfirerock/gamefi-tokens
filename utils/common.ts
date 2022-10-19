@@ -6,3 +6,6 @@ export const truncateString = (address: string, show = 4) => {
 
   return `${start}...${end}`;
 };
+
+export const capitaliseString = (string: string) =>
+  string.charAt(0).toUpperCase() + string.slice(1);

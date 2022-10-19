@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ethers } from "ethers";
 import { useDispatch } from "react-redux";
 
@@ -10,6 +10,8 @@ import {
 } from "../../features/TransactionsSlice";
 import useConnectWallet from "./useConnectWallet";
 import { updateDBAfterTokenSalePurchase } from "../../features/ProductsSlice";
+
+import { TransactionType } from "../../interfaces/ITransaction";
 
 const NFTSaleJson = require("../abis/NFTSale.json");
 
@@ -31,7 +33,14 @@ const usePurchaseNFT = () => {
   ) => {
     if (!window || !provider) return;
 
-    const nextTransaction = { tokenSale: { tokenId, description, name } };
+    const nextTransaction = {
+      tokenSale: {
+        tokenId,
+        description,
+        name,
+        type: TransactionType.TokenSalePurchase,
+      },
+    };
 
     dispatch(addPendingTransaction(nextTransaction));
 
@@ -54,27 +63,22 @@ const usePurchaseNFT = () => {
 
     const { transactionHash, from, to } = receipt;
 
-    dispatch(
-      updateDBAfterTokenSalePurchase({
-        tokenId,
-        txDetails: { transactionHash, from, to },
-      })
-    );
-    // walletAddress is lower case
-    // either have to send all addresses to be saved in lower-case
-    // or use regex to find transactions in Mongo side
-    dispatch(fetchTransactions(account || ""));
-    dispatch(removePendingTransaction(nextTransaction));
+    const dispatchAfterSuccess = () => {
+      dispatch(
+        updateDBAfterTokenSalePurchase({
+          tokenId,
+          txDetails: { transactionHash, from, to },
+        })
+      );
+      // walletAddress is lower case
+      // either have to send all addresses to be saved in lower-case
+      // or use regex to find transactions in Mongo side
+      dispatch(fetchTransactions(account || ""));
+      dispatch(removePendingTransaction(nextTransaction));
+    };
 
     // await setTimeout(() => {
-    //   dispatch(
-    //     updateDBAfterTokenSalePurchase({
-    //       tokenId,
-    //       txDetails: { transactionHash, from, to },
-    //     })
-    //   );
-    //   dispatch(fetchTransactions(account || ""));
-    //   dispatch(removePendingTransaction(nextTransaction));
+    dispatchAfterSuccess();
     // }, 10000);
   };
 

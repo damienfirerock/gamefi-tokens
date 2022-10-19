@@ -14,3 +14,14 @@ export interface ITransaction {
   tokenId?: number;
   category: TransactionType;
 }
+
+export interface IPendingTransaction {
+  tokenId: number;
+  description: string;
+  name: string;
+  type: TransactionType;
+}
+
+export interface IPendingTransactions {
+  tokenSales: IPendingTransaction[];
+}

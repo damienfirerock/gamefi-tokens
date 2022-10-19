@@ -17,9 +17,14 @@ import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 
 import { AppDispatch, RootState } from "../../../store";
-import { fetchTransactions } from "../../../features/TransactionsSlice";
+import {
+  fetchTransactions,
+  isPendingTransactionsPresent,
+} from "../../../features/TransactionsSlice";
 import useConnectWallet from "../../../utils/hooks/useConnectWallet";
-import { truncateString } from "../../../utils/common";
+import { truncateString, capitaliseString } from "../../../utils/common";
+
+import { IPendingTransaction } from "../../../interfaces/ITransaction";
 
 const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(1),
@@ -88,6 +93,11 @@ const TransactionsButton: React.FunctionComponent = () => {
     return null;
   }
 
+  const shouldShowPendingTransactions =
+    isPendingTransactionsPresent(pendingTransactions);
+  const flattenPendingTransactions: IPendingTransaction[] =
+    Object.values(pendingTransactions).flat();
+
   return (
     <>
       <StyledButton
@@ -122,6 +132,22 @@ const TransactionsButton: React.FunctionComponent = () => {
           top: 20,
         }}
       >
+        {shouldShowPendingTransactions && (
+          <StyledBox>
+            <Typography variant="h5" sx={{ marginBottom: 1 }}>
+              Pending transactions:
+            </Typography>
+            {flattenPendingTransactions.map(
+              ({ tokenId, name, description, type }) => (
+                <StyledCard key={tokenId + type} variant="outlined">
+                  <Typography variant="h6">
+                    {type}: #{description} - {capitaliseString(name)}
+                  </Typography>
+                </StyledCard>
+              )
+            )}
+          </StyledBox>
+        )}
         <StyledBox>
           {!!data?.length && (
             <Typography variant="h5" sx={{ marginBottom: 1 }}>

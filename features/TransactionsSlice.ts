@@ -1,25 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import { ITransaction } from "../interfaces/ITransaction";
+import {
+  ITransaction,
+  IPendingTransaction,
+  IPendingTransactions,
+} from "../interfaces/ITransaction";
 
-interface IPendingTokenSale {
-  tokenId: number;
-  description: string;
-  name: string;
-}
-
-interface IPendingTransactions {
-  tokenSales: IPendingTokenSale[];
-}
-
-interface IPendingTransactionPayload {
-  tokenSale?: IPendingTokenSale;
+export interface IPendingTransactionPayload {
+  tokenSale?: IPendingTransaction;
 }
 
 const { NEXT_PUBLIC_BACKEND_URL } = process.env;
 const ENDPOINT = "/api/v1/transactions";
 
-const isPendingTransactionsPresent = (
+export const isPendingTransactionsPresent = (
   pendingTransactions: IPendingTransactions
 ) => {
   return !!Object.values(pendingTransactions).flat().length;
