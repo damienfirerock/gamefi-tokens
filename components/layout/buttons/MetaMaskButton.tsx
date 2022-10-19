@@ -2,8 +2,6 @@ import React from "react";
 import { Button, Typography } from "@mui/material";
 import Image from "next/image";
 
-import useConnectWallet from "../../../utils/hooks/useConnectWallet";
-
 interface IMetaMaskButton {
   text: string;
   handleClick: () => void;

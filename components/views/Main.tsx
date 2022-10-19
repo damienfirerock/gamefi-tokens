@@ -7,6 +7,7 @@ import Layout from "../layout/Layout";
 import { Header } from "../common";
 import ProductCard from "../product/ProductCard";
 import LoadingProductCards from "../product/LoadingProductCards";
+import WelcomeModal from "../layout/WelcomeModal";
 
 import { RootState } from "../../store";
 import { fetchProducts } from "../../features/ProductsSlice";
@@ -65,6 +66,7 @@ const MainPage: React.FunctionComponent<{ data: IProduct[] }> = () => {
           )}
         </CardsBox>
       </StyledContainer>
+      <WelcomeModal />
     </Layout>
   );
 };
