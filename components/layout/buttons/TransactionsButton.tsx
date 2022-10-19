@@ -16,12 +16,15 @@ import Image from "next/image";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 
+import AlertBar from "../../common/AlertBar";
+
 import { AppDispatch, RootState } from "../../../store";
-import { fetchTransactions } from "../../../features/TransactionsSlice";
+import {
+  fetchTransactions,
+  clearError,
+} from "../../../features/TransactionsSlice";
 import useConnectWallet from "../../../utils/hooks/useConnectWallet";
 import { truncateString, capitaliseString } from "../../../utils/common";
-
-import { IPendingTransaction } from "../../../interfaces/ITransaction";
 
 const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
   marginRight: theme.spacing(1),
@@ -52,7 +55,7 @@ const TransactionsButton: React.FunctionComponent = () => {
   const transactionsSlice = useSelector(
     (state: RootState) => state.transactions
   );
-  const { loading, data, pendingTransactions } = transactionsSlice;
+  const { loading, error, data, pendingTransactions } = transactionsSlice;
 
   const { account, chainId } = useConnectWallet();
 
@@ -166,6 +169,11 @@ const TransactionsButton: React.FunctionComponent = () => {
           )}
         </StyledBox>
       </Popover>
+      <AlertBar
+        severity="error"
+        text={error}
+        handleClearAlertSource={() => dispatch(clearError())}
+      />
     </>
   );
 };
