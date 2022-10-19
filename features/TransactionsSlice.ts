@@ -92,10 +92,6 @@ export const TransactionsSlice = createSlice({
   initialState,
   reducers: {
     clearTransactions: (state) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
       state.data = null;
       state.error = null;
       state.loading = false;
@@ -135,7 +131,8 @@ export const TransactionsSlice = createSlice({
   extraReducers: (builder) => {
     // Fetching Transactions after Search
     builder.addCase(fetchTransactions.pending, (state) => {
-      state.data = null;
+      // No need to set to null, since this will cause 'flashing' as transactions
+      // state.data = null;
       state.loading = true;
       state.error = null;
     });
