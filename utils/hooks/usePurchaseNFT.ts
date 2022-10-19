@@ -17,17 +17,14 @@ const usePurchaseNFT = () => {
 
   const { ethereum } = window as any;
 
-  const provider = ethereum
-    ? new ethers.providers.Web3Provider(ethereum, "any")
-    : ethers.getDefaultProvider();
-
   const purchaseNFT = async (
     tokenId: number,
     description: string,
     name: string
   ) => {
-    if (!window || !provider) return;
+    if (!window || !ethereum) return;
 
+    const provider = new ethers.providers.Web3Provider(ethereum, "any");
     const nextTransaction = {
       tokenId,
       description,
@@ -41,6 +38,7 @@ const usePurchaseNFT = () => {
       method: "eth_requestAccounts",
     });
     const walletAddress = accounts[0]; // first account in MetaMask
+
     const signer = provider.getSigner(walletAddress);
 
     const contract = new ethers.Contract(
