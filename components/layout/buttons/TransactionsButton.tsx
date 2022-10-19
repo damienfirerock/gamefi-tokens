@@ -170,7 +170,7 @@ const TransactionsButton: React.FunctionComponent = () => {
         </StyledBox>
       </Popover>
       <AlertBar
-        severity="error"
+        severity="warning"
         text={error}
         handleClearAlertSource={() => dispatch(clearError())}
       />
