@@ -12,7 +12,7 @@ import { TransactionType } from "../../interfaces/ITransaction";
 
 const NFTSaleJson = require("../abis/NFTSale.json");
 
-const usePurchaseNFT = () => {
+const useWeb3Transactions = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { ethereum } = window as any;
@@ -95,16 +95,16 @@ const usePurchaseNFT = () => {
       dispatch(removePendingTransaction(nextTransaction));
     };
 
-    // await setTimeout(() => {
-    if (receipt) {
-      dispatchAfterSuccess();
-    } else {
-      dispatchAfterFailure();
-    }
-    // }, 10000);
+    await setTimeout(() => {
+      if (receipt) {
+        dispatchAfterSuccess();
+      } else {
+        dispatchAfterFailure();
+      }
+    }, 10000);
   };
 
   return { purchaseNFT };
 };
 
-export default usePurchaseNFT;
+export default useWeb3Transactions;

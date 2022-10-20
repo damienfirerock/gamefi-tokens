@@ -19,7 +19,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { IProduct } from "../../interfaces/IProduct";
 import { truncateString } from "../../utils/common";
-import usePurchaseNFT from "../../utils/hooks/usePurchaseNFT";
+import useWeb3Transactions from "../../utils/hooks/useWeb3Transactions";
 import { ZERO_ADDRESS } from "../../constants";
 
 export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
@@ -66,7 +66,7 @@ const displayOwner = (address: string) => {
 const PokemonCard: React.FunctionComponent<IProduct> = (props) => {
   const { name, description, image, tokenId, owner } = props;
 
-  const { purchaseNFT } = usePurchaseNFT();
+  const { purchaseNFT } = useWeb3Transactions();
   const transactionsSlice = useSelector(
     (state: RootState) => state.transactions
   );
