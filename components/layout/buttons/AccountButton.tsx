@@ -1,18 +1,21 @@
 import React from "react";
-import { Button, ButtonProps, Popover, Typography } from "@mui/material";
+import { Box, BoxProps, Link, Popover, Typography } from "@mui/material";
 import Image from "next/image";
+import OilBarrelIcon from "@mui/icons-material/OilBarrel";
 import { styled } from "@mui/material/styles";
 
-import MetaMaskButton from "./MetaMaskButton";
+import MetaMaskButton from "./common/MetaMaskButton";
+import PopoverBox from "./common/PopoverBox";
+import MenuStyledButton from "./common/MenuStyledButton";
 
 import useConnectWallet from "../../../utils/hooks/useConnectWallet";
-import { truncateString } from "../../../utils/common";
+import { truncateString, handleOpenWindow } from "../../../utils/common";
 
-const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
-  minWidth: 150,
+const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
+  marginBottom: theme.spacing(2),
 }));
 
-const WalletButton: React.FunctionComponent = () => {
+const AccountButton: React.FunctionComponent = () => {
   const { provider, account, chainId, requestConnect, requestChangeChainId } =
     useConnectWallet();
 
@@ -32,7 +35,11 @@ const WalletButton: React.FunctionComponent = () => {
   const id = open ? "simple-popover" : undefined;
 
   const handleInstallMetamask = () => {
-    window.open("https://metamask.io/", "_blank");
+    handleOpenWindow("https://metamask.io/");
+  };
+
+  const handleDirectFaucet = () => {
+    handleOpenWindow("https://goerlifaucet.com/");
   };
 
   if (!provider)
@@ -58,7 +65,7 @@ const WalletButton: React.FunctionComponent = () => {
 
   return (
     <>
-      <StyledButton
+      <MenuStyledButton
         aria-describedby={id}
         variant="contained"
         onClick={handleClick}
@@ -67,7 +74,7 @@ const WalletButton: React.FunctionComponent = () => {
         <Typography variant="h6" sx={{ marginLeft: 1 }}>
           {truncateString(account)}
         </Typography>
-      </StyledButton>
+      </MenuStyledButton>
       <Popover
         id={id}
         open={open}
@@ -78,16 +85,48 @@ const WalletButton: React.FunctionComponent = () => {
           vertical: "bottom",
         }}
         keepMounted
-        PaperProps={{ sx: { width: 300 } }}
+        PaperProps={{
+          elevation: 0,
+          variant: "popup",
+          sx: {
+            width: 300,
+          },
+        }}
         transitionDuration={300}
         sx={{
           top: 20,
         }}
       >
-        <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
+        <PopoverBox sx={{ textAlign: "center" }}>
+          <StyledBox>
+            <Typography variant="h5">
+              Account:{" "}
+              <Link
+                href={`https://goerli.etherscan.io/address/${account}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {truncateString(account, 8)}
+              </Link>
+            </Typography>
+          </StyledBox>
+
+          <StyledBox>
+            <MenuStyledButton
+              aria-describedby={id}
+              variant="outlined"
+              onClick={handleDirectFaucet}
+            >
+              <OilBarrelIcon />
+              <Typography variant="h6" sx={{ marginLeft: 1 }}>
+                Free ETH Faucet
+              </Typography>
+            </MenuStyledButton>
+          </StyledBox>
+        </PopoverBox>
       </Popover>
     </>
   );
 };
 
-export default WalletButton;
+export default AccountButton;

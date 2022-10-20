@@ -8,6 +8,7 @@ import {
   CardContent,
   CardContentProps,
   CircularProgress,
+  CircularProgressProps,
   Button,
   Typography,
 } from "@mui/material";
@@ -39,6 +40,17 @@ export const StyledCardActions = styled(CardActions)<CardActionsProps>(
     paddingBottom: theme.spacing(3),
   })
 );
+
+export const StyledCircularProgress = styled(
+  CircularProgress
+)<CircularProgressProps>(({ theme }) => ({
+  color: "rgba(60, 60, 60, 0.1)",
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  marginTop: "-12px",
+  marginLeft: "-12px",
+}));
 
 const displayOwner = (address: string) => {
   switch (address) {
@@ -89,7 +101,7 @@ const PokemonCard: React.FunctionComponent<IProduct> = (props) => {
             Buy
           </Button>
           {isPending && (
-            <CircularProgress
+            <StyledCircularProgress
               size={24}
               sx={{
                 color: "rgba(60, 60, 60, 0.1)",

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import {
   Box,
-  BoxProps,
   Button,
   ButtonProps,
   Card,
@@ -16,27 +15,20 @@ import Image from "next/image";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 
+import PopoverBox from "./common/PopoverBox";
+import MenuStyledButton from "./common/MenuStyledButton";
+
 import { AppDispatch, RootState } from "../../../store";
 import { fetchTransactions } from "../../../features/TransactionsSlice";
 import useConnectWallet from "../../../utils/hooks/useConnectWallet";
 import usePreviousNumberValue from "../../../utils/hooks/usePreviousNumberValue";
 import { truncateString, capitaliseString } from "../../../utils/common";
 
-const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
-  marginRight: theme.spacing(1),
-  minWidth: 150,
-}));
-
 const StyledCircularProgress = styled(CircularProgress)<CircularProgressProps>(
   ({ theme }) => ({
     marginRight: theme.spacing(0.5),
   })
 );
-
-const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
-  padding: theme.spacing(1),
-  overflow: "hidden",
-}));
 
 export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   display: "flex",
@@ -99,16 +91,17 @@ const TransactionsButton: React.FunctionComponent = () => {
 
   return (
     <>
-      <StyledButton
+      <MenuStyledButton
         aria-describedby={id}
         variant="contained"
         onClick={handleClick}
+        sx={{ marginRight: 1 }}
       >
         {showIcon()}
         <Typography variant="h6" sx={{ marginLeft: 0.5 }}>
           {loading ? "Pending..." : "Transactions"}
         </Typography>
-      </StyledButton>
+      </MenuStyledButton>
       <Popover
         id={id}
         open={open}
@@ -132,7 +125,7 @@ const TransactionsButton: React.FunctionComponent = () => {
         }}
       >
         {!!pendingTransactions.length && (
-          <StyledBox>
+          <PopoverBox>
             <Typography variant="h5" sx={{ marginBottom: 1 }}>
               Pending transactions:
             </Typography>
@@ -143,9 +136,9 @@ const TransactionsButton: React.FunctionComponent = () => {
                 </Typography>
               </StyledCard>
             ))}
-          </StyledBox>
+          </PopoverBox>
         )}
-        <StyledBox>
+        <PopoverBox>
           {!!data?.length && (
             <Typography variant="h5" sx={{ marginBottom: 1 }}>
               Last {data.length === 5 && "5 "}transactions:
@@ -171,7 +164,7 @@ const TransactionsButton: React.FunctionComponent = () => {
               <Typography variant="h5">No transactions yet</Typography>
             </Box>
           )}
-        </StyledBox>
+        </PopoverBox>
       </Popover>
     </>
   );

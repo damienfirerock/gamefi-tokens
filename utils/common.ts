@@ -9,3 +9,7 @@ export const truncateString = (address: string, show = 4) => {
 
 export const capitaliseString = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
+
+export const handleOpenWindow = (url: string) => {
+  window.open(url, "_blank", "noopener");
+};
