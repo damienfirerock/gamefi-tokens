@@ -5,15 +5,16 @@ import { AppDispatch } from "../../store";
 import {
   addPendingTransaction,
   removePendingTransaction,
-  setError,
 } from "../../features/TransactionsSlice";
 import { updateDBAfterTokenSalePurchase } from "../../features/ProductsSlice";
 import { TransactionType } from "../../interfaces/ITransaction";
+import useDispatchErrors from "./useDispatchErrors";
 
 const NFTSaleJson = require("../abis/NFTSale.json");
 
 const useWeb3Transactions = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const { sendTransactionError } = useDispatchErrors();
 
   const { ethereum } = window as any;
 
@@ -23,7 +24,7 @@ const useWeb3Transactions = () => {
     name: string
   ) => {
     if (!window || !ethereum) {
-      dispatch(setError("No wallet installed"));
+      sendTransactionError("No wallet installed");
       return;
     }
 
@@ -50,7 +51,7 @@ const useWeb3Transactions = () => {
 
     if (chainId !== parseInt(process.env.NEXT_PUBLIC_NETWORK_CHAIN_ID || "")) {
       dispatchAfterFailure();
-      dispatch(setError("Please switch to Goerli network"));
+      sendTransactionError("Please switch to Goerli network");
       return;
     }
 
@@ -72,14 +73,16 @@ const useWeb3Transactions = () => {
       const { code, reason, message } = error;
 
       if (code && reason) {
-        dispatch(setError(`${code}: ${reason}`));
+        sendTransactionError(`${code}: ${reason}`);
       } else if (message) {
-        dispatch(setError(message));
+        sendTransactionError(message);
       } else if (code) {
-        dispatch(setError(code));
+        sendTransactionError(code);
       } else {
-        dispatch(setError(error));
+        sendTransactionError(error);
       }
+
+      dispatchAfterFailure();
     }
 
     const { transactionHash, from, to } = receipt || {};
