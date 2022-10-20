@@ -51,12 +51,14 @@ const useConnectWallet = () => {
   };
 
   const requestConnect = async () => {
-    provider
-      .send("eth_requestAccounts", [])
-      .then(async () => {
-        await accountChangedHandler(provider.getSigner());
-      })
-      .catch((error: any) => sendTransactionErrorOnMetaMaskRequest(error));
+    if (!provider) return;
+
+    try {
+      await provider.send("eth_requestAccounts", []);
+      await accountChangedHandler(provider.getSigner());
+    } catch (error) {
+      sendTransactionErrorOnMetaMaskRequest(error);
+    }
   };
 
   const requestChangeChainId = async () => {
