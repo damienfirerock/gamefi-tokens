@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
-
 import { ethers } from "ethers";
 
 const useConnectWallet = () => {
   const [account, setAccount] = useState(null);
   const [chainId, setChainId] = useState(null);
   const [provider, setProvider] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
 
   const findProvider = async () => {
     if (!window) return;
@@ -77,8 +75,6 @@ const useConnectWallet = () => {
 
     if (ethereum) {
       findProvider();
-    } else {
-      setError("Please Install Metamask");
     }
   }, []);
 
@@ -113,7 +109,6 @@ const useConnectWallet = () => {
     provider,
     account,
     chainId,
-    error,
     requestConnect,
     requestChangeChainId,
   };
