@@ -10,7 +10,28 @@ const useDispatchErrors = () => {
     dispatch(setError(error));
   };
 
-  return { sendTransactionError };
+  const sendTransactionErrorOnMetaMaskRequest = (error: any) => {
+    const { code, reason, message } = error;
+
+    let errorMessage;
+
+    if (code && reason) {
+      errorMessage = `${code}: ${reason}`;
+    } else if (message) {
+      errorMessage = message;
+    } else if (code) {
+      errorMessage = code;
+    } else {
+      errorMessage = error;
+    }
+
+    sendTransactionError(errorMessage);
+  };
+
+  return {
+    sendTransactionError,
+    sendTransactionErrorOnMetaMaskRequest,
+  };
 };
 
 export default useDispatchErrors;
