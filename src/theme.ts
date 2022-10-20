@@ -12,6 +12,8 @@ const headerFont = {
   color: brown[600],
 };
 
+const SECONDARY_COLOR = yellow[200];
+
 const theme = createTheme({
   typography: {
     h1: headerFont,
@@ -26,7 +28,7 @@ const theme = createTheme({
       main: yellow[900],
     },
     secondary: {
-      main: yellow[500],
+      main: SECONDARY_COLOR,
     },
   },
   components: {
@@ -35,7 +37,8 @@ const theme = createTheme({
         {
           props: { variant: "popup" },
           style: {
-            border: `4px solid rgba(201, 58, 42, 0.4)`,
+            border: `4px solid ${SECONDARY_COLOR}`,
+            borderStyle: "dotted",
           },
         },
       ],
