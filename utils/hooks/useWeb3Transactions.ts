@@ -14,7 +14,8 @@ const NFTSaleJson = require("../abis/NFTSale.json");
 
 const useWeb3Transactions = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { sendTransactionError } = useDispatchErrors();
+  const { sendTransactionError, sendTransactionErrorOnMetaMaskRequest } =
+    useDispatchErrors();
 
   const { ethereum } = window as any;
 
@@ -70,18 +71,7 @@ const useWeb3Transactions = () => {
       transaction = await contract.purchaseNFT(tokenId, { value: 5 });
       receipt = await transaction.wait();
     } catch (error: any) {
-      const { code, reason, message } = error;
-
-      if (code && reason) {
-        sendTransactionError(`${code}: ${reason}`);
-      } else if (message) {
-        sendTransactionError(message);
-      } else if (code) {
-        sendTransactionError(code);
-      } else {
-        sendTransactionError(error);
-      }
-
+      sendTransactionErrorOnMetaMaskRequest(error);
       dispatchAfterFailure();
     }
 

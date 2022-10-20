@@ -55,7 +55,7 @@ const AccountButton: React.FunctionComponent = () => {
       <MetaMaskButton handleClick={requestConnect} text="Connect MetaMask" />
     );
 
-  if (chainId !== parseInt(process.env.NEXT_PUBLIC_NETWORK_CHAIN_ID || "31337"))
+  if (chainId !== parseInt(process.env.NEXT_PUBLIC_NETWORK_CHAIN_ID || "5"))
     return (
       <MetaMaskButton
         handleClick={requestChangeChainId}

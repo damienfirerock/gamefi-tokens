@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 
+import useDispatchErrors from "./useDispatchErrors";
+
 const useConnectWallet = () => {
+  const { sendTransactionErrorOnMetaMaskRequest } = useDispatchErrors();
+
   const [account, setAccount] = useState(null);
   const [chainId, setChainId] = useState(null);
   const [provider, setProvider] = useState<any>(null);
@@ -47,9 +51,12 @@ const useConnectWallet = () => {
   };
 
   const requestConnect = async () => {
-    provider.send("eth_requestAccounts", []).then(async () => {
-      await accountChangedHandler(provider.getSigner());
-    });
+    provider
+      .send("eth_requestAccounts", [])
+      .then(async () => {
+        await accountChangedHandler(provider.getSigner());
+      })
+      .catch((error: any) => sendTransactionErrorOnMetaMaskRequest(error));
   };
 
   const requestChangeChainId = async () => {
@@ -57,14 +64,16 @@ const useConnectWallet = () => {
 
     const { ethereum } = window as any;
 
-    ethereum.request({
-      method: "wallet_switchEthereumChain",
-      params: [
-        {
-          chainId: "0x5",
-        },
-      ],
-    });
+    ethereum
+      .request({
+        method: "wallet_switchEthereumChain",
+        params: [
+          {
+            chainId: "0x5",
+          },
+        ],
+      })
+      .catch((error: any) => sendTransactionErrorOnMetaMaskRequest(error));
   };
 
   useEffect(() => {
