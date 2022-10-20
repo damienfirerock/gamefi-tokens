@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { ethers } from "ethers";
 
 import useDispatchErrors from "./useDispatchErrors";
@@ -29,13 +29,13 @@ const useConnectWallet = () => {
     enquireChainId();
   };
 
-  const enquireChainId = async () => {
+  const enquireChainId = useCallback(async () => {
     const network = await provider.getNetwork();
 
     if (network?.chainId) {
       setChainId(network.chainId);
     }
-  };
+  }, [provider]);
 
   const enquireAccounts = async () => {
     const accounts = await provider.listAccounts();
@@ -45,10 +45,10 @@ const useConnectWallet = () => {
     }
   };
 
-  const checkConnection = async () => {
+  const checkConnection = useCallback(async () => {
     await enquireChainId();
     await enquireAccounts();
-  };
+  }, [provider]);
 
   const requestConnect = async () => {
     if (!provider) return;
