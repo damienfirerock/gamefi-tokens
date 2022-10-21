@@ -34,7 +34,7 @@ export const abortFetchProducts = () => {
 };
 
 export const fetchProducts = createAsyncThunk(
-  "get/fetchProducts",
+  "post/fetchProducts",
   async (payload?: IProductFilter) => {
     abortController.abort(); // cancel previous request
     abortController = abortControllerObj && new abortControllerObj();

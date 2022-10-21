@@ -16,6 +16,7 @@ import LoadingProductCards from "../product/LoadingProductCards";
 import WelcomeModal from "../layout/WelcomeModal";
 
 import { RootState } from "../../store";
+import { fetchDeposits } from "../../features/DepositsSlice";
 import { fetchProducts } from "../../features/ProductsSlice";
 import { AppDispatch } from "../../store";
 import { IProduct } from "../../interfaces/IProduct";
@@ -45,9 +46,13 @@ const PokemonCenter: React.FunctionComponent<{ data: IProduct[] }> = () => {
   const productsSlice = useSelector((state: RootState) => state.products);
   const { loading, data } = productsSlice;
 
+  const depositsSlice = useSelector((state: RootState) => state.deposits);
+  const { loading: depositsLoading, data: despositsData } = depositsSlice;
+
   useEffect(() => {
     if (!account) return;
 
+    dispatch(fetchDeposits({ owner: account }));
     dispatch(fetchProducts({ owner: account }));
   }, [account]);
 
@@ -57,12 +62,12 @@ const PokemonCenter: React.FunctionComponent<{ data: IProduct[] }> = () => {
       <StyledContainer>
         <StyledBox>
           <Header
-            text={loading ? "Getting Pokemon..." : "Pokemon Center"}
+            text={loading ? "Getting your Pokemon..." : "Pokemon Center"}
             variant="h2"
           />
         </StyledBox>
 
-        {/* Pieces on Sale */}
+        {/* Owned Pokemon */}
         <CardsBox>
           {loading ? (
             <LoadingProductCards />
@@ -72,6 +77,32 @@ const PokemonCenter: React.FunctionComponent<{ data: IProduct[] }> = () => {
             ))
           ) : (
             <Typography variant="h6">You have no pokemon yet :(</Typography>
+          )}
+        </CardsBox>
+
+        <StyledBox>
+          <Header
+            text={
+              loading
+                ? "Getting deposited Pokemon..."
+                : "Your deposited Pokemon"
+            }
+            variant="h2"
+          />
+        </StyledBox>
+
+        {/* Deposited Pokemon */}
+        <CardsBox>
+          {depositsLoading ? (
+            <LoadingProductCards />
+          ) : despositsData?.length ? (
+            despositsData.map((element) => (
+              <ProductCard key={element.tokenId} {...element} />
+            ))
+          ) : (
+            <Typography variant="h6">
+              You have not deposited any pokemon yet :(
+            </Typography>
           )}
         </CardsBox>
       </StyledContainer>
