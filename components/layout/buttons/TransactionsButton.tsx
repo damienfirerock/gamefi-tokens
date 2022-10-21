@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import {
   Box,
-  Button,
-  ButtonProps,
   Card,
   CardProps,
   CircularProgress,
@@ -95,7 +93,7 @@ const TransactionsButton: React.FunctionComponent = () => {
         aria-describedby={id}
         variant="contained"
         onClick={handleClick}
-        sx={{ marginRight: 1 }}
+        sx={{ marginX: 1 }}
       >
         {showIcon()}
         <Typography variant="h6" sx={{ marginLeft: 0.5 }}>

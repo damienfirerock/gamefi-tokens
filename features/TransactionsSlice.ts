@@ -49,7 +49,7 @@ export const fetchTransactions = createAsyncThunk(
       await fetch(`${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "", {
         method: "POST",
         signal: abortControllerObj && abortController.signal,
-        headers: new Headers({ "content-type": "application/json" }),
+        headers: { "content-type": "application/json" },
         body,
       }).then((res) => res.json());
 

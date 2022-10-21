@@ -5,6 +5,10 @@ import { IProduct } from "../interfaces/IProduct";
 const { NEXT_PUBLIC_BACKEND_URL } = process.env;
 const ENDPOINT = "/api/v1/products";
 
+interface IProductFilter {
+  owner?: string;
+}
+
 const sortProductsByDescription = (array: IProduct[]) => {
   const nextArray = array.sort(
     (a, b) => parseInt(a.description) - parseInt(b.description)
@@ -29,29 +33,37 @@ export const abortFetchProducts = () => {
   abortController = new abortControllerObj();
 };
 
-export const fetchProducts = createAsyncThunk("get/fetchProducts", async () => {
-  abortController.abort(); // cancel previous request
-  abortController = abortControllerObj && new abortControllerObj();
+export const fetchProducts = createAsyncThunk(
+  "get/fetchProducts",
+  async (payload?: IProductFilter) => {
+    abortController.abort(); // cancel previous request
+    abortController = abortControllerObj && new abortControllerObj();
 
-  const response: any = await fetch(
-    `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "",
-    {
-      signal: abortControllerObj && abortController.signal,
+    const body = JSON.stringify(payload);
+
+    const response: any = await fetch(
+      `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "",
+      {
+        method: "POST",
+        signal: abortControllerObj && abortController.signal,
+        headers: { "content-type": "application/json" },
+        body,
+      }
+    ).then((res) => res.json());
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    //The fetch() method returns a Promise that resolves regardless of whether the request is successful,
+    // unless there's a network error.
+    // In other words, the Promise isn't rejected even when the response has an HTTP 400 or 500 status code.
+    if (response.error) return Promise.reject(response.error);
+
+    if (response.data?.length) {
+      return sortProductsByDescription(response.data);
     }
-  ).then((res) => res.json());
 
-  // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-  //The fetch() method returns a Promise that resolves regardless of whether the request is successful,
-  // unless there's a network error.
-  // In other words, the Promise isn't rejected even when the response has an HTTP 400 or 500 status code.
-  if (response.error) return Promise.reject(response.error);
-
-  if (response.data?.length) {
-    return sortProductsByDescription(response.data);
+    return response.data;
   }
-
-  return response.data;
-});
+);
 
 export const updateDBAfterTokenSalePurchase = createAsyncThunk(
   "get/updateDBAfterTokenSalePurchase",

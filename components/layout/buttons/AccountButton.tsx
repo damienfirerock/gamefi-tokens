@@ -2,7 +2,9 @@ import React from "react";
 import { Box, BoxProps, Link, Popover, Typography } from "@mui/material";
 import Image from "next/image";
 import OilBarrelIcon from "@mui/icons-material/OilBarrel";
+import HouseIcon from "@mui/icons-material/House";
 import { styled } from "@mui/material/styles";
+import NextLink from "next/link";
 
 import MetaMaskButton from "./common/MetaMaskButton";
 import PopoverBox from "./common/PopoverBox";
@@ -122,6 +124,17 @@ const AccountButton: React.FunctionComponent = () => {
                 Free ETH Faucet
               </Typography>
             </MenuStyledButton>
+          </StyledBox>
+
+          <StyledBox>
+            <NextLink href="/pokemon-center" passHref>
+              <MenuStyledButton aria-describedby={id} variant="outlined">
+                <HouseIcon />
+                <Typography variant="h6" sx={{ marginLeft: 1 }}>
+                  Pokemon Center
+                </Typography>
+              </MenuStyledButton>
+            </NextLink>
           </StyledBox>
         </PopoverBox>
       </Popover>
