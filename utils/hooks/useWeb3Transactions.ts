@@ -16,12 +16,15 @@ import useDispatchErrors from "./useDispatchErrors";
 const ThunderDomeNFTJson = require("../abis/ThunderDomeNFT.json");
 const NFTSaleJson = require("../abis/NFTSale.json");
 const PokemonCenterJson = require("../abis/PokemonCenter.json");
+const PokePointJson = require("../abis/PokePoint.json");
+
+const { NEXT_PUBLIC_POKEPOINT_ADDRESS } = process.env;
 
 interface ITransactionCheck {
   nextTransaction: {
-    tokenId: number;
-    description: string;
-    name: string;
+    tokenId?: number;
+    description?: string;
+    name?: string;
     type: TransactionType;
   };
   methodOnFailure: (error: any) => void;
@@ -29,12 +32,47 @@ interface ITransactionCheck {
 
 const useWeb3Transactions = () => {
   const dispatch = useDispatch<AppDispatch>();
+
   const { sendTransactionError, sendTransactionErrorOnMetaMaskRequest } =
     useDispatchErrors();
 
-  const { ethereum } = window as any;
+  const runPreChecks = async () => {
+    const { ethereum } = window as any;
+
+    if (!window || !ethereum) {
+      sendTransactionError("No wallet installed");
+      return;
+    }
+
+    const provider = new ethers.providers.Web3Provider(ethereum, "any");
+
+    let walletAddress;
+
+    try {
+      const accounts = await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      walletAddress = accounts[0]; // first account in MetaMask
+    } catch (error: any) {
+      sendTransactionErrorOnMetaMaskRequest(error);
+      return;
+    }
+
+    const { chainId } = await provider.getNetwork();
+
+    if (chainId !== parseInt(process.env.NEXT_PUBLIC_NETWORK_CHAIN_ID || "")) {
+      sendTransactionError("Please switch to Goerli network");
+      return;
+    }
+
+    const signer = provider.getSigner(walletAddress);
+
+    return { signer };
+  };
 
   const runPreTransactionChecks = async (props: ITransactionCheck) => {
+    const { ethereum } = window as any;
+
     if (!window || !ethereum) {
       sendTransactionError("No wallet installed");
       return;
@@ -279,7 +317,115 @@ const useWeb3Transactions = () => {
     // }, 10000);
   };
 
-  return { purchaseNFT, depositPokemon, withdrawPokemon };
+  const enquirePokePointsBalance = async (address: string) => {
+    const { signer } = (await runPreChecks()) || {};
+
+    if (!signer) return; // errors should be caught in runPreTransactionChecks
+
+    const pokePointsContract = new ethers.Contract(
+      NEXT_PUBLIC_POKEPOINT_ADDRESS || "",
+      PokePointJson.abi,
+      signer
+    );
+
+    let result;
+
+    try {
+      result = await pokePointsContract.balanceOf(address);
+    } catch (error: any) {
+      sendTransactionErrorOnMetaMaskRequest(error);
+      return;
+    }
+
+    return Number(result);
+  };
+
+  const calculatePokePointsYield = async (address: string) => {
+    const { signer } = (await runPreChecks()) || {};
+
+    if (!signer) return; // errors should be caught in runPreTransactionChecks
+
+    const pokemonCenterContract = new ethers.Contract(
+      process.env.NEXT_PUBLIC_POKEMON_CENTER_ADDRESS || "",
+      PokemonCenterJson.abi,
+      signer
+    );
+
+    let result;
+
+    try {
+      const potentialYield = await pokemonCenterContract.calculateTotalYield(
+        address
+      );
+      const pokePointBalance = await pokemonCenterContract.pokePointBalance(
+        address
+      );
+
+      result = Number(potentialYield) + Number(pokePointBalance);
+    } catch (error: any) {
+      sendTransactionErrorOnMetaMaskRequest(error);
+      return;
+    }
+
+    return result;
+  };
+
+  const withdrawPokePointsYield = async (address: string) => {
+    const nextTransaction = {
+      type: TransactionType.YieldWithdrawal,
+    };
+
+    const dispatchAfterFailure = (error: any) => {
+      dispatch(removePendingTransaction(nextTransaction));
+      sendTransactionErrorOnMetaMaskRequest(error);
+    };
+
+    const { signer } =
+      (await runPreTransactionChecks({
+        nextTransaction,
+        methodOnFailure: dispatchAfterFailure,
+      })) || {};
+
+    if (!signer) return; // errors should be caught in runPreTransactionChecks
+
+    const pokemonCenterContract = new ethers.Contract(
+      process.env.NEXT_PUBLIC_POKEMON_CENTER_ADDRESS || "",
+      PokemonCenterJson.abi,
+      signer
+    );
+
+    let transaction;
+    let receipt: any;
+
+    try {
+      transaction = await pokemonCenterContract.withdrawYield();
+      receipt = await transaction.wait();
+    } catch (error: any) {
+      dispatchAfterFailure(error);
+      return;
+    }
+
+    const dispatchAfterSuccess = () => {
+      dispatch(removePendingTransaction(nextTransaction));
+    };
+
+    await setTimeout(() => {
+      if (receipt) {
+        dispatchAfterSuccess();
+      } else {
+        dispatchAfterFailure("Un-received Transaction");
+      }
+    }, 10000);
+  };
+
+  return {
+    purchaseNFT,
+    depositPokemon,
+    withdrawPokemon,
+    enquirePokePointsBalance,
+    calculatePokePointsYield,
+    withdrawPokePointsYield,
+  };
 };
 
 export default useWeb3Transactions;
