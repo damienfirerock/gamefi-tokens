@@ -37,7 +37,7 @@ const StyledContainer = styled(Container)<ContainerProps>(({ theme }) => ({
 const CardsBox = styled(Container)<ContainerProps>(({ theme }) => ({
   display: "flex",
   flexWrap: "wrap",
-  justifyContent: "space-around",
+  justifyContent: "center",
 }));
 
 const PokemonCenter: React.FunctionComponent<{ data: IProduct[] }> = () => {
