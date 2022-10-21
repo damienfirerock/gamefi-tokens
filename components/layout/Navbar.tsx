@@ -1,6 +1,6 @@
 import React from "react";
 import { AppBar, Box, BoxProps, Toolbar, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
 
@@ -15,6 +15,7 @@ const StyledBox = styled(Box)<BoxProps>(() => ({
 
 const NavBar: React.FunctionComponent = () => {
   const router = useRouter();
+  const theme = useTheme();
 
   return (
     <div style={{ flexGrow: 1 }}>
@@ -25,7 +26,10 @@ const NavBar: React.FunctionComponent = () => {
           </StyledBox>
           {router.pathname !== "/" && (
             <NextLink href="/" passHref>
-              <MenuStyledButton variant="outlined">
+              <MenuStyledButton
+                variant="outlined"
+                sx={{ marginX: theme.spacing(1) }}
+              >
                 <Typography variant="h6">Back to Main</Typography>
               </MenuStyledButton>
             </NextLink>
