@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Layout from "../layout/Layout";
 import { Header } from "../common";
 import ProductCard from "../product/ProductCard";
-import LoadingProductCards from "../product/LoadingProductCards";
+import LoadingPokemonCards from "../product/LoadingPokemonCards";
 import WelcomeModal from "../layout/WelcomeModal";
 
 import { RootState } from "../../store";
@@ -70,7 +70,7 @@ const PokemonCenter: React.FunctionComponent<{ data: IProduct[] }> = () => {
         {/* Owned Pokemon */}
         <CardsBox>
           {loading ? (
-            <LoadingProductCards />
+            <LoadingPokemonCards />
           ) : data?.length ? (
             data.map((element) => (
               <ProductCard key={element.tokenId} {...element} />
@@ -94,7 +94,7 @@ const PokemonCenter: React.FunctionComponent<{ data: IProduct[] }> = () => {
         {/* Deposited Pokemon */}
         <CardsBox>
           {depositsLoading ? (
-            <LoadingProductCards />
+            <LoadingPokemonCards />
           ) : despositsData?.length ? (
             despositsData.map((element) => (
               <ProductCard key={element.tokenId} {...element} />

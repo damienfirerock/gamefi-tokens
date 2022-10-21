@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Layout from "../layout/Layout";
 import { Header } from "../common";
 import ProductCard from "../product/ProductCard";
-import LoadingProductCards from "../product/LoadingProductCards";
+import LoadingPokemonCards from "../product/LoadingPokemonCards";
 import WelcomeModal from "../layout/WelcomeModal";
 
 import { RootState } from "../../store";
@@ -56,7 +56,7 @@ const MainPage: React.FunctionComponent<{ data: IProduct[] }> = () => {
         {/* Pieces on Sale */}
         <CardsBox>
           {loading ? (
-            <LoadingProductCards />
+            <LoadingPokemonCards />
           ) : (
             data?.map((element) => (
               <ProductCard key={element.tokenId} {...element} />
