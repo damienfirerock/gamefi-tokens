@@ -11,7 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Layout from "../layout/Layout";
 import { Header } from "../common";
-import ProductCard from "../product/ProductCard";
+import DepositCard from "../product/DepositCard";
+import WithdrawCard from "../product/WithdrawCard";
 import LoadingPokemonCards from "../product/LoadingPokemonCards";
 import WelcomeModal from "../layout/WelcomeModal";
 
@@ -56,14 +57,23 @@ const PokemonCenter: React.FunctionComponent<{ data: IProduct[] }> = () => {
     dispatch(fetchProducts({ owner: account }));
   }, [account]);
 
+  useEffect(() => {
+    if (!account || data === null) return;
+
+    dispatch(fetchDeposits({ owner: account }));
+  }, [data?.length]);
+
   return (
     <Layout>
       {/* Header */}
       <StyledContainer>
         <StyledBox>
+          <Header text={"Pokemon Center"} variant="h2" />
+        </StyledBox>
+        <StyledBox>
           <Header
-            text={loading ? "Getting your Pokemon..." : "Pokemon Center"}
-            variant="h2"
+            text={loading ? "Getting your Pokemon..." : "Your Pokemon"}
+            variant="h4"
           />
         </StyledBox>
 
@@ -73,7 +83,7 @@ const PokemonCenter: React.FunctionComponent<{ data: IProduct[] }> = () => {
             <LoadingPokemonCards />
           ) : data?.length ? (
             data.map((element) => (
-              <ProductCard key={element.tokenId} {...element} />
+              <DepositCard key={element.tokenId} {...element} />
             ))
           ) : (
             <Typography variant="h6">You have no pokemon yet :(</Typography>
@@ -87,7 +97,7 @@ const PokemonCenter: React.FunctionComponent<{ data: IProduct[] }> = () => {
                 ? "Getting deposited Pokemon..."
                 : "Your deposited Pokemon"
             }
-            variant="h2"
+            variant="h4"
           />
         </StyledBox>
 
@@ -97,7 +107,7 @@ const PokemonCenter: React.FunctionComponent<{ data: IProduct[] }> = () => {
             <LoadingPokemonCards />
           ) : despositsData?.length ? (
             despositsData.map((element) => (
-              <ProductCard key={element.tokenId} {...element} />
+              <WithdrawCard key={element.tokenId} {...element} />
             ))
           ) : (
             <Typography variant="h6">

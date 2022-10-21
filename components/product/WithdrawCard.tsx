@@ -19,7 +19,7 @@ const WithdrawCard: React.FunctionComponent<IProduct> = (props) => {
   return (
     <PokemonCard
       disabled={disabled}
-      buttonText="deposit"
+      buttonText="withdraw"
       handleClick={handleClick}
       {...props}
     />

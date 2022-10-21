@@ -6,10 +6,14 @@ import {
   addPendingTransaction,
   removePendingTransaction,
 } from "../../features/TransactionsSlice";
-import { updateDBAfterTokenSalePurchase } from "../../features/ProductsSlice";
+import {
+  updateDBAfterTokenSalePurchase,
+  updateDBAfterPokemonCenterTransaction,
+} from "../../features/ProductsSlice";
 import { TransactionType } from "../../interfaces/ITransaction";
 import useDispatchErrors from "./useDispatchErrors";
 
+const ThunderDomeNFTJson = require("../abis/ThunderDomeNFT.json");
 const NFTSaleJson = require("../abis/NFTSale.json");
 const PokemonCenterJson = require("../abis/PokemonCenter.json");
 
@@ -91,7 +95,7 @@ const useWeb3Transactions = () => {
 
     if (!signer) return; // errors should be caught in runPreTransactionChecks
 
-    const contract = new ethers.Contract(
+    const tokenSaleContract = new ethers.Contract(
       process.env.NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS || "",
       NFTSaleJson.abi,
       signer
@@ -101,7 +105,7 @@ const useWeb3Transactions = () => {
     let receipt: any;
 
     try {
-      transaction = await contract.purchaseNFT(tokenId, { value: 5 });
+      transaction = await tokenSaleContract.purchaseNFT(tokenId, { value: 5 });
       receipt = await transaction.wait();
     } catch (error: any) {
       dispatchAfterFailure(error);
@@ -155,17 +159,34 @@ const useWeb3Transactions = () => {
 
     if (!signer) return; // errors should be caught in runPreTransactionChecks
 
-    const contract = new ethers.Contract(
+    let transaction;
+    let receipt: any;
+
+    const thunderDomeNFTContract = new ethers.Contract(
+      process.env.NEXT_PUBLIC_THUNDERDOME_NFT_ADDRESS || "",
+      ThunderDomeNFTJson.abi,
+      signer
+    );
+
+    try {
+      transaction = await thunderDomeNFTContract.approve(
+        process.env.NEXT_PUBLIC_POKEMON_CENTER_ADDRESS,
+        tokenId
+      );
+      receipt = await transaction.wait();
+    } catch (error: any) {
+      dispatchAfterFailure(error);
+      return;
+    }
+
+    const pokemonCenterContract = new ethers.Contract(
       process.env.NEXT_PUBLIC_POKEMON_CENTER_ADDRESS || "",
       PokemonCenterJson.abi,
       signer
     );
 
-    let transaction;
-    let receipt: any;
-
     try {
-      transaction = await contract.deposit(tokenId);
+      transaction = await pokemonCenterContract.deposit(tokenId);
       receipt = await transaction.wait();
     } catch (error: any) {
       dispatchAfterFailure(error);
@@ -176,7 +197,7 @@ const useWeb3Transactions = () => {
 
     const dispatchAfterSuccess = () => {
       dispatch(
-        updateDBAfterTokenSalePurchase({
+        updateDBAfterPokemonCenterTransaction({
           tokenId,
           txDetails: { transactionHash, from, to },
         })
@@ -219,7 +240,7 @@ const useWeb3Transactions = () => {
 
     if (!signer) return; // errors should be caught in runPreTransactionChecks
 
-    const contract = new ethers.Contract(
+    const pokemonCenterContract = new ethers.Contract(
       process.env.NEXT_PUBLIC_POKEMON_CENTER_ADDRESS || "",
       PokemonCenterJson.abi,
       signer
@@ -229,7 +250,7 @@ const useWeb3Transactions = () => {
     let receipt: any;
 
     try {
-      transaction = await contract.withdraw(tokenId);
+      transaction = await pokemonCenterContract.withdraw(tokenId);
       receipt = await transaction.wait();
     } catch (error: any) {
       dispatchAfterFailure(error);
@@ -240,7 +261,7 @@ const useWeb3Transactions = () => {
 
     const dispatchAfterSuccess = () => {
       dispatch(
-        updateDBAfterTokenSalePurchase({
+        updateDBAfterPokemonCenterTransaction({
           tokenId,
           txDetails: { transactionHash, from, to },
         })
