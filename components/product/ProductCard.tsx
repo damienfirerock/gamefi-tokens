@@ -30,18 +30,27 @@ export const StyledCard = styled(Card)<IStyledCard>(
   ({ theme, shouldHoverEffect }) => ({
     margin: theme.spacing(1),
     minWidth: 160,
-    "@keyframes MoveUpDown": {
-      "0%, 100%": {
+    "@keyframes Move": {
+      "0%": {
+        transform: "rotate(0)",
         bottom: "-5%",
       },
+      "25%": {
+        transform: "rotate(-0.01turn)",
+      },
       "50%": {
+        transform: "rotate(0)",
         bottom: "5%",
       },
+      "75%": {
+        transform: "rotate(0.01turn)",
+      },
+      "100%": { transform: "rotate(0)", bottom: "-5%" },
     },
 
     "&:hover": {
       "span > img": {
-        animation: shouldHoverEffect ? "MoveUpDown 0.5s linear infinite" : "",
+        animation: shouldHoverEffect ? "Move 0.5s linear infinite" : "",
       },
     },
   })
