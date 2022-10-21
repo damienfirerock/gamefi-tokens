@@ -22,10 +22,30 @@ import { truncateString } from "../../utils/common";
 import useWeb3Transactions from "../../utils/hooks/useWeb3Transactions";
 import { ZERO_ADDRESS } from "../../constants";
 
-export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
-  margin: theme.spacing(1),
-  minWidth: 160,
-}));
+interface IStyledCard extends CardProps {
+  shouldHoverEffect?: boolean;
+}
+
+export const StyledCard = styled(Card)<IStyledCard>(
+  ({ theme, shouldHoverEffect }) => ({
+    margin: theme.spacing(1),
+    minWidth: 160,
+    "@keyframes MoveUpDown": {
+      "0%, 100%": {
+        bottom: "-5%",
+      },
+      "50%": {
+        bottom: "5%",
+      },
+    },
+
+    "&:hover": {
+      "span > img": {
+        animation: shouldHoverEffect ? "MoveUpDown 0.5s linear infinite" : "",
+      },
+    },
+  })
+);
 
 export const StyledCardContent = styled(CardContent)<CardContentProps>(() => ({
   display: "flex",
@@ -78,12 +98,18 @@ const PokemonCard: React.FunctionComponent<IProduct> = (props) => {
 
   const isPending = pendingTransactions.some((txn) => txn.tokenId === tokenId);
 
+  const disabled =
+    !(owner === process.env.NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS) ||
+    isPending;
+
   return (
-    <StyledCard variant="outlined">
+    <StyledCard variant="outlined" shouldHoverEffect={!disabled}>
       <StyledCardContent>
         <Typography variant="h4">{description}</Typography>
         <Typography variant="h5">{name}</Typography>
-        <Image src={image} alt={image} width={125} height={125} />
+        <Box sx={{ position: "relative" }}>
+          <Image src={image} alt={image} width={125} height={125} />
+        </Box>
         <Typography variant="h6">{displayOwner(owner)}</Typography>
       </StyledCardContent>
       <StyledCardActions>
@@ -91,11 +117,7 @@ const PokemonCard: React.FunctionComponent<IProduct> = (props) => {
           <Button
             size="large"
             variant="outlined"
-            disabled={
-              !(
-                owner === process.env.NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS
-              ) || isPending
-            }
+            disabled={disabled}
             onClick={handleClick}
           >
             Buy
