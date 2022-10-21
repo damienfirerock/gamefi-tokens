@@ -4,6 +4,7 @@ import {
   BoxProps,
   Container,
   ContainerProps,
+  Link,
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -14,7 +15,7 @@ import { Header } from "../common";
 import DepositCard from "../product/DepositCard";
 import WithdrawCard from "../product/WithdrawCard";
 import LoadingPokemonCards from "../product/LoadingPokemonCards";
-import WelcomeModal from "../layout/WelcomeModal";
+import PokePointBalance from "../pokepoint/PokePointsBalance";
 
 import { RootState } from "../../store";
 import { fetchDeposits } from "../../features/DepositsSlice";
@@ -69,7 +70,18 @@ const PokemonCenter: React.FunctionComponent<{ data: IProduct[] }> = () => {
       {/* Header */}
       <StyledContainer>
         <StyledBox>
-          <Header text={"Pokemon Center"} variant="h2" />
+          <Typography variant="h2">
+            Pokemon{" "}
+            <Link
+              href={
+                "https://goerli.etherscan.io/address/0x473B25e90d67Dd5A312fb78dA4Ff15E3960EeD4F#code"
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Center
+            </Link>
+          </Typography>
         </StyledBox>
         <StyledBox>
           <Header
@@ -116,8 +128,11 @@ const PokemonCenter: React.FunctionComponent<{ data: IProduct[] }> = () => {
             </Typography>
           )}
         </CardsBox>
+
+        <PokePointBalance />
+
+        <StyledBox></StyledBox>
       </StyledContainer>
-      <WelcomeModal />
     </Layout>
   );
 };

@@ -130,7 +130,9 @@ const TransactionsButton: React.FunctionComponent = () => {
             {pendingTransactions.map(({ tokenId, name, description, type }) => (
               <StyledCard key={tokenId + type} variant="outlined">
                 <Typography variant="h6">
-                  {type}: #{description} - {capitaliseString(name)}
+                  {description && name
+                    ? `${type}: #${description} - ${capitaliseString(name)}`
+                    : type}
                 </Typography>
               </StyledCard>
             ))}

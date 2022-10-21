@@ -1,5 +1,12 @@
 import React, { useEffect } from "react";
-import { Box, BoxProps, Container, ContainerProps } from "@mui/material";
+import {
+  Box,
+  BoxProps,
+  Container,
+  ContainerProps,
+  Link,
+  Typography,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -45,12 +52,35 @@ const MainPage: React.FunctionComponent<{ data: IProduct[] }> = () => {
       {/* Header */}
       <StyledContainer>
         <StyledBox>
-          <Header
-            text={
-              loading ? "Getting Pokemon..." : "These Pokemon are fighting fit!"
-            }
-            variant="h2"
-          />
+          <Typography variant="h2">
+            {loading ? (
+              "Getting Pokemon..."
+            ) : (
+              <span>
+                These{" "}
+                <Link
+                  href={
+                    "https://goerli.etherscan.io/address/0x16377628d5c50aE40951D63134572AB32395677C#code"
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Pokemon
+                </Link>{" "}
+                are fighting{" "}
+                <Link
+                  href={
+                    "https://goerli.etherscan.io/address/0xfF0Cc93e85150e18BA66102469d6e3613dC8Ef9B#code"
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  fit
+                </Link>
+                !
+              </span>
+            )}
+          </Typography>
         </StyledBox>
 
         {/* Pieces on Sale */}
