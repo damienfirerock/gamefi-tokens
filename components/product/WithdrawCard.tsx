@@ -5,16 +5,16 @@ import PokemonCard from "./common/PokemonCard";
 import { IProduct } from "../../interfaces/IProduct";
 import useWeb3Transactions from "../../utils/hooks/useWeb3Transactions";
 
-const DepositCard: React.FunctionComponent<IProduct> = (props) => {
+const WithdrawCard: React.FunctionComponent<IProduct> = (props) => {
   const { name, description, tokenId, owner } = props;
 
-  const { depositPokemon } = useWeb3Transactions();
+  const { withdrawPokemon } = useWeb3Transactions();
 
   const handleClick = () => {
-    if (tokenId !== undefined) depositPokemon(tokenId, description, name);
+    if (tokenId !== undefined) withdrawPokemon(tokenId, description, name);
   };
 
-  const disabled = owner === process.env.NEXT_PUBLIC_POKEMON_CENTER_ADDRESS;
+  const disabled = !(owner === process.env.NEXT_PUBLIC_POKEMON_CENTER_ADDRESS);
 
   return (
     <PokemonCard
@@ -26,4 +26,4 @@ const DepositCard: React.FunctionComponent<IProduct> = (props) => {
   );
 };
 
-export default DepositCard;
+export default WithdrawCard;
