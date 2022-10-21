@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Skeleton } from "@mui/material";
 
-import { StyledCard, StyledCardContent } from "./ProductCard";
+import { StyledCard, StyledCardContent } from "./PokemonCard";
 
 const SkeletonCard: React.FunctionComponent = () => {
   return (
