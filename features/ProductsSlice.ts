@@ -92,6 +92,7 @@ export const updateDBAfterTokenSalePurchase = createAsyncThunk(
     const nextResponse: any = await fetch(
       `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "",
       {
+        method: "POST",
         signal: abortControllerObj && abortController.signal,
       }
     ).then((res) => res.json());

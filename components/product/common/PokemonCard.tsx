@@ -91,6 +91,8 @@ const displayOwner = (address: string) => {
       return "???";
     case process.env.NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS:
       return "Available";
+    case process.env.NEXT_PUBLIC_POKEMON_CENTER_ADDRESS:
+      return "Pokemon Center";
     default:
       return truncateString(address);
   }
