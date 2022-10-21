@@ -59,9 +59,7 @@ const MainPage: React.FunctionComponent<{ data: IProduct[] }> = () => {
             <LoadingProductCards />
           ) : (
             data?.map((element) => (
-              <div key={element.tokenId}>
-                <ProductCard key={element.tokenId} {...element} />
-              </div>
+              <ProductCard key={element.tokenId} {...element} />
             ))
           )}
         </CardsBox>

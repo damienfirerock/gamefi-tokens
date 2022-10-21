@@ -39,20 +39,27 @@ const useWeb3Transactions = () => {
 
     dispatch(addPendingTransaction(nextTransaction));
 
-    const dispatchAfterFailure = () => {
+    const dispatchAfterFailure = (error: any) => {
       dispatch(removePendingTransaction(nextTransaction));
+      sendTransactionErrorOnMetaMaskRequest(error);
     };
 
-    const accounts = await ethereum.request({
-      method: "eth_requestAccounts",
-    });
-    const walletAddress = accounts[0]; // first account in MetaMask
+    let walletAddress;
+
+    try {
+      const accounts = await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      walletAddress = accounts[0]; // first account in MetaMask
+    } catch (error: any) {
+      dispatchAfterFailure(error);
+      return;
+    }
 
     const { chainId } = await provider.getNetwork();
 
     if (chainId !== parseInt(process.env.NEXT_PUBLIC_NETWORK_CHAIN_ID || "")) {
-      dispatchAfterFailure();
-      sendTransactionError("Please switch to Goerli network");
+      dispatchAfterFailure("Please switch to Goerli network");
       return;
     }
 
@@ -71,8 +78,8 @@ const useWeb3Transactions = () => {
       transaction = await contract.purchaseNFT(tokenId, { value: 5 });
       receipt = await transaction.wait();
     } catch (error: any) {
-      sendTransactionErrorOnMetaMaskRequest(error);
-      dispatchAfterFailure();
+      dispatchAfterFailure(error);
+      return;
     }
 
     const { transactionHash, from, to } = receipt || {};
@@ -88,13 +95,13 @@ const useWeb3Transactions = () => {
       dispatch(removePendingTransaction(nextTransaction));
     };
 
-    await setTimeout(() => {
-      if (receipt) {
-        dispatchAfterSuccess();
-      } else {
-        dispatchAfterFailure();
-      }
-    }, 10000);
+    // await setTimeout(() => {
+    if (receipt) {
+      dispatchAfterSuccess();
+    } else {
+      dispatchAfterFailure("Un-received Transaction");
+    }
+    // }, 10000);
   };
 
   return { purchaseNFT };
