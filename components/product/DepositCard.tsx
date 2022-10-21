@@ -5,27 +5,25 @@ import PokemonCard from "./common/PokemonCard";
 import { IProduct } from "../../interfaces/IProduct";
 import useWeb3Transactions from "../../utils/hooks/useWeb3Transactions";
 
-const ProductCard: React.FunctionComponent<IProduct> = (props) => {
+const DepositCard: React.FunctionComponent<IProduct> = (props) => {
   const { name, description, tokenId, owner } = props;
 
-  const { purchaseNFT } = useWeb3Transactions();
+  const { depositPokemon } = useWeb3Transactions();
 
   const handleClick = () => {
-    if (tokenId !== undefined) purchaseNFT(tokenId, description, name);
+    if (tokenId !== undefined) depositPokemon(tokenId, description, name);
   };
 
-  const disabled = !(
-    owner === process.env.NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS
-  );
+  const disabled = !(owner === process.env.NEXT_PUBLIC_POKEMON_CENTER_ADDRESS);
 
   return (
     <PokemonCard
       disabled={disabled}
-      buttonText="buy"
+      buttonText="deposit"
       handleClick={handleClick}
       {...props}
     />
   );
 };
 
-export default ProductCard;
+export default DepositCard;

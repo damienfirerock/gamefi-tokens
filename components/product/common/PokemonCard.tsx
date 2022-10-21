@@ -14,7 +14,9 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import { styled } from "@mui/material/styles";
+import { useSelector } from "react-redux";
 
+import { RootState } from "../../../store";
 import { IProduct } from "../../../interfaces/IProduct";
 import { truncateString } from "../../../utils/common";
 import { ZERO_ADDRESS } from "../../../constants";
@@ -24,7 +26,6 @@ interface IStyledCard extends CardProps {
 }
 
 interface IPokemonCard extends IProduct {
-  pending: boolean;
   disabled: boolean;
   buttonText: string;
   handleClick: () => void;
@@ -104,15 +105,24 @@ const displayOwner = (address: string) => {
 
 const PokemonCard: React.FunctionComponent<IPokemonCard> = (props) => {
   const {
+    tokenId,
     name,
     description,
     image,
     owner,
-    pending,
     disabled,
     buttonText,
     handleClick,
   } = props;
+
+  const transactionsSlice = useSelector(
+    (state: RootState) => state.transactions
+  );
+  const { pendingTransactions } = transactionsSlice;
+
+  const pending = pendingTransactions.some((txn) => txn.tokenId === tokenId);
+
+  const isDisabled = disabled || pending;
 
   return (
     <StyledCard variant="outlined" shouldHoverEffect={!disabled}>
@@ -129,7 +139,7 @@ const PokemonCard: React.FunctionComponent<IPokemonCard> = (props) => {
           <Button
             size="large"
             variant="outlined"
-            disabled={disabled}
+            disabled={isDisabled}
             onClick={handleClick}
           >
             {buttonText}
