@@ -31,6 +31,7 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
 
 const StyledContainer = styled(Container)<ContainerProps>(({ theme }) => ({
   marginTop: theme.spacing(1),
+  paddingBottom: theme.spacing(10),
 }));
 
 const CardsBox = styled(Container)<ContainerProps>(({ theme }) => ({
