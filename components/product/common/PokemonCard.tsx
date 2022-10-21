@@ -36,25 +36,29 @@ export const StyledCard = styled(Card)<IStyledCard>(
     minWidth: 160,
     "@keyframes Move": {
       "0%": {
-        transform: "rotate(0)",
+        transform: "rotate(-0.01turn)",
         bottom: "-5%",
+        left: "-5%",
       },
       "25%": {
-        transform: "rotate(-0.01turn)",
-      },
-      "50%": {
-        transform: "rotate(0)",
         bottom: "5%",
+        left: "0",
       },
+      "50%": { transform: "rotate(0.01turn)", bottom: "-5%", left: "5%" },
       "75%": {
-        transform: "rotate(0.01turn)",
+        bottom: "5%",
+        left: "0",
       },
-      "100%": { transform: "rotate(0)", bottom: "-5%" },
+      "100%": {
+        transform: "rotate(-0.01turn)",
+        bottom: "-5%",
+        left: "-5%",
+      },
     },
 
     "&:hover": {
       "span > img": {
-        animation: shouldHoverEffect ? "Move 0.5s linear infinite" : "",
+        animation: shouldHoverEffect ? "Move 0.9s linear infinite" : "",
       },
     },
   })
