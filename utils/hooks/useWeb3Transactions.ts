@@ -194,7 +194,71 @@ const useWeb3Transactions = () => {
     // }, 10000);
   };
 
-  return { purchaseNFT, depositPokemon };
+  const withdrawPokemon = async (
+    tokenId: number,
+    description: string,
+    name: string
+  ) => {
+    const nextTransaction = {
+      tokenId,
+      description,
+      name,
+      type: TransactionType.StakingDeposit,
+    };
+
+    const dispatchAfterFailure = (error: any) => {
+      dispatch(removePendingTransaction(nextTransaction));
+      sendTransactionErrorOnMetaMaskRequest(error);
+    };
+
+    const { signer } =
+      (await runPreTransactionChecks({
+        nextTransaction,
+        methodOnFailure: dispatchAfterFailure,
+      })) || {};
+
+    if (!signer) return; // errors should be caught in runPreTransactionChecks
+
+    const contract = new ethers.Contract(
+      process.env.NEXT_PUBLIC_POKEMON_CENTER_ADDRESS || "",
+      PokemonCenterJson.abi,
+      signer
+    );
+
+    let transaction;
+    let receipt: any;
+
+    try {
+      transaction = await contract.withdraw(tokenId);
+      receipt = await transaction.wait();
+    } catch (error: any) {
+      dispatchAfterFailure(error);
+      return;
+    }
+
+    const { transactionHash, from, to } = receipt || {};
+
+    const dispatchAfterSuccess = () => {
+      dispatch(
+        updateDBAfterTokenSalePurchase({
+          tokenId,
+          txDetails: { transactionHash, from, to },
+        })
+      );
+
+      dispatch(removePendingTransaction(nextTransaction));
+    };
+
+    // await setTimeout(() => {
+    if (receipt) {
+      dispatchAfterSuccess();
+    } else {
+      dispatchAfterFailure("Un-received Transaction");
+    }
+    // }, 10000);
+  };
+
+  return { purchaseNFT, depositPokemon, withdrawPokemon };
 };
 
 export default useWeb3Transactions;
