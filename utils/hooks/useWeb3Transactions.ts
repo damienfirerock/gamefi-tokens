@@ -153,8 +153,8 @@ const useWeb3Transactions = () => {
 
     const { transactionHash, from, to } = receipt || {};
 
-    const dispatchAfterSuccess = () => {
-      dispatch(
+    const dispatchAfterSuccess = async () => {
+      await dispatch(
         updateDBAfterTokenSalePurchase({
           tokenId,
           txDetails: { transactionHash, from, to },
@@ -164,13 +164,13 @@ const useWeb3Transactions = () => {
       dispatch(removePendingTransaction(nextTransaction));
     };
 
-    // await setTimeout(() => {
-    if (receipt) {
-      dispatchAfterSuccess();
-    } else {
-      dispatchAfterFailure("Un-received Transaction");
-    }
-    // }, 10000);
+    await setTimeout(async () => {
+      if (receipt) {
+        await dispatchAfterSuccess();
+      } else {
+        dispatchAfterFailure("Un-received Transaction");
+      }
+    }, 10000);
   };
 
   const depositPokemon = async (
@@ -234,8 +234,8 @@ const useWeb3Transactions = () => {
 
     const { transactionHash, from, to } = receipt || {};
 
-    const dispatchAfterSuccess = () => {
-      dispatch(
+    const dispatchAfterSuccess = async () => {
+      await dispatch(
         updateDBAfterPokemonCenterDeposit({
           tokenId,
           txDetails: { transactionHash, from, to },
@@ -247,7 +247,7 @@ const useWeb3Transactions = () => {
 
     // await setTimeout(() => {
     if (receipt) {
-      dispatchAfterSuccess();
+      await dispatchAfterSuccess();
     } else {
       dispatchAfterFailure("Un-received Transaction");
     }
@@ -298,8 +298,8 @@ const useWeb3Transactions = () => {
 
     const { transactionHash, from, to } = receipt || {};
 
-    const dispatchAfterSuccess = () => {
-      dispatch(
+    const dispatchAfterSuccess = async () => {
+      await dispatch(
         updateDBAfterPokemonCenterWithdrawal({
           tokenId,
           txDetails: { transactionHash, from, to },
@@ -311,7 +311,7 @@ const useWeb3Transactions = () => {
 
     // await setTimeout(() => {
     if (receipt) {
-      dispatchAfterSuccess();
+      await dispatchAfterSuccess();
     } else {
       dispatchAfterFailure("Un-received Transaction");
     }
