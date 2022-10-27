@@ -8,6 +8,7 @@ const ENDPOINT = "/api/v1/products";
 
 interface IProductFilter {
   owner?: string;
+  tokenId?: string;
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/AbortController

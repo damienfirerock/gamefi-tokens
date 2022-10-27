@@ -2,6 +2,7 @@ import React from "react";
 import { Box, BoxProps, Link, Popover, Typography } from "@mui/material";
 import Image from "next/image";
 import OilBarrelIcon from "@mui/icons-material/OilBarrel";
+import CelebrationIcon from "@mui/icons-material/Celebration";
 import HouseIcon from "@mui/icons-material/House";
 import { styled } from "@mui/material/styles";
 import NextLink from "next/link";
@@ -132,6 +133,17 @@ const AccountButton: React.FunctionComponent = () => {
                 <HouseIcon />
                 <Typography variant="h6" sx={{ marginLeft: 1 }}>
                   Pokemon Center
+                </Typography>
+              </MenuStyledButton>
+            </NextLink>
+          </StyledBox>
+
+          <StyledBox>
+            <NextLink href="/lucky-draw" passHref>
+              <MenuStyledButton aria-describedby={id} variant="outlined">
+                <CelebrationIcon />
+                <Typography variant="h6" sx={{ marginLeft: 1 }}>
+                  Lucky Draw
                 </Typography>
               </MenuStyledButton>
             </NextLink>
