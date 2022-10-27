@@ -20,35 +20,14 @@ const removePendingTransactionsForState = (
     (element) => element.tokenId != payload.tokenId
   );
 };
-
-// https://developer.mozilla.org/en-US/docs/Web/API/AbortController
-let abortController: any;
-let abortControllerObj: any;
-// Check for process.browser to prevent window error
-// https://stackoverflow.com/questions/55151041/window-is-not-defined-in-next-js-react-app
-// Also check if AbortController is present in client browser
-if (process.browser && AbortController) {
-  abortControllerObj = AbortController;
-  abortController = new AbortController();
-}
-
-export const abortFetchTransactions = () => {
-  abortController.abort(); // cancel previous request
-  abortController = new abortControllerObj();
-};
-
 export const fetchTransactions = createAsyncThunk(
   "get/fetchTransactions",
   async (address: string) => {
-    abortController.abort(); // cancel previous request
-    abortController = abortControllerObj && new abortControllerObj();
-
     const body = JSON.stringify({ address });
 
     const response: { success: boolean; data: ITransaction[]; error?: any } =
       await fetch(`${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "", {
         method: "POST",
-        signal: abortControllerObj && abortController.signal,
         headers: { "content-type": "application/json" },
         body,
       }).then((res) => res.json());

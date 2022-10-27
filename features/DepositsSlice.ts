@@ -11,35 +11,15 @@ interface IDepositFilter {
   owner?: string;
 }
 
-// https://developer.mozilla.org/en-US/docs/Web/API/AbortController
-let abortController: any;
-let abortControllerObj: any;
-// Check for process.browser to prevent window error
-// https://stackoverflow.com/questions/55151041/window-is-not-defined-in-next-js-react-app
-// Also check if AbortController is present in client browser
-if (process.browser && AbortController) {
-  abortControllerObj = AbortController;
-  abortController = new AbortController();
-}
-
-export const abortFetchDeposits = () => {
-  abortController.abort(); // cancel previous request
-  abortController = new abortControllerObj();
-};
-
 export const fetchDeposits = createAsyncThunk(
   "post/fetchDeposits",
   async (payload?: IDepositFilter) => {
-    abortController.abort(); // cancel previous request
-    abortController = abortControllerObj && new abortControllerObj();
-
     const body = JSON.stringify(payload);
 
     const response: any = await fetch(
       `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "",
       {
         method: "POST",
-        signal: abortControllerObj && abortController.signal,
         headers: { "content-type": "application/json" },
         body,
       }
@@ -89,7 +69,6 @@ export const updateDBAfterPokemonCenterDeposit = createAsyncThunk(
       `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "",
       {
         method: "POST",
-        signal: abortControllerObj && abortController.signal,
         headers: { "content-type": "application/json" },
         body: nextBody,
       }
@@ -122,10 +101,6 @@ export const updateDBAfterPokemonCenterWithdrawal = createAsyncThunk(
       }
     ).then((res) => res.json());
 
-    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-    //The fetch() method returns a Promise that resolves regardless of whether the request is successful,
-    // unless there's a network error.
-    // In other words, the Promise isn't rejected even when the response has an HTTP 400 or 500 status code.
     if (response.error) return Promise.reject(response.error);
 
     const nextBody = JSON.stringify({ owner: txDetails.from });
@@ -134,11 +109,11 @@ export const updateDBAfterPokemonCenterWithdrawal = createAsyncThunk(
       `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "",
       {
         method: "POST",
-        signal: abortControllerObj && abortController.signal,
         headers: { "content-type": "application/json" },
         body: nextBody,
       }
     ).then((res) => res.json());
+
     if (nextResponse.error) return Promise.reject(nextResponse.error);
 
     if (nextResponse.data?.length) {
