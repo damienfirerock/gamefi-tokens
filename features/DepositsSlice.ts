@@ -2,21 +2,14 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { IProduct } from "../interfaces/IProduct";
 
+import { sortProductsByDescription } from "../utils/common";
+
 const { NEXT_PUBLIC_BACKEND_URL } = process.env;
 const ENDPOINT = "/api/v1/deposits";
 
 interface IDepositFilter {
   owner?: string;
 }
-
-// Deposits endpoint searches for deposits, but will link back to product details via tokenId
-const sortDepositsByDescription = (array: IProduct[]) => {
-  const nextArray = array.sort(
-    (a, b) => parseInt(a.description) - parseInt(b.description)
-  );
-
-  return nextArray;
-};
 
 // https://developer.mozilla.org/en-US/docs/Web/API/AbortController
 let abortController: any;
@@ -59,10 +52,100 @@ export const fetchDeposits = createAsyncThunk(
     if (response.error) return Promise.reject(response.error);
 
     if (response.data?.length) {
-      return sortDepositsByDescription(response.data);
+      return sortProductsByDescription(response.data);
     }
 
     return response.data;
+  }
+);
+
+export const updateDBAfterPokemonCenterDeposit = createAsyncThunk(
+  "get/updateDBAfterPokemonCenterDeposit",
+  async (props: {
+    tokenId: number;
+    txDetails: { transactionHash: string; from: string; to: string };
+  }) => {
+    const { tokenId, txDetails } = props;
+    const body = JSON.stringify({ tokenId, txDetails });
+
+    const response: any = await fetch(
+      `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}/add` || "",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body,
+      }
+    ).then((res) => res.json());
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    //The fetch() method returns a Promise that resolves regardless of whether the request is successful,
+    // unless there's a network error.
+    // In other words, the Promise isn't rejected even when the response has an HTTP 400 or 500 status code.
+    if (response.error) return Promise.reject(response.error);
+
+    const nextBody = JSON.stringify({ owner: txDetails.from });
+
+    const nextResponse: any = await fetch(
+      `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "",
+      {
+        method: "POST",
+        signal: abortControllerObj && abortController.signal,
+        headers: { "content-type": "application/json" },
+        body: nextBody,
+      }
+    ).then((res) => res.json());
+    if (nextResponse.error) return Promise.reject(nextResponse.error);
+
+    if (nextResponse.data?.length) {
+      return sortProductsByDescription(nextResponse.data);
+    }
+
+    return nextResponse.data;
+  }
+);
+
+export const updateDBAfterPokemonCenterWithdrawal = createAsyncThunk(
+  "get/updateDBAfterPokemonCenterWithdrawal",
+  async (props: {
+    tokenId: number;
+    txDetails: { transactionHash: string; from: string; to: string };
+  }) => {
+    const { tokenId, txDetails } = props;
+    const body = JSON.stringify({ tokenId, txDetails });
+
+    const response: any = await fetch(
+      `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}/remove` || "",
+      {
+        method: "DELETE",
+        headers: { "content-type": "application/json" },
+        body,
+      }
+    ).then((res) => res.json());
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    //The fetch() method returns a Promise that resolves regardless of whether the request is successful,
+    // unless there's a network error.
+    // In other words, the Promise isn't rejected even when the response has an HTTP 400 or 500 status code.
+    if (response.error) return Promise.reject(response.error);
+
+    const nextBody = JSON.stringify({ owner: txDetails.from });
+
+    const nextResponse: any = await fetch(
+      `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "",
+      {
+        method: "POST",
+        signal: abortControllerObj && abortController.signal,
+        headers: { "content-type": "application/json" },
+        body: nextBody,
+      }
+    ).then((res) => res.json());
+    if (nextResponse.error) return Promise.reject(nextResponse.error);
+
+    if (nextResponse.data?.length) {
+      return sortProductsByDescription(nextResponse.data);
+    }
+
+    return nextResponse.data;
   }
 );
 
@@ -106,6 +189,36 @@ export const DepositsSlice = createSlice({
         state.error = action.error.message;
       }
     });
+    builder.addCase(updateDBAfterPokemonCenterDeposit.pending, (state) => {
+      // Runs 'silently'
+    });
+    builder.addCase(
+      updateDBAfterPokemonCenterDeposit.fulfilled,
+      (state, action: { payload: IProduct[] }) => {
+        state.data = action.payload;
+      }
+    );
+    builder.addCase(
+      updateDBAfterPokemonCenterDeposit.rejected,
+      (state, action) => {
+        state.error = action.error.message;
+      }
+    );
+    builder.addCase(updateDBAfterPokemonCenterWithdrawal.pending, (state) => {
+      // Runs 'silently'
+    });
+    builder.addCase(
+      updateDBAfterPokemonCenterWithdrawal.fulfilled,
+      (state, action: { payload: IProduct[] }) => {
+        state.data = action.payload;
+      }
+    );
+    builder.addCase(
+      updateDBAfterPokemonCenterWithdrawal.rejected,
+      (state, action) => {
+        state.error = action.error.message;
+      }
+    );
   },
 });
 

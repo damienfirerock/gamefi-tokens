@@ -6,10 +6,11 @@ import {
   addPendingTransaction,
   removePendingTransaction,
 } from "../../features/TransactionsSlice";
+import { updateDBAfterTokenSalePurchase } from "../../features/ProductsSlice";
 import {
-  updateDBAfterTokenSalePurchase,
-  updateDBAfterPokemonCenterTransaction,
-} from "../../features/ProductsSlice";
+  updateDBAfterPokemonCenterDeposit,
+  updateDBAfterPokemonCenterWithdrawal,
+} from "../../features/DepositsSlice";
 import { TransactionType } from "../../interfaces/ITransaction";
 import useDispatchErrors from "./useDispatchErrors";
 
@@ -235,7 +236,7 @@ const useWeb3Transactions = () => {
 
     const dispatchAfterSuccess = () => {
       dispatch(
-        updateDBAfterPokemonCenterTransaction({
+        updateDBAfterPokemonCenterDeposit({
           tokenId,
           txDetails: { transactionHash, from, to },
         })
@@ -299,7 +300,7 @@ const useWeb3Transactions = () => {
 
     const dispatchAfterSuccess = () => {
       dispatch(
-        updateDBAfterPokemonCenterTransaction({
+        updateDBAfterPokemonCenterWithdrawal({
           tokenId,
           txDetails: { transactionHash, from, to },
         })

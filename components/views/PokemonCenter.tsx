@@ -60,10 +60,12 @@ const PokemonCenter: React.FunctionComponent<{ data: IProduct[] }> = () => {
   }, [account]);
 
   useEffect(() => {
-    if (!account || data === null) return;
+    if (!account || despositsData === null) return;
 
-    dispatch(fetchDeposits({ owner: account }));
-  }, [data?.length]);
+    // Fetch user pokemon when deposit length changes
+    // Implies that user has deposited/withdrawn to/from center
+    dispatch(fetchProducts({ owner: account }));
+  }, [despositsData?.length]);
 
   return (
     <Layout>
@@ -130,8 +132,6 @@ const PokemonCenter: React.FunctionComponent<{ data: IProduct[] }> = () => {
         </CardsBox>
 
         <PokePointBalance />
-
-        <StyledBox></StyledBox>
       </StyledContainer>
     </Layout>
   );
