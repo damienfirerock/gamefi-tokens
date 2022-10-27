@@ -164,13 +164,13 @@ const useWeb3Transactions = () => {
       dispatch(removePendingTransaction(nextTransaction));
     };
 
-    await setTimeout(async () => {
-      if (receipt) {
-        await dispatchAfterSuccess();
-      } else {
-        dispatchAfterFailure("Un-received Transaction");
-      }
-    }, 10000);
+    // await setTimeout(async () => {
+    if (receipt) {
+      await dispatchAfterSuccess();
+    } else {
+      dispatchAfterFailure("Un-received Transaction");
+    }
+    // }, 10000);
   };
 
   const depositPokemon = async (
@@ -410,13 +410,13 @@ const useWeb3Transactions = () => {
       dispatch(removePendingTransaction(nextTransaction));
     };
 
-    await setTimeout(() => {
-      if (receipt) {
-        dispatchAfterSuccess();
-      } else {
-        dispatchAfterFailure("Un-received Transaction");
-      }
-    }, 10000);
+    // await setTimeout(() => {
+    if (receipt) {
+      dispatchAfterSuccess();
+    } else {
+      dispatchAfterFailure("Un-received Transaction");
+    }
+    // }, 10000);
   };
 
   return {
