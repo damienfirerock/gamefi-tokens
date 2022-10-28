@@ -105,7 +105,7 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
                 : `There ${entrants?.length === 1 ? "is" : "are"} currently ${
                     entrants?.length || 0
                   } player${
-                    entrants?.length === 1 ? "s" : ""
+                    entrants?.length === 1 ? "" : "s"
                   } in the lucky draw`
             }
             variant="h4"
