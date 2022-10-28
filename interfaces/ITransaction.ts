@@ -7,6 +7,7 @@ export enum TransactionType {
   StakingWithdrawal = "Staking Withdrawal",
   StakingRedemption = "StakingRedemption",
   YieldWithdrawal = "YieldWithdrawal",
+  LuckyDraw = "LuckyDraw",
 }
 export interface ITransaction {
   from: string;
