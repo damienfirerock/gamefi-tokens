@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   BoxProps,
@@ -15,9 +15,9 @@ import { Header } from "../common";
 import LuckyDrawCard from "../product/LuckyDrawCard";
 import SkeletonPokemonCard from "../product/common/SkeletonPokemonCard";
 
-import { RootState } from "../../store";
+import { AppDispatch, RootState } from "../../store";
 import { fetchProducts } from "../../features/ProductsSlice";
-import { AppDispatch } from "../../store";
+import { fetchLuckyDrawEntrants } from "../../features/LuckyDrawEntrantsSlice";
 import { IProduct } from "../../interfaces/IProduct";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 
@@ -46,14 +46,18 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
   const productsSlice = useSelector((state: RootState) => state.products);
   const { loading, data } = productsSlice;
 
-  useEffect(() => {
-    if (!account) return;
+  const luckyDrawEntrantsSlice = useSelector(
+    (state: RootState) => state.luckyDrawEntrants
+  );
+  const { data: entrants, loading: entrantsLoading } = luckyDrawEntrantsSlice;
 
+  useEffect(() => {
     dispatch(
       fetchProducts({
         tokenId: process.env.NEXT_PUBLIC_LUCKYDRAW_PRIZE_TOKEN_ID || "",
       })
     );
+    dispatch(fetchLuckyDrawEntrants());
   }, [account]);
 
   return (
@@ -92,6 +96,19 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
             <Typography variant="h6">No prize currently :(</Typography>
           )}
         </CardsBox>
+
+        <StyledBox>
+          <Header
+            text={
+              entrantsLoading
+                ? "Getting Players..."
+                : `There are currently ${
+                    entrants?.length || 0
+                  } players in the lucky draw`
+            }
+            variant="h4"
+          />
+        </StyledBox>
       </StyledContainer>
     </Layout>
   );
