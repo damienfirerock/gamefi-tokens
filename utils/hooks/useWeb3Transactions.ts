@@ -429,7 +429,7 @@ const useWeb3Transactions = () => {
       tokenId,
       description,
       name,
-      type: TransactionType.StakingDeposit,
+      type: TransactionType.LuckyDrawEnter,
     };
 
     const dispatchAfterFailure = (error: any) => {
