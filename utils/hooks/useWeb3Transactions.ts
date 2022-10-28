@@ -18,6 +18,7 @@ const ThunderDomeNFTJson = require("../abis/ThunderDomeNFT.json");
 const NFTSaleJson = require("../abis/NFTSale.json");
 const PokemonCenterJson = require("../abis/PokemonCenter.json");
 const PokePointJson = require("../abis/PokePoint.json");
+const LuckyDrawJson = require("../abis/LuckyDraw.json");
 
 const { NEXT_PUBLIC_POKEPOINT_ADDRESS } = process.env;
 
@@ -419,6 +420,60 @@ const useWeb3Transactions = () => {
     // }, 10000);
   };
 
+  const enterLuckyDraw = async (
+    tokenId: number,
+    description: string,
+    name: string
+  ) => {
+    const nextTransaction = {
+      tokenId,
+      description,
+      name,
+      type: TransactionType.StakingDeposit,
+    };
+
+    const dispatchAfterFailure = (error: any) => {
+      dispatch(removePendingTransaction(nextTransaction));
+      sendTransactionErrorOnMetaMaskRequest(error);
+    };
+
+    const { signer } =
+      (await runPreTransactionChecks({
+        nextTransaction,
+        methodOnFailure: dispatchAfterFailure,
+      })) || {};
+
+    if (!signer) return; // errors should be caught in runPreTransactionChecks
+
+    const luckyDrawContract = new ethers.Contract(
+      process.env.NEXT_PUBLIC_LUCKY_DRAW_ADDRESS || "",
+      LuckyDrawJson.abi,
+      signer
+    );
+
+    let receipt: any;
+
+    try {
+      const transaction = await luckyDrawContract.enter();
+      receipt = await transaction.wait();
+    } catch (error: any) {
+      dispatchAfterFailure(error);
+      return;
+    }
+
+    const dispatchAfterSuccess = () => {
+      dispatch(removePendingTransaction(nextTransaction));
+    };
+
+    // await setTimeout(() => {
+    if (receipt) {
+      dispatchAfterSuccess();
+    } else {
+      dispatchAfterFailure("Un-received Transaction");
+    }
+    // }, 10000);
+  };
+
   return {
     purchaseNFT,
     depositPokemon,
@@ -426,6 +481,7 @@ const useWeb3Transactions = () => {
     enquirePokePointsBalance,
     calculatePokePointsYield,
     withdrawPokePointsYield,
+    enterLuckyDraw,
   };
 };
 
