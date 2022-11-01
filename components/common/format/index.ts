@@ -1,5 +1,3 @@
-import Header from './Header'
-import Paragraph from './Paragraph'
-import Section from './Section'
+import Header from "./Header";
 
-export { Header, Paragraph, Section }
+export { Header };
