@@ -41,6 +41,8 @@ const CardsBox = styled(Container)<ContainerProps>(({ theme }) => ({
   justifyContent: "center",
 }));
 
+const { NEXT_PUBLIC_POKEMON_CENTER_ADDRESS } = process.env;
+
 const PokemonCenter: React.FunctionComponent<{ data: IProduct[] }> = () => {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -75,9 +77,7 @@ const PokemonCenter: React.FunctionComponent<{ data: IProduct[] }> = () => {
           <Typography variant="h2">
             Pokemon{" "}
             <Link
-              href={
-                "https://goerli.etherscan.io/address/0x473B25e90d67Dd5A312fb78dA4Ff15E3960EeD4F#code"
-              }
+              href={`https://goerli.etherscan.io/address/${NEXT_PUBLIC_POKEMON_CENTER_ADDRESS}#code`}
               target="_blank"
               rel="noopener noreferrer"
             >

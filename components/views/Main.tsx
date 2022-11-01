@@ -37,6 +37,13 @@ const CardsBox = styled(Container)<ContainerProps>(({ theme }) => ({
   justifyContent: "center",
 }));
 
+// Destructuring here may cause error:
+// 'ReferenceError: process is not defined'
+const NEXT_PUBLIC_THUNDERDOME_NFT_ADDRESS =
+  process.env.NEXT_PUBLIC_THUNDERDOME_NFT_ADDRESS;
+const NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS =
+  process.env.NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS;
+
 const MainPage: React.FunctionComponent<{ data: IProduct[] }> = () => {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -59,9 +66,7 @@ const MainPage: React.FunctionComponent<{ data: IProduct[] }> = () => {
               <span>
                 These{" "}
                 <Link
-                  href={
-                    "https://goerli.etherscan.io/address/0x16377628d5c50aE40951D63134572AB32395677C#code"
-                  }
+                  href={`https://goerli.etherscan.io/address/${NEXT_PUBLIC_THUNDERDOME_NFT_ADDRESS}#code`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -69,9 +74,7 @@ const MainPage: React.FunctionComponent<{ data: IProduct[] }> = () => {
                 </Link>{" "}
                 are fighting{" "}
                 <Link
-                  href={
-                    "https://goerli.etherscan.io/address/0xfF0Cc93e85150e18BA66102469d6e3613dC8Ef9B#code"
-                  }
+                  href={`https://goerli.etherscan.io/address/${NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS}#code`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

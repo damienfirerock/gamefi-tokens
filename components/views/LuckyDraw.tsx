@@ -38,6 +38,8 @@ const CardsBox = styled(Container)<ContainerProps>(({ theme }) => ({
   justifyContent: "center",
 }));
 
+const { NEXT_PUBLIC_LUCKY_DRAW_ADDRESS } = process.env;
+
 const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -54,7 +56,7 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
   useEffect(() => {
     dispatch(
       fetchProducts({
-        tokenId: process.env.NEXT_PUBLIC_LUCKYDRAW_PRIZE_TOKEN_ID || "",
+        tokenId: process.env.NEXT_PUBLIC_LUCKY_DRAW_PRIZE_TOKEN_ID || "",
       })
     );
     dispatch(fetchLuckyDrawEntrants());
@@ -68,9 +70,7 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
           <Typography variant="h2">
             Lucky{" "}
             <Link
-              href={
-                "https://goerli.etherscan.io/address/0x473B25e90d67Dd5A312fb78dA4Ff15E3960EeD4F#code"
-              }
+              href={`https://goerli.etherscan.io/address/${NEXT_PUBLIC_LUCKY_DRAW_ADDRESS}#code`}
               target="_blank"
               rel="noopener noreferrer"
             >
