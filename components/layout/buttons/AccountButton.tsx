@@ -4,12 +4,13 @@ import Image from "next/image";
 import OilBarrelIcon from "@mui/icons-material/OilBarrel";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 import HouseIcon from "@mui/icons-material/House";
+import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import { styled } from "@mui/material/styles";
-import NextLink from "next/link";
 
 import MetaMaskButton from "./common/MetaMaskButton";
 import PopoverBox from "./common/PopoverBox";
 import MenuStyledButton from "./common/MenuStyledButton";
+import AccountLink from "./common/AccountLink";
 
 import useConnectWallet from "../../../utils/hooks/useConnectWallet";
 import { truncateString, handleOpenWindow } from "../../../utils/common";
@@ -127,27 +128,23 @@ const AccountButton: React.FunctionComponent = () => {
             </MenuStyledButton>
           </StyledBox>
 
-          <StyledBox>
-            <NextLink href="/pokemon-center" passHref>
-              <MenuStyledButton aria-describedby={id} variant="outlined">
-                <HouseIcon />
-                <Typography variant="h6" sx={{ marginLeft: 1 }}>
-                  Pokemon Center
-                </Typography>
-              </MenuStyledButton>
-            </NextLink>
-          </StyledBox>
+          <AccountLink
+            href="/pokemon-center"
+            text="Pokemon Center"
+            icon={<HouseIcon />}
+          />
 
-          <StyledBox>
-            <NextLink href="/lucky-draw" passHref>
-              <MenuStyledButton aria-describedby={id} variant="outlined">
-                <CelebrationIcon />
-                <Typography variant="h6" sx={{ marginLeft: 1 }}>
-                  Lucky Draw
-                </Typography>
-              </MenuStyledButton>
-            </NextLink>
-          </StyledBox>
+          <AccountLink
+            href="/lucky-draw"
+            text="Lucky Draw"
+            icon={<CelebrationIcon />}
+          />
+
+          <AccountLink
+            href="/market-place"
+            text="Market Place"
+            icon={<ShoppingBasketIcon />}
+          />
         </PopoverBox>
       </Popover>
     </>
