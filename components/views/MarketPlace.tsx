@@ -12,14 +12,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Layout from "../layout/Layout";
 import { Header } from "../common";
-import LuckyDrawCard from "../product/LuckyDrawCard";
 import SkeletonPokemonCard from "../product/common/SkeletonPokemonCard";
-import LoadingPokemonCards from "../product/LoadingPokemonCards";
 import DepositCard from "../product/DepositCard";
 
 import { AppDispatch, RootState } from "../../store";
 import { fetchProducts } from "../../features/ProductsSlice";
-import { fetchLuckyDrawEntrants } from "../../features/LuckyDrawEntrantsSlice";
+import { fetchMarketPlace } from "../../features/MarketPlaceSlice";
 import { IProduct } from "../../interfaces/IProduct";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 
@@ -47,6 +45,9 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
 
   const { account } = useConnectWallet();
 
+  const marketPlacelice = useSelector((state: RootState) => state.marketPlace);
+  const { loading: marketLoading, data: marketData } = marketPlacelice;
+
   const productsSlice = useSelector((state: RootState) => state.products);
   const { loading, data } = productsSlice;
 
@@ -54,6 +55,7 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
     if (!account) return;
 
     dispatch(fetchProducts({ owner: account }));
+    dispatch(fetchMarketPlace({ owner: NEXT_PUBLIC_MARKETPLACE_ADDRESS }));
   }, [account]);
 
   return (
@@ -74,23 +76,24 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
         </StyledBox>
         <StyledBox>
           <Header
-            // text={loading ? "Getting Prize..." : "Current Prize:"}
-            text="Available to Buy"
+            text={
+              marketLoading ? "Getting Market Data..." : "Available to Buy:"
+            }
             variant="h4"
           />
         </StyledBox>
 
-        {/* <CardsBox>
-          {loading ? (
+        <CardsBox>
+          {marketLoading ? (
             <SkeletonPokemonCard />
-          ) : data?.length ? (
-            data.map((element) => (
-              <LuckyDrawCard key={element.tokenId} {...element} />
+          ) : marketData?.length ? (
+            marketData.map((element) => (
+              <DepositCard key={element.tokenId} {...element} />
             ))
           ) : (
-            <Typography variant="h6">No prize currently :(</Typography>
+            <Typography variant="h6">No listings currently :(</Typography>
           )}
-        </CardsBox> */}
+        </CardsBox>
 
         <StyledBox>
           <Header
@@ -99,6 +102,18 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
             variant="h4"
           />
         </StyledBox>
+
+        {/* <CardsBox>
+          {loading ? (
+            <SkeletonPokemonCard />
+          ) : marketData?.length ? (
+            marketData.map((element) => (
+              <DepositCard key={element.tokenId} {...element} />
+            ))
+          ) : (
+            <Typography variant="h6">No listings currently :(</Typography>
+          )}
+        </CardsBox> */}
 
         <StyledBox>
           <Header
@@ -110,7 +125,7 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
         {/* Owned Pokemon */}
         <CardsBox>
           {loading ? (
-            <LoadingPokemonCards />
+            <SkeletonPokemonCard />
           ) : data?.length ? (
             data.map((element) => (
               <DepositCard key={element.tokenId} {...element} />
