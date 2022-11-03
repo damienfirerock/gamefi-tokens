@@ -1,13 +1,13 @@
 export enum TransactionType {
   TokenSalePurchase = "Token Sale Purchase",
   MarketPlaceOffer = "MarketPlace Offer",
-  MarketPlaceDeposit = "MarketPlace Deposit",
+  MarketPlaceListing = "MarketPlace Listing",
   LuckyDrawEnter = "Enter Lucky Draw",
   StakingDeposit = "Staking Deposit",
   StakingWithdrawal = "Staking Withdrawal",
-  StakingRedemption = "StakingRedemption",
-  YieldWithdrawal = "YieldWithdrawal",
-  LuckyDraw = "LuckyDraw",
+  StakingRedemption = "Staking Redemption",
+  YieldWithdrawal = "Yield Withdrawal",
+  LuckyDraw = "Lucky Draw",
 }
 export interface ITransaction {
   from: string;
