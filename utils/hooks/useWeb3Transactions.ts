@@ -147,7 +147,7 @@ const useWeb3Transactions = () => {
         methodOnFailure,
       })) || {};
 
-    if (!signer) return; // errors should be caught in runPreTransactionChecks
+    if (!signer) throw Error("Error getting account");
 
     const { address, abi } = contractDetails;
 
@@ -307,36 +307,29 @@ const useWeb3Transactions = () => {
       tokenId,
       description,
       name,
-      type: TransactionType.StakingDeposit,
+      type: TransactionType.StakingWithdrawal,
     };
 
-    const dispatchAfterFailure = (error: any) => {
-      dispatch(removePendingTransaction(nextTransaction));
-      sendTransactionErrorOnMetaMaskRequest(error);
+    const contractDetails = {
+      abi: PokemonCenterJson.abi,
+      address: NEXT_PUBLIC_POKEMON_CENTER_ADDRESS || "",
     };
 
-    const { signer } =
-      (await runPreTransactionChecks({
-        nextTransaction,
-        methodOnFailure: dispatchAfterFailure,
-      })) || {};
-
-    if (!signer) return; // errors should be caught in runPreTransactionChecks
-
-    const pokemonCenterContract = new ethers.Contract(
-      NEXT_PUBLIC_POKEMON_CENTER_ADDRESS || "",
-      PokemonCenterJson.abi,
-      signer
-    );
-
-    let transaction;
     let receipt: any;
 
     try {
-      transaction = await pokemonCenterContract.withdraw(tokenId);
-      receipt = await transaction.wait();
+      const pokemonCenterContract = await getContract(
+        nextTransaction,
+        contractDetails,
+        dispatchAfterTxnFailure(nextTransaction)
+      );
+
+      if (pokemonCenterContract) {
+        const transaction = await pokemonCenterContract.withdraw(tokenId);
+        receipt = await transaction.wait();
+      }
     } catch (error: any) {
-      dispatchAfterFailure(error);
+      dispatchAfterTxnFailure(nextTransaction)(error);
       return;
     }
 
@@ -357,7 +350,7 @@ const useWeb3Transactions = () => {
     if (receipt) {
       await dispatchAfterSuccess();
     } else {
-      dispatchAfterFailure("Un-received Transaction");
+      dispatchAfterTxnFailure(nextTransaction)("Un-received Transaction");
     }
     // }, 10000);
   };
@@ -415,38 +408,29 @@ const useWeb3Transactions = () => {
     return result;
   };
 
-  const withdrawPokePointsYield = async (address: string) => {
+  const withdrawPokePointsYield = async () => {
     const nextTransaction = {
       type: TransactionType.YieldWithdrawal,
     };
 
-    const dispatchAfterFailure = (error: any) => {
-      dispatch(removePendingTransaction(nextTransaction));
-      sendTransactionErrorOnMetaMaskRequest(error);
+    const contractDetails = {
+      abi: PokemonCenterJson.abi,
+      address: NEXT_PUBLIC_POKEMON_CENTER_ADDRESS || "",
     };
 
-    const { signer } =
-      (await runPreTransactionChecks({
-        nextTransaction,
-        methodOnFailure: dispatchAfterFailure,
-      })) || {};
-
-    if (!signer) return; // errors should be caught in runPreTransactionChecks
-
-    const pokemonCenterContract = new ethers.Contract(
-      NEXT_PUBLIC_POKEMON_CENTER_ADDRESS || "",
-      PokemonCenterJson.abi,
-      signer
-    );
-
-    let transaction;
     let receipt: any;
 
     try {
-      transaction = await pokemonCenterContract.withdrawYield();
+      const pokemonCenterContract = await getContract(
+        nextTransaction,
+        contractDetails,
+        dispatchAfterTxnFailure(nextTransaction)
+      );
+
+      const transaction = await pokemonCenterContract.withdrawYield();
       receipt = await transaction.wait();
     } catch (error: any) {
-      dispatchAfterFailure(error);
+      dispatchAfterTxnFailure(nextTransaction)(error);
       return;
     }
 
@@ -458,7 +442,7 @@ const useWeb3Transactions = () => {
     if (receipt) {
       dispatchAfterSuccess();
     } else {
-      dispatchAfterFailure("Un-received Transaction");
+      dispatchAfterTxnFailure(nextTransaction)("Un-received Transaction");
     }
     // }, 10000);
   };
