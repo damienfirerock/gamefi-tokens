@@ -19,17 +19,37 @@ const NFTSaleJson = require("../abis/NFTSale.json");
 const PokemonCenterJson = require("../abis/PokemonCenter.json");
 const PokePointJson = require("../abis/PokePoint.json");
 const LuckyDrawJson = require("../abis/LuckyDraw.json");
+const MarketPlaceJson = require("../abis/MarketPlace.json");
 
-const { NEXT_PUBLIC_POKEPOINT_ADDRESS } = process.env;
+const NEXT_PUBLIC_THUNDERDOME_NFT_ADDRESS =
+  process.env.NEXT_PUBLIC_THUNDERDOME_NFT_ADDRESS;
+const NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS =
+  process.env.NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS;
+const NEXT_PUBLIC_POKEPOINT_ADDRESS = process.env.NEXT_PUBLIC_POKEPOINT_ADDRESS;
+const NEXT_PUBLIC_POKEMON_CENTER_ADDRESS =
+  process.env.NEXT_PUBLIC_POKEMON_CENTER_ADDRESS;
+const NEXT_PUBLIC_LUCKY_DRAW_ADDRESS =
+  process.env.NEXT_PUBLIC_LUCKY_DRAW_ADDRESS;
+const NEXT_PUBLIC_MARKETPLACE_ADDRESS =
+  process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS;
+
+interface INextTransaction {
+  tokenId?: number;
+  description?: string;
+  name?: string;
+  type: TransactionType;
+}
 
 interface ITransactionCheck {
-  nextTransaction: {
-    tokenId?: number;
-    description?: string;
-    name?: string;
-    type: TransactionType;
-  };
+  nextTransaction: INextTransaction;
   methodOnFailure: (error: any) => void;
+}
+
+interface IContractDetails {
+  // Attempted to type with AbiItem[] from web3-utils
+  // but get error that it is incompatible with readonly (string | Fragment | JsonFragment)[]
+  abi: any[];
+  address: string;
 }
 
 const useWeb3Transactions = () => {
@@ -110,6 +130,33 @@ const useWeb3Transactions = () => {
     return { signer };
   };
 
+  const getContract = async (
+    nextTransaction: INextTransaction,
+    contractDetails: IContractDetails,
+    methodOnFailure: (error: any) => void
+  ) => {
+    const dispatchAfterFailure = (error: any) => {
+      dispatch(removePendingTransaction(nextTransaction));
+      methodOnFailure(error);
+    };
+
+    const { signer } =
+      (await runPreTransactionChecks({
+        nextTransaction,
+        methodOnFailure: dispatchAfterFailure,
+      })) || {};
+
+    if (!signer) return; // errors should be caught in runPreTransactionChecks
+
+    const { address, abi } = contractDetails;
+
+    const contract = new ethers.Contract(address, abi, signer);
+
+    if (!contract) throw Error("Error creating contract object");
+
+    return contract;
+  };
+
   const purchaseNFT = async (
     tokenId: number,
     description: string,
@@ -136,7 +183,7 @@ const useWeb3Transactions = () => {
     if (!signer) return; // errors should be caught in runPreTransactionChecks
 
     const tokenSaleContract = new ethers.Contract(
-      process.env.NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS || "",
+      NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS || "",
       NFTSaleJson.abi,
       signer
     );
@@ -203,14 +250,14 @@ const useWeb3Transactions = () => {
     let receipt: any;
 
     const thunderDomeNFTContract = new ethers.Contract(
-      process.env.NEXT_PUBLIC_THUNDERDOME_NFT_ADDRESS || "",
+      NEXT_PUBLIC_THUNDERDOME_NFT_ADDRESS || "",
       ThunderDomeNFTJson.abi,
       signer
     );
 
     try {
       transaction = await thunderDomeNFTContract.approve(
-        process.env.NEXT_PUBLIC_POKEMON_CENTER_ADDRESS,
+        NEXT_PUBLIC_POKEMON_CENTER_ADDRESS,
         tokenId
       );
       receipt = await transaction.wait();
@@ -220,7 +267,7 @@ const useWeb3Transactions = () => {
     }
 
     const pokemonCenterContract = new ethers.Contract(
-      process.env.NEXT_PUBLIC_POKEMON_CENTER_ADDRESS || "",
+      NEXT_PUBLIC_POKEMON_CENTER_ADDRESS || "",
       PokemonCenterJson.abi,
       signer
     );
@@ -281,7 +328,7 @@ const useWeb3Transactions = () => {
     if (!signer) return; // errors should be caught in runPreTransactionChecks
 
     const pokemonCenterContract = new ethers.Contract(
-      process.env.NEXT_PUBLIC_POKEMON_CENTER_ADDRESS || "",
+      NEXT_PUBLIC_POKEMON_CENTER_ADDRESS || "",
       PokemonCenterJson.abi,
       signer
     );
@@ -348,7 +395,7 @@ const useWeb3Transactions = () => {
     if (!signer) return; // errors should be caught in runPreTransactionChecks
 
     const pokemonCenterContract = new ethers.Contract(
-      process.env.NEXT_PUBLIC_POKEMON_CENTER_ADDRESS || "",
+      NEXT_PUBLIC_POKEMON_CENTER_ADDRESS || "",
       PokemonCenterJson.abi,
       signer
     );
@@ -391,7 +438,7 @@ const useWeb3Transactions = () => {
     if (!signer) return; // errors should be caught in runPreTransactionChecks
 
     const pokemonCenterContract = new ethers.Contract(
-      process.env.NEXT_PUBLIC_POKEMON_CENTER_ADDRESS || "",
+      NEXT_PUBLIC_POKEMON_CENTER_ADDRESS || "",
       PokemonCenterJson.abi,
       signer
     );
@@ -446,7 +493,7 @@ const useWeb3Transactions = () => {
     if (!signer) return; // errors should be caught in runPreTransactionChecks
 
     const luckyDrawContract = new ethers.Contract(
-      process.env.NEXT_PUBLIC_LUCKY_DRAW_ADDRESS || "",
+      NEXT_PUBLIC_LUCKY_DRAW_ADDRESS || "",
       LuckyDrawJson.abi,
       signer
     );
@@ -474,6 +521,59 @@ const useWeb3Transactions = () => {
     // }, 10000);
   };
 
+  const listOnMarketPlace = async (
+    tokenId: number,
+    description: string,
+    name: string
+  ) => {
+    const nextTransaction = {
+      tokenId,
+      description,
+      name,
+      type: TransactionType.MarketPlaceListing,
+    };
+
+    const dispatchAfterFailure = (error: any) => {
+      dispatch(removePendingTransaction(nextTransaction));
+      sendTransactionErrorOnMetaMaskRequest(error);
+    };
+
+    const contractDetails = {
+      abi: MarketPlaceJson.abi,
+      address: NEXT_PUBLIC_MARKETPLACE_ADDRESS || "",
+    };
+
+    let receipt: any;
+
+    try {
+      const luckyDrawContract = await getContract(
+        nextTransaction,
+        contractDetails,
+        dispatchAfterFailure
+      );
+
+      if (luckyDrawContract) {
+        const transaction = await luckyDrawContract.enter();
+        receipt = await transaction.wait();
+      }
+    } catch (error: any) {
+      dispatchAfterFailure(error);
+      return;
+    }
+
+    const dispatchAfterSuccess = () => {
+      dispatch(removePendingTransaction(nextTransaction));
+    };
+
+    // await setTimeout(() => {
+    if (receipt) {
+      dispatchAfterSuccess();
+    } else {
+      dispatchAfterFailure("Un-received Transaction");
+    }
+    // }, 10000);
+  };
+
   return {
     purchaseNFT,
     depositPokemon,
@@ -482,6 +582,7 @@ const useWeb3Transactions = () => {
     calculatePokePointsYield,
     withdrawPokePointsYield,
     enterLuckyDraw,
+    listOnMarketPlace,
   };
 };
 
