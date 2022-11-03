@@ -64,6 +64,20 @@ const useWeb3Transactions = () => {
       sendTransactionErrorOnMetaMaskRequest(error);
     };
 
+  const dispatchesUponReceipt = (
+    receipt: any,
+    dispatchAfterSuccess: () => void,
+    nextTransaction: INextTransaction
+  ) => {
+    // await setTimeout(() => {
+    if (receipt) {
+      dispatchAfterSuccess();
+    } else {
+      dispatchAfterTxnFailure(nextTransaction)("Un-received Transaction");
+    }
+    // }, 10000);
+  };
+
   const runPreChecks = async () => {
     const { ethereum } = window as any;
 
@@ -208,13 +222,7 @@ const useWeb3Transactions = () => {
       dispatch(removePendingTransaction(nextTransaction));
     };
 
-    // await setTimeout(async () => {
-    if (receipt) {
-      await dispatchAfterSuccess();
-    } else {
-      dispatchAfterTxnFailure(nextTransaction)("Un-received Transaction");
-    }
-    // }, 10000);
+    dispatchesUponReceipt(receipt, dispatchAfterSuccess, nextTransaction);
   };
 
   const depositPokemon = async (
@@ -289,13 +297,7 @@ const useWeb3Transactions = () => {
       dispatch(removePendingTransaction(nextTransaction));
     };
 
-    // await setTimeout(() => {
-    if (receipt) {
-      await dispatchAfterSuccess();
-    } else {
-      dispatchAfterTxnFailure(nextTransaction)("Un-received Transaction");
-    }
-    // }, 10000);
+    dispatchesUponReceipt(receipt, dispatchAfterSuccess, nextTransaction);
   };
 
   const withdrawPokemon = async (
@@ -346,13 +348,7 @@ const useWeb3Transactions = () => {
       dispatch(removePendingTransaction(nextTransaction));
     };
 
-    // await setTimeout(() => {
-    if (receipt) {
-      await dispatchAfterSuccess();
-    } else {
-      dispatchAfterTxnFailure(nextTransaction)("Un-received Transaction");
-    }
-    // }, 10000);
+    dispatchesUponReceipt(receipt, dispatchAfterSuccess, nextTransaction);
   };
 
   const enquirePokePointsBalance = async (address: string) => {
@@ -438,13 +434,7 @@ const useWeb3Transactions = () => {
       dispatch(removePendingTransaction(nextTransaction));
     };
 
-    // await setTimeout(() => {
-    if (receipt) {
-      dispatchAfterSuccess();
-    } else {
-      dispatchAfterTxnFailure(nextTransaction)("Un-received Transaction");
-    }
-    // }, 10000);
+    dispatchesUponReceipt(receipt, dispatchAfterSuccess, nextTransaction);
   };
 
   const enterLuckyDraw = async (
@@ -459,32 +449,24 @@ const useWeb3Transactions = () => {
       type: TransactionType.LuckyDrawEnter,
     };
 
-    const dispatchAfterFailure = (error: any) => {
-      dispatch(removePendingTransaction(nextTransaction));
-      sendTransactionErrorOnMetaMaskRequest(error);
+    const contractDetails = {
+      abi: LuckyDrawJson.abi,
+      address: NEXT_PUBLIC_LUCKY_DRAW_ADDRESS || "",
     };
-
-    const { signer } =
-      (await runPreTransactionChecks({
-        nextTransaction,
-        methodOnFailure: dispatchAfterFailure,
-      })) || {};
-
-    if (!signer) return; // errors should be caught in runPreTransactionChecks
-
-    const luckyDrawContract = new ethers.Contract(
-      NEXT_PUBLIC_LUCKY_DRAW_ADDRESS || "",
-      LuckyDrawJson.abi,
-      signer
-    );
 
     let receipt: any;
 
     try {
+      const luckyDrawContract = await getContract(
+        nextTransaction,
+        contractDetails,
+        dispatchAfterTxnFailure(nextTransaction)
+      );
+
       const transaction = await luckyDrawContract.enter();
       receipt = await transaction.wait();
     } catch (error: any) {
-      dispatchAfterFailure(error);
+      dispatchAfterTxnFailure(nextTransaction)(error);
       return;
     }
 
@@ -492,13 +474,7 @@ const useWeb3Transactions = () => {
       dispatch(removePendingTransaction(nextTransaction));
     };
 
-    // await setTimeout(() => {
-    if (receipt) {
-      dispatchAfterSuccess();
-    } else {
-      dispatchAfterFailure("Un-received Transaction");
-    }
-    // }, 10000);
+    dispatchesUponReceipt(receipt, dispatchAfterSuccess, nextTransaction);
   };
 
   const listOnMarketPlace = async (
@@ -513,11 +489,6 @@ const useWeb3Transactions = () => {
       type: TransactionType.MarketPlaceListing,
     };
 
-    const dispatchAfterFailure = (error: any) => {
-      dispatch(removePendingTransaction(nextTransaction));
-      sendTransactionErrorOnMetaMaskRequest(error);
-    };
-
     const contractDetails = {
       abi: MarketPlaceJson.abi,
       address: NEXT_PUBLIC_MARKETPLACE_ADDRESS || "",
@@ -529,7 +500,7 @@ const useWeb3Transactions = () => {
       const marketPlaceContract = await getContract(
         nextTransaction,
         contractDetails,
-        dispatchAfterFailure
+        dispatchAfterTxnFailure(nextTransaction)
       );
 
       if (marketPlaceContract) {
@@ -537,7 +508,7 @@ const useWeb3Transactions = () => {
         receipt = await transaction.wait();
       }
     } catch (error: any) {
-      dispatchAfterFailure(error);
+      dispatchAfterTxnFailure(nextTransaction)(error);
       return;
     }
 
@@ -545,13 +516,7 @@ const useWeb3Transactions = () => {
       dispatch(removePendingTransaction(nextTransaction));
     };
 
-    // await setTimeout(() => {
-    if (receipt) {
-      dispatchAfterSuccess();
-    } else {
-      dispatchAfterFailure("Un-received Transaction");
-    }
-    // }, 10000);
+    dispatchesUponReceipt(receipt, dispatchAfterSuccess, nextTransaction);
   };
 
   return {
