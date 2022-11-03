@@ -35,7 +35,7 @@ const PokePointBalance: React.FunctionComponent = () => {
   const withdrawYield = async () => {
     if (!account) return;
 
-    await withdrawPokePointsYield(account);
+    await withdrawPokePointsYield();
     await updatePokePointsBalance();
   };
 
