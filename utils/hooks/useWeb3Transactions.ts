@@ -58,6 +58,12 @@ const useWeb3Transactions = () => {
   const { sendTransactionError, sendTransactionErrorOnMetaMaskRequest } =
     useDispatchErrors();
 
+  const dispatchAfterTxnFailure =
+    (nextTransaction: INextTransaction) => (error: any) => {
+      dispatch(removePendingTransaction(nextTransaction));
+      sendTransactionErrorOnMetaMaskRequest(error);
+    };
+
   const runPreChecks = async () => {
     const { ethereum } = window as any;
 
@@ -135,15 +141,10 @@ const useWeb3Transactions = () => {
     contractDetails: IContractDetails,
     methodOnFailure: (error: any) => void
   ) => {
-    const dispatchAfterFailure = (error: any) => {
-      dispatch(removePendingTransaction(nextTransaction));
-      methodOnFailure(error);
-    };
-
     const { signer } =
       (await runPreTransactionChecks({
         nextTransaction,
-        methodOnFailure: dispatchAfterFailure,
+        methodOnFailure,
       })) || {};
 
     if (!signer) return; // errors should be caught in runPreTransactionChecks
@@ -169,33 +170,28 @@ const useWeb3Transactions = () => {
       type: TransactionType.TokenSalePurchase,
     };
 
-    const dispatchAfterFailure = (error: any) => {
-      dispatch(removePendingTransaction(nextTransaction));
-      sendTransactionErrorOnMetaMaskRequest(error);
+    const contractDetails = {
+      abi: NFTSaleJson.abi,
+      address: NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS || "",
     };
 
-    const { signer } =
-      (await runPreTransactionChecks({
-        nextTransaction,
-        methodOnFailure: dispatchAfterFailure,
-      })) || {};
-
-    if (!signer) return; // errors should be caught in runPreTransactionChecks
-
-    const tokenSaleContract = new ethers.Contract(
-      NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS || "",
-      NFTSaleJson.abi,
-      signer
-    );
-
-    let transaction;
     let receipt: any;
 
     try {
-      transaction = await tokenSaleContract.purchaseNFT(tokenId, { value: 5 });
-      receipt = await transaction.wait();
+      const tokenSaleContract = await getContract(
+        nextTransaction,
+        contractDetails,
+        dispatchAfterTxnFailure(nextTransaction)
+      );
+
+      if (tokenSaleContract) {
+        const transaction = await tokenSaleContract.purchaseNFT(tokenId, {
+          value: 5,
+        });
+        receipt = await transaction.wait();
+      }
     } catch (error: any) {
-      dispatchAfterFailure(error);
+      dispatchAfterTxnFailure(nextTransaction)(error);
       return;
     }
 
@@ -216,7 +212,7 @@ const useWeb3Transactions = () => {
     if (receipt) {
       await dispatchAfterSuccess();
     } else {
-      dispatchAfterFailure("Un-received Transaction");
+      dispatchAfterTxnFailure(nextTransaction)("Un-received Transaction");
     }
     // }, 10000);
   };
@@ -233,50 +229,50 @@ const useWeb3Transactions = () => {
       type: TransactionType.StakingDeposit,
     };
 
-    const dispatchAfterFailure = (error: any) => {
-      dispatch(removePendingTransaction(nextTransaction));
-      sendTransactionErrorOnMetaMaskRequest(error);
+    const contractDetails = {
+      abi: ThunderDomeNFTJson.abi,
+      address: NEXT_PUBLIC_THUNDERDOME_NFT_ADDRESS || "",
     };
 
-    const { signer } =
-      (await runPreTransactionChecks({
-        nextTransaction,
-        methodOnFailure: dispatchAfterFailure,
-      })) || {};
-
-    if (!signer) return; // errors should be caught in runPreTransactionChecks
-
-    let transaction;
     let receipt: any;
 
-    const thunderDomeNFTContract = new ethers.Contract(
-      NEXT_PUBLIC_THUNDERDOME_NFT_ADDRESS || "",
-      ThunderDomeNFTJson.abi,
-      signer
-    );
-
     try {
-      transaction = await thunderDomeNFTContract.approve(
-        NEXT_PUBLIC_POKEMON_CENTER_ADDRESS,
-        tokenId
+      const thunderDomeNFTContract = await getContract(
+        nextTransaction,
+        contractDetails,
+        dispatchAfterTxnFailure(nextTransaction)
       );
-      receipt = await transaction.wait();
+
+      if (thunderDomeNFTContract) {
+        const transaction = await thunderDomeNFTContract.approve(
+          NEXT_PUBLIC_POKEMON_CENTER_ADDRESS,
+          tokenId
+        );
+        receipt = await transaction.wait();
+      }
     } catch (error: any) {
-      dispatchAfterFailure(error);
+      dispatchAfterTxnFailure(nextTransaction)(error);
       return;
     }
 
-    const pokemonCenterContract = new ethers.Contract(
-      NEXT_PUBLIC_POKEMON_CENTER_ADDRESS || "",
-      PokemonCenterJson.abi,
-      signer
-    );
+    const nextContractDetails = {
+      abi: PokemonCenterJson.abi,
+      address: NEXT_PUBLIC_POKEMON_CENTER_ADDRESS || "",
+    };
 
     try {
-      transaction = await pokemonCenterContract.deposit(tokenId);
-      receipt = await transaction.wait();
+      const pokemonCenterContract = await getContract(
+        nextTransaction,
+        nextContractDetails,
+        dispatchAfterTxnFailure(nextTransaction)
+      );
+
+      if (pokemonCenterContract) {
+        const transaction = await pokemonCenterContract.deposit(tokenId);
+        receipt = await transaction.wait();
+      }
     } catch (error: any) {
-      dispatchAfterFailure(error);
+      dispatchAfterTxnFailure(nextTransaction)(error);
       return;
     }
 
@@ -297,7 +293,7 @@ const useWeb3Transactions = () => {
     if (receipt) {
       await dispatchAfterSuccess();
     } else {
-      dispatchAfterFailure("Un-received Transaction");
+      dispatchAfterTxnFailure(nextTransaction)("Un-received Transaction");
     }
     // }, 10000);
   };
@@ -546,14 +542,14 @@ const useWeb3Transactions = () => {
     let receipt: any;
 
     try {
-      const luckyDrawContract = await getContract(
+      const marketPlaceContract = await getContract(
         nextTransaction,
         contractDetails,
         dispatchAfterFailure
       );
 
-      if (luckyDrawContract) {
-        const transaction = await luckyDrawContract.enter();
+      if (marketPlaceContract) {
+        const transaction = await marketPlaceContract.makeListing(tokenId, 10);
         receipt = await transaction.wait();
       }
     } catch (error: any) {
