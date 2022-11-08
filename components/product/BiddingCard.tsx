@@ -10,12 +10,12 @@ import useWeb3Transactions from "../../utils/hooks/useWeb3Transactions";
 const BiddingCard: React.FunctionComponent<IProduct> = (props) => {
   const { name, description, tokenId, owner } = props;
 
-  const { listOnMarketPlace } = useWeb3Transactions();
+  const { bidInMarketPlace } = useWeb3Transactions();
 
   const { data } = useSelector((state: RootState) => state.listings);
 
   const handleClick = () => {
-    if (tokenId !== undefined) listOnMarketPlace(tokenId, description, name);
+    if (tokenId !== undefined) bidInMarketPlace(tokenId, description, name);
   };
 
   const disabled = !!data?.some((element) => element.tokenId === tokenId);

@@ -14,6 +14,7 @@ import {
 import {
   updateDBAfterMarketPlaceListing,
   updateDBAfterMarketPlaceWithdrawal,
+  updateDBAfterMarketPlaceBid,
 } from "../../features/ListingsSlice";
 import { TransactionType } from "../../interfaces/ITransaction";
 import useDispatchErrors from "./useDispatchErrors";
@@ -570,7 +571,7 @@ const useWeb3Transactions = () => {
       tokenId,
       description,
       name,
-      type: TransactionType.MarketPlaceListing,
+      type: TransactionType.MarketPlaceWithdrawal,
     };
 
     let receipt: any;
@@ -611,6 +612,58 @@ const useWeb3Transactions = () => {
     dispatchesUponReceipt(receipt, dispatchAfterSuccess, nextTransaction);
   };
 
+  const bidInMarketPlace = async (
+    tokenId: number,
+    description: string,
+    name: string
+  ) => {
+    const nextTransaction = {
+      tokenId,
+      description,
+      name,
+      type: TransactionType.MarketPlaceOffer,
+    };
+
+    let receipt: any;
+
+    const contractDetails = {
+      abi: MarketPlaceJson.abi,
+      address: NEXT_PUBLIC_MARKETPLACE_ADDRESS || "",
+    };
+
+    try {
+      const marketPlaceContract = await getContract(
+        nextTransaction,
+        contractDetails,
+        dispatchAfterTxnFailure(nextTransaction)
+      );
+
+      if (marketPlaceContract) {
+        const transaction = await marketPlaceContract.bid(tokenId, {
+          value: 10,
+        });
+        receipt = await transaction.wait();
+      }
+    } catch (error: any) {
+      dispatchAfterTxnFailure(nextTransaction)(error);
+      return;
+    }
+
+    const { transactionHash, from, to } = receipt || {};
+
+    const dispatchAfterSuccess = async () => {
+      await dispatch(
+        updateDBAfterMarketPlaceBid({
+          tokenId,
+          txDetails: { transactionHash, from, to },
+        })
+      );
+      dispatch(removePendingTransaction(nextTransaction));
+    };
+
+    dispatchesUponReceipt(receipt, dispatchAfterSuccess, nextTransaction);
+  };
+
   return {
     purchaseNFT,
     depositPokemon,
@@ -621,6 +674,7 @@ const useWeb3Transactions = () => {
     enterLuckyDraw,
     listOnMarketPlace,
     withdrawFromMarketPlace,
+    bidInMarketPlace,
   };
 };
 
