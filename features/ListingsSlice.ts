@@ -6,7 +6,7 @@ import { sortProductsByDescription } from "../utils/common";
 const { NEXT_PUBLIC_BACKEND_URL } = process.env;
 const ENDPOINT = "/api/v1/listings";
 
-interface IProductFilter {
+interface IListingsFilter {
   owner?: string;
   tokenId?: string;
 }
@@ -16,7 +16,7 @@ interface IProductFilter {
 // And filtering on the browser
 export const fetchListings = createAsyncThunk(
   "post/fetchListings",
-  async (payload?: IProductFilter) => {
+  async (payload?: IListingsFilter) => {
     const body = JSON.stringify(payload);
 
     const response: any = await fetch(
@@ -48,9 +48,10 @@ export const updateDBAfterMarketPlaceListing = createAsyncThunk(
   async (props: {
     tokenId: number;
     txDetails: { transactionHash: string; from: string; to: string };
+    offerPrice: number;
   }) => {
-    const { tokenId, txDetails } = props;
-    const body = JSON.stringify({ tokenId, txDetails });
+    const { txDetails } = props;
+    const body = JSON.stringify(props);
 
     const response: any = await fetch(
       `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}/add` || "",

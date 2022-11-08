@@ -495,6 +495,8 @@ const useWeb3Transactions = () => {
       address: NEXT_PUBLIC_THUNDERDOME_NFT_ADDRESS || "",
     };
 
+    const offerPrice = 10;
+
     let receipt: any;
 
     try {
@@ -529,7 +531,10 @@ const useWeb3Transactions = () => {
       );
 
       if (marketPlaceContract) {
-        const transaction = await marketPlaceContract.makeListing(tokenId, 10);
+        const transaction = await marketPlaceContract.makeListing(
+          tokenId,
+          offerPrice
+        );
         receipt = await transaction.wait();
       }
     } catch (error: any) {
@@ -544,6 +549,7 @@ const useWeb3Transactions = () => {
         updateDBAfterMarketPlaceListing({
           tokenId,
           txDetails: { transactionHash, from, to },
+          offerPrice,
         })
       );
       dispatch(removePendingTransaction(nextTransaction));
