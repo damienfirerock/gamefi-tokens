@@ -64,7 +64,7 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
     dispatch(
       fetchMarketPlaceProducts({ owner: NEXT_PUBLIC_MARKETPLACE_ADDRESS })
     );
-    dispatch(fetchListings({ owner: account }));
+    dispatch(fetchListings({ seller: account }));
     dispatch(fetchProducts({ owner: account }));
   }, [account]);
 

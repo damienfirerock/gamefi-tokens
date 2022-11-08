@@ -7,8 +7,7 @@ const { NEXT_PUBLIC_BACKEND_URL } = process.env;
 const ENDPOINT = "/api/v1/listings";
 
 interface IListingsFilter {
-  owner?: string;
-  tokenId?: string;
+  seller?: string;
 }
 
 // Essentially the same as fetchProducts in productsSlice
