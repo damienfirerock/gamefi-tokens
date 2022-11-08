@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Layout from "../layout/Layout";
 import { Header } from "../common";
 import SkeletonPokemonCard from "../product/common/SkeletonPokemonCard";
+import BiddingCard from "../product/BiddingCard";
 import ListingCard from "../product/ListingCard";
 import RemoveListingCard from "../product/RemoveListingCard";
 
@@ -108,7 +109,7 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
             <SkeletonPokemonCard />
           ) : marketPlaceProductsData?.length ? (
             marketPlaceProductsData.map((element) => (
-              <RemoveListingCard key={element.tokenId} {...element} />
+              <BiddingCard key={element.tokenId} {...element} />
             ))
           ) : (
             <Typography variant="h6">
