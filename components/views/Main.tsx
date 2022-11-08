@@ -72,7 +72,14 @@ const MainPage: React.FunctionComponent<{ data: IProduct[] }> = () => {
                 >
                   Pokemon
                 </Link>{" "}
-                are fighting{" "}
+                are{" "}
+                <Link
+                  href={`https://testnets.opensea.io/collection/thunderdomenft`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  fighting
+                </Link>{" "}
                 <Link
                   href={`https://goerli.etherscan.io/address/${NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS}#code`}
                   target="_blank"
