@@ -100,6 +100,8 @@ const displayOwner = (address: string) => {
       return "Pokemon Center";
     case process.env.NEXT_PUBLIC_LUCKY_DRAW_ADDRESS:
       return "Lucky Draw";
+    case process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS:
+      return "Market Place";
     default:
       return truncateString(address);
   }

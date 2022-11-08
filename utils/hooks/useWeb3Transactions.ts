@@ -491,16 +491,40 @@ const useWeb3Transactions = () => {
     };
 
     const contractDetails = {
-      abi: MarketPlaceJson.abi,
-      address: NEXT_PUBLIC_MARKETPLACE_ADDRESS || "",
+      abi: ThunderDomeNFTJson.abi,
+      address: NEXT_PUBLIC_THUNDERDOME_NFT_ADDRESS || "",
     };
 
     let receipt: any;
 
     try {
-      const marketPlaceContract = await getContract(
+      const thunderDomeNFTContract = await getContract(
         nextTransaction,
         contractDetails,
+        dispatchAfterTxnFailure(nextTransaction)
+      );
+
+      if (thunderDomeNFTContract) {
+        const transaction = await thunderDomeNFTContract.approve(
+          NEXT_PUBLIC_MARKETPLACE_ADDRESS,
+          tokenId
+        );
+        receipt = await transaction.wait();
+      }
+    } catch (error: any) {
+      dispatchAfterTxnFailure(nextTransaction)(error);
+      return;
+    }
+
+    const nextContractDetails = {
+      abi: MarketPlaceJson.abi,
+      address: NEXT_PUBLIC_MARKETPLACE_ADDRESS || "",
+    };
+
+    try {
+      const marketPlaceContract = await getContract(
+        nextTransaction,
+        nextContractDetails,
         dispatchAfterTxnFailure(nextTransaction)
       );
 
