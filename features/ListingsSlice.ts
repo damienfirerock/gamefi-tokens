@@ -43,6 +43,50 @@ export const fetchListings = createAsyncThunk(
   }
 );
 
+export const updateDBAfterMarketPlaceListing = createAsyncThunk(
+  "get/updateDBAfterMarketPlaceListing",
+  async (props: {
+    tokenId: number;
+    txDetails: { transactionHash: string; from: string; to: string };
+  }) => {
+    const { tokenId, txDetails } = props;
+    const body = JSON.stringify({ tokenId, txDetails });
+
+    const response: any = await fetch(
+      `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}/add` || "",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body,
+      }
+    ).then((res) => res.json());
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    //The fetch() method returns a Promise that resolves regardless of whether the request is successful,
+    // unless there's a network error.
+    // In other words, the Promise isn't rejected even when the response has an HTTP 400 or 500 status code.
+    if (response.error) return Promise.reject(response.error);
+
+    const nextBody = JSON.stringify({ owner: txDetails.from });
+
+    const nextResponse: any = await fetch(
+      `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: nextBody,
+      }
+    ).then((res) => res.json());
+    if (nextResponse.error) return Promise.reject(nextResponse.error);
+
+    if (nextResponse.data?.length) {
+      return sortProductsByDescription(nextResponse.data);
+    }
+
+    return nextResponse.data;
+  }
+);
+
 type SliceState = {
   error?: null | string;
   loading: boolean;
@@ -84,6 +128,21 @@ export const ListingsSlice = createSlice({
         state.error = action.error.message;
       }
     });
+    builder.addCase(updateDBAfterMarketPlaceListing.pending, (state) => {
+      // Runs 'silently'
+    });
+    builder.addCase(
+      updateDBAfterMarketPlaceListing.fulfilled,
+      (state, action: { payload: IProduct[] }) => {
+        state.data = action.payload;
+      }
+    );
+    builder.addCase(
+      updateDBAfterMarketPlaceListing.rejected,
+      (state, action) => {
+        state.error = action.error.message;
+      }
+    );
   },
 });
 

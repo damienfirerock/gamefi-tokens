@@ -11,6 +11,7 @@ import {
   updateDBAfterPokemonCenterDeposit,
   updateDBAfterPokemonCenterWithdrawal,
 } from "../../features/DepositsSlice";
+import { updateDBAfterMarketPlaceListing } from "../../features/ListingsSlice";
 import { TransactionType } from "../../interfaces/ITransaction";
 import useDispatchErrors from "./useDispatchErrors";
 
@@ -512,7 +513,15 @@ const useWeb3Transactions = () => {
       return;
     }
 
-    const dispatchAfterSuccess = () => {
+    const { transactionHash, from, to } = receipt || {};
+
+    const dispatchAfterSuccess = async () => {
+      await dispatch(
+        updateDBAfterMarketPlaceListing({
+          tokenId,
+          txDetails: { transactionHash, from, to },
+        })
+      );
       dispatch(removePendingTransaction(nextTransaction));
     };
 
