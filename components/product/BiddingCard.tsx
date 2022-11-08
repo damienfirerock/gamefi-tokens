@@ -22,7 +22,7 @@ const BiddingCard: React.FunctionComponent<IProduct> = (props) => {
   };
 
   const tokenDetails = offers?.find((element) => element.tokenId === tokenId);
-  console.log({ offers });
+
   const disabled =
     // Disable if pokemon is owner's listing
     !!data?.some((element) => element.tokenId === tokenId) ||

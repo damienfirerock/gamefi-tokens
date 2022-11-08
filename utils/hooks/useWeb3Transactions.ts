@@ -11,10 +11,10 @@ import {
   updateDBAfterPokemonCenterDeposit,
   updateDBAfterPokemonCenterWithdrawal,
 } from "../../features/DepositsSlice";
+import { updateDBAfterMarketPlaceBid } from "../../features/MarketPlaceProductsSlice";
 import {
   updateDBAfterMarketPlaceListing,
   updateDBAfterMarketPlaceWithdrawal,
-  updateDBAfterMarketPlaceBid,
 } from "../../features/ListingsSlice";
 import { TransactionType } from "../../interfaces/ITransaction";
 import useDispatchErrors from "./useDispatchErrors";

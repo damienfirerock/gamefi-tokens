@@ -5,6 +5,8 @@ import { IProduct } from "../interfaces/IProduct";
 import { sortProductsByDescription } from "../utils/common";
 
 const { NEXT_PUBLIC_BACKEND_URL } = process.env;
+const NEXT_PUBLIC_MARKETPLACE_ADDRESS =
+  process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS;
 const ENDPOINT = "/api/v1/products";
 
 interface IProductFilter {
@@ -61,6 +63,38 @@ export const fetchMarketPlaceProducts = createAsyncThunk(
   }
 );
 
+export const updateDBAfterMarketPlaceBid = createAsyncThunk(
+  "get/updateDBAfterMarketPlaceBid",
+  async (props: {
+    tokenId: number;
+    txDetails: { transactionHash: string; from: string; to: string };
+  }) => {
+    const { txDetails } = props;
+    const body = JSON.stringify(props);
+
+    const response: any = await fetch(
+      `${NEXT_PUBLIC_BACKEND_URL}/api/v1/listings/update` || "",
+      {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body,
+      }
+    ).then((res) => res.json());
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    //The fetch() method returns a Promise that resolves regardless of whether the request is successful,
+    // unless there's a network error.
+    // In other words, the Promise isn't rejected even when the response has an HTTP 400 or 500 status code.
+    if (response.error) return Promise.reject(response.error);
+
+    const data = await getProductsAndListings({
+      owner: NEXT_PUBLIC_MARKETPLACE_ADDRESS,
+    });
+    console.log({ data });
+    return data;
+  }
+);
+
 type SliceState = {
   error?: null | string;
   loading: boolean;
@@ -104,6 +138,16 @@ export const MarketPlaceProductsSlice = createSlice({
         state.loading = false;
         state.error = action.error.message;
       }
+    });
+    builder.addCase(updateDBAfterMarketPlaceBid.pending, (state) => {
+      // Runs 'silently'
+    });
+    builder.addCase(updateDBAfterMarketPlaceBid.fulfilled, (state, action) => {
+      state.data = action.payload?.data || null;
+      state.details = action.payload?.details || null;
+    });
+    builder.addCase(updateDBAfterMarketPlaceBid.rejected, (state, action) => {
+      state.error = action.error.message;
     });
   },
 });
