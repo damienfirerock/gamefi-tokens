@@ -15,6 +15,7 @@ import { updateDBAfterMarketPlaceBid } from "../../features/MarketPlaceProductsS
 import {
   updateDBAfterMarketPlaceListing,
   updateDBAfterMarketPlaceWithdrawal,
+  updateDBAfterMarketPlaceAccept,
 } from "../../features/ListingsSlice";
 import { TransactionType } from "../../interfaces/ITransaction";
 import useDispatchErrors from "./useDispatchErrors";
@@ -664,6 +665,56 @@ const useWeb3Transactions = () => {
     dispatchesUponReceipt(receipt, dispatchAfterSuccess, nextTransaction);
   };
 
+  const acceptInMarketPlace = async (
+    tokenId: number,
+    description: string,
+    name: string
+  ) => {
+    const nextTransaction = {
+      tokenId,
+      description,
+      name,
+      type: TransactionType.MarketPlaceAccept,
+    };
+
+    let receipt: any;
+
+    const contractDetails = {
+      abi: MarketPlaceJson.abi,
+      address: NEXT_PUBLIC_MARKETPLACE_ADDRESS || "",
+    };
+
+    try {
+      const marketPlaceContract = await getContract(
+        nextTransaction,
+        contractDetails,
+        dispatchAfterTxnFailure(nextTransaction)
+      );
+
+      if (marketPlaceContract) {
+        const transaction = await marketPlaceContract.acceptOffer(tokenId);
+        receipt = await transaction.wait();
+      }
+    } catch (error: any) {
+      dispatchAfterTxnFailure(nextTransaction)(error);
+      return;
+    }
+
+    const { transactionHash, from, to } = receipt || {};
+
+    const dispatchAfterSuccess = async () => {
+      await dispatch(
+        updateDBAfterMarketPlaceAccept({
+          tokenId,
+          txDetails: { transactionHash, from, to },
+        })
+      );
+      dispatch(removePendingTransaction(nextTransaction));
+    };
+
+    dispatchesUponReceipt(receipt, dispatchAfterSuccess, nextTransaction);
+  };
+
   return {
     purchaseNFT,
     depositPokemon,
@@ -675,6 +726,7 @@ const useWeb3Transactions = () => {
     listOnMarketPlace,
     withdrawFromMarketPlace,
     bidInMarketPlace,
+    acceptInMarketPlace,
   };
 };
 
