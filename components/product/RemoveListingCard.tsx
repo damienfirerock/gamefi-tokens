@@ -5,13 +5,14 @@ import PokemonCard from "./common/PokemonCard";
 import { IProduct } from "../../interfaces/IProduct";
 import useWeb3Transactions from "../../utils/hooks/useWeb3Transactions";
 
-const ListingCard: React.FunctionComponent<IProduct> = (props) => {
-  const { name, description, tokenId, owner } = props;
+const RemoveListingCard: React.FunctionComponent<IProduct> = (props) => {
+  const { name, description, tokenId } = props;
 
-  const { listOnMarketPlace } = useWeb3Transactions();
+  const { withdrawFromMarketPlace } = useWeb3Transactions();
 
   const handleClick = () => {
-    if (tokenId !== undefined) listOnMarketPlace(tokenId, description, name);
+    if (tokenId !== undefined)
+      withdrawFromMarketPlace(tokenId, description, name);
   };
 
   const disabled = false;
@@ -19,11 +20,11 @@ const ListingCard: React.FunctionComponent<IProduct> = (props) => {
   return (
     <PokemonCard
       disabled={disabled}
-      buttonText="list"
+      buttonText="withdraw"
       handleClick={handleClick}
       {...props}
     />
   );
 };
 
-export default ListingCard;
+export default RemoveListingCard;

@@ -14,6 +14,7 @@ import Layout from "../layout/Layout";
 import { Header } from "../common";
 import SkeletonPokemonCard from "../product/common/SkeletonPokemonCard";
 import ListingCard from "../product/ListingCard";
+import RemoveListingCard from "../product/RemoveListingCard";
 
 import { AppDispatch, RootState } from "../../store";
 import { fetchProducts } from "../../features/ProductsSlice";
@@ -100,7 +101,7 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
             <SkeletonPokemonCard />
           ) : marketPlaceProductsData?.length ? (
             marketPlaceProductsData.map((element) => (
-              <ListingCard key={element.tokenId} {...element} />
+              <RemoveListingCard key={element.tokenId} {...element} />
             ))
           ) : (
             <Typography variant="h6">
@@ -122,7 +123,7 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
             <SkeletonPokemonCard />
           ) : listingsData?.length ? (
             listingsData.map((element) => (
-              <ListingCard key={element.tokenId} {...element} />
+              <RemoveListingCard key={element.tokenId} {...element} />
             ))
           ) : (
             <Typography variant="h6">No listings currently :(</Typography>
