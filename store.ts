@@ -4,7 +4,7 @@ import depositsReducer from "./features/DepositsSlice";
 import productsReducer from "./features/ProductsSlice";
 import transactionsReducer from "./features/TransactionsSlice";
 import luckyDrawEntrantsReducer from "./features/LuckyDrawEntrantsSlice";
-import marketPlaceReducer from "./features/MarketPlaceSlice";
+import listingsReducer from "./features/ListingsSlice";
 
 const store = configureStore({
   reducer: {
@@ -12,7 +12,7 @@ const store = configureStore({
     products: productsReducer,
     transactions: transactionsReducer,
     luckyDrawEntrants: luckyDrawEntrantsReducer,
-    marketPlace: marketPlaceReducer,
+    listings: listingsReducer,
   },
 });
 

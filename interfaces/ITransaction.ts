@@ -2,6 +2,7 @@ export enum TransactionType {
   TokenSalePurchase = "Token Sale Purchase",
   MarketPlaceOffer = "MarketPlace Offer",
   MarketPlaceListing = "MarketPlace Listing",
+  MarketPlaceWithdrawal = "MarketPlace Withdrawal",
   LuckyDrawEnter = "Enter Lucky Draw",
   StakingDeposit = "Staking Deposit",
   StakingWithdrawal = "Staking Withdrawal",

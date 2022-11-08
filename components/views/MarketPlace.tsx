@@ -13,11 +13,11 @@ import { useDispatch, useSelector } from "react-redux";
 import Layout from "../layout/Layout";
 import { Header } from "../common";
 import SkeletonPokemonCard from "../product/common/SkeletonPokemonCard";
-import DepositCard from "../product/DepositCard";
+import ListingCard from "../product/ListingCard";
 
 import { AppDispatch, RootState } from "../../store";
 import { fetchProducts } from "../../features/ProductsSlice";
-import { fetchMarketPlace } from "../../features/MarketPlaceSlice";
+import { fetchMarketPlace } from "../../features/ListingsSlice";
 import { IProduct } from "../../interfaces/IProduct";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 
@@ -45,8 +45,8 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
 
   const { account } = useConnectWallet();
 
-  const marketPlacelice = useSelector((state: RootState) => state.marketPlace);
-  const { loading: marketLoading, data: marketData } = marketPlacelice;
+  const listingsSlice = useSelector((state: RootState) => state.listings);
+  const { loading: listingsLoading, data: listingsData } = listingsSlice;
 
   const productsSlice = useSelector((state: RootState) => state.products);
   const { loading, data } = productsSlice;
@@ -77,22 +77,22 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
         <StyledBox>
           <Header
             text={
-              marketLoading ? "Getting Market Data..." : "Available to Buy:"
+              listingsLoading ? "Getting Market Data..." : "Available to Buy:"
             }
             variant="h4"
           />
         </StyledBox>
 
         <CardsBox>
-          {marketLoading ? (
+          {/* {listingsLoading ? (
             <SkeletonPokemonCard />
-          ) : marketData?.length ? (
-            marketData.map((element) => (
-              <DepositCard key={element.tokenId} {...element} />
+          ) : listingsData?.length ? (
+            listingsData.map((element) => (
+              <ListingCard key={element.tokenId} {...element} />
             ))
           ) : (
             <Typography variant="h6">No listings currently :(</Typography>
-          )}
+          )} */}
         </CardsBox>
 
         <StyledBox>
@@ -103,17 +103,17 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
           />
         </StyledBox>
 
-        {/* <CardsBox>
-          {loading ? (
+        <CardsBox>
+          {listingsLoading ? (
             <SkeletonPokemonCard />
-          ) : marketData?.length ? (
-            marketData.map((element) => (
-              <DepositCard key={element.tokenId} {...element} />
+          ) : listingsData?.length ? (
+            listingsData.map((element) => (
+              <ListingCard key={element.tokenId} {...element} />
             ))
           ) : (
             <Typography variant="h6">No listings currently :(</Typography>
           )}
-        </CardsBox> */}
+        </CardsBox>
 
         <StyledBox>
           <Header
@@ -128,7 +128,7 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
             <SkeletonPokemonCard />
           ) : data?.length ? (
             data.map((element) => (
-              <DepositCard key={element.tokenId} {...element} />
+              <ListingCard key={element.tokenId} {...element} />
             ))
           ) : (
             <Typography variant="h6">You have no pokemon yet :(</Typography>

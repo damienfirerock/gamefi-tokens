@@ -4,7 +4,7 @@ import { IProduct } from "../interfaces/IProduct";
 import { sortProductsByDescription } from "../utils/common";
 
 const { NEXT_PUBLIC_BACKEND_URL } = process.env;
-const ENDPOINT = "/api/v1/products";
+const ENDPOINT = "/api/v1/listings";
 
 interface IProductFilter {
   owner?: string;
