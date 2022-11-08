@@ -62,12 +62,19 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
   useEffect(() => {
     if (!account) return;
 
+    dispatch(fetchProducts({ owner: account }));
+  }, [account]);
+
+  // Fetches User and MarketPlace Products after changes in marketPlaceProductsData
+  // marketPlaceProductsData changes after initial fetch, as well as changes to number of listings
+  useEffect(() => {
+    if (!account) return;
+
     dispatch(
       fetchMarketPlaceProducts({ owner: NEXT_PUBLIC_MARKETPLACE_ADDRESS })
     );
-    dispatch(fetchListings({ seller: account }));
     dispatch(fetchProducts({ owner: account }));
-  }, [account]);
+  }, [listingsData?.length, account]);
 
   return (
     <Layout>
