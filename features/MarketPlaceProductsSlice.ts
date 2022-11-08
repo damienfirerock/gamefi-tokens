@@ -4,7 +4,7 @@ import { IProduct } from "../interfaces/IProduct";
 import { sortProductsByDescription } from "../utils/common";
 
 const { NEXT_PUBLIC_BACKEND_URL } = process.env;
-const ENDPOINT = "/api/v1/listings";
+const ENDPOINT = "/api/v1/products";
 
 interface IProductFilter {
   owner?: string;
@@ -14,8 +14,8 @@ interface IProductFilter {
 // Essentially the same as fetchProducts in productsSlice
 // But it is probably better to separate the two slices instead of getting all the data
 // And filtering on the browser
-export const fetchListings = createAsyncThunk(
-  "post/fetchListings",
+export const fetchMarketPlaceProducts = createAsyncThunk(
+  "post/fetchMarketPlaceProducts",
   async (payload?: IProductFilter) => {
     const body = JSON.stringify(payload);
 
@@ -23,7 +23,6 @@ export const fetchListings = createAsyncThunk(
       `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "",
       {
         method: "POST",
-
         headers: { "content-type": "application/json" },
         body,
       }
@@ -56,28 +55,28 @@ const initialState: SliceState = {
   data: null,
 };
 
-export const ListingsSlice = createSlice({
-  name: "Listings",
+export const MarketPlaceProductsSlice = createSlice({
+  name: "MarketPlace",
   initialState,
   reducers: {
-    clearListings: (state) => {
+    clearMarketPlaceProducts: (state) => {
       state.data = null;
       state.error = null;
       state.loading = false;
     },
   },
   extraReducers: (builder) => {
-    // Fetching Listings after Search
-    builder.addCase(fetchListings.pending, (state) => {
+    // Fetching MarketPlace after Search
+    builder.addCase(fetchMarketPlaceProducts.pending, (state) => {
       state.data = null;
       state.loading = true;
       state.error = null;
     });
-    builder.addCase(fetchListings.fulfilled, (state, action) => {
+    builder.addCase(fetchMarketPlaceProducts.fulfilled, (state, action) => {
       state.loading = false;
       state.data = action.payload;
     });
-    builder.addCase(fetchListings.rejected, (state, action) => {
+    builder.addCase(fetchMarketPlaceProducts.rejected, (state, action) => {
       // If abortController.abort(), error name will be 'AbortError'
       if (action.error.name !== "AbortError") {
         state.loading = false;
@@ -87,6 +86,6 @@ export const ListingsSlice = createSlice({
   },
 });
 
-export const { clearListings } = ListingsSlice.actions;
+export const { clearMarketPlaceProducts } = MarketPlaceProductsSlice.actions;
 
-export default ListingsSlice.reducer;
+export default MarketPlaceProductsSlice.reducer;

@@ -5,6 +5,7 @@ import productsReducer from "./features/ProductsSlice";
 import transactionsReducer from "./features/TransactionsSlice";
 import luckyDrawEntrantsReducer from "./features/LuckyDrawEntrantsSlice";
 import listingsReducer from "./features/ListingsSlice";
+import marketPlaceProductsReducer from "./features/MarketPlaceProductsSlice";
 
 const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ const store = configureStore({
     transactions: transactionsReducer,
     luckyDrawEntrants: luckyDrawEntrantsReducer,
     listings: listingsReducer,
+    marketPlaceProducts: marketPlaceProductsReducer,
   },
 });
 

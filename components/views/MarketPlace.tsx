@@ -17,7 +17,8 @@ import ListingCard from "../product/ListingCard";
 
 import { AppDispatch, RootState } from "../../store";
 import { fetchProducts } from "../../features/ProductsSlice";
-import { fetchMarketPlace } from "../../features/ListingsSlice";
+import { fetchListings } from "../../features/ListingsSlice";
+import { fetchMarketPlaceProducts } from "../../features/MarketPlaceProductsSlice";
 import { IProduct } from "../../interfaces/IProduct";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 
@@ -45,6 +46,12 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
 
   const { account } = useConnectWallet();
 
+  const marketPlaceProductsSlice = useSelector(
+    (state: RootState) => state.marketPlaceProducts
+  );
+  const { loading: marketPlaceProductsLoading, data: marketPlaceProductsData } =
+    marketPlaceProductsSlice;
+
   const listingsSlice = useSelector((state: RootState) => state.listings);
   const { loading: listingsLoading, data: listingsData } = listingsSlice;
 
@@ -54,8 +61,11 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
   useEffect(() => {
     if (!account) return;
 
+    dispatch(
+      fetchMarketPlaceProducts({ owner: NEXT_PUBLIC_MARKETPLACE_ADDRESS })
+    );
+    dispatch(fetchListings({ owner: account }));
     dispatch(fetchProducts({ owner: account }));
-    dispatch(fetchMarketPlace({ owner: NEXT_PUBLIC_MARKETPLACE_ADDRESS }));
   }, [account]);
 
   return (
@@ -77,22 +87,26 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
         <StyledBox>
           <Header
             text={
-              listingsLoading ? "Getting Market Data..." : "Available to Buy:"
+              marketPlaceProductsLoading
+                ? "Getting Market Data..."
+                : "Available to Buy:"
             }
             variant="h4"
           />
         </StyledBox>
 
         <CardsBox>
-          {/* {listingsLoading ? (
+          {marketPlaceProductsLoading ? (
             <SkeletonPokemonCard />
-          ) : listingsData?.length ? (
-            listingsData.map((element) => (
+          ) : marketPlaceProductsData?.length ? (
+            marketPlaceProductsData.map((element) => (
               <ListingCard key={element.tokenId} {...element} />
             ))
           ) : (
-            <Typography variant="h6">No listings currently :(</Typography>
-          )} */}
+            <Typography variant="h6">
+              No listings currently on the market place :(
+            </Typography>
+          )}
         </CardsBox>
 
         <StyledBox>
