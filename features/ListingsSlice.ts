@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { IProduct } from "../interfaces/IProduct";
+import { IListing } from "../interfaces/IListing";
 import { sortProductsByDescription } from "../utils/common";
 
 const { NEXT_PUBLIC_BACKEND_URL } = process.env;
@@ -10,35 +11,43 @@ interface IListingsFilter {
   seller?: string;
 }
 
+const getListings = async (payload?: IListingsFilter) => {
+  const body = JSON.stringify(payload);
+
+  const response: any = await fetch(
+    `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "",
+    {
+      method: "POST",
+
+      headers: { "content-type": "application/json" },
+      body,
+    }
+  ).then((res) => res.json());
+
+  // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+  //The fetch() method returns a Promise that resolves regardless of whether the request is successful,
+  // unless there's a network error.
+  // In other words, the Promise isn't rejected even when the response has an HTTP 400 or 500 status code.
+  if (response.error) return Promise.reject(response.error);
+
+  if (response.data?.length) {
+    return {
+      data: sortProductsByDescription(response.data),
+      details: response.details,
+    };
+  }
+
+  return null;
+};
+
 // Essentially the same as fetchProducts in productsSlice
 // But it is probably better to separate the two slices instead of getting all the data
 // And filtering on the browser
 export const fetchListings = createAsyncThunk(
   "post/fetchListings",
   async (payload?: IListingsFilter) => {
-    const body = JSON.stringify(payload);
-
-    const response: any = await fetch(
-      `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "",
-      {
-        method: "POST",
-
-        headers: { "content-type": "application/json" },
-        body,
-      }
-    ).then((res) => res.json());
-
-    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-    //The fetch() method returns a Promise that resolves regardless of whether the request is successful,
-    // unless there's a network error.
-    // In other words, the Promise isn't rejected even when the response has an HTTP 400 or 500 status code.
-    if (response.error) return Promise.reject(response.error);
-
-    if (response.data?.length) {
-      return sortProductsByDescription(response.data);
-    }
-
-    return response.data;
+    const data = await getListings(payload);
+    return data;
   }
 );
 
@@ -67,23 +76,8 @@ export const updateDBAfterMarketPlaceListing = createAsyncThunk(
     // In other words, the Promise isn't rejected even when the response has an HTTP 400 or 500 status code.
     if (response.error) return Promise.reject(response.error);
 
-    const nextBody = JSON.stringify({ owner: txDetails.from });
-
-    const nextResponse: any = await fetch(
-      `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "",
-      {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: nextBody,
-      }
-    ).then((res) => res.json());
-    if (nextResponse.error) return Promise.reject(nextResponse.error);
-
-    if (nextResponse.data?.length) {
-      return sortProductsByDescription(nextResponse.data);
-    }
-
-    return nextResponse.data;
+    const data = await getListings({ seller: txDetails.from });
+    return data;
   }
 );
 
@@ -111,23 +105,8 @@ export const updateDBAfterMarketPlaceWithdrawal = createAsyncThunk(
     // In other words, the Promise isn't rejected even when the response has an HTTP 400 or 500 status code.
     if (response.error) return Promise.reject(response.error);
 
-    const nextBody = JSON.stringify({ owner: txDetails.from });
-
-    const nextResponse: any = await fetch(
-      `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "",
-      {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: nextBody,
-      }
-    ).then((res) => res.json());
-    if (nextResponse.error) return Promise.reject(nextResponse.error);
-
-    if (nextResponse.data?.length) {
-      return sortProductsByDescription(nextResponse.data);
-    }
-
-    return nextResponse.data;
+    const data = await getListings({ seller: txDetails.from });
+    return data;
   }
 );
 
@@ -155,23 +134,8 @@ export const updateDBAfterMarketPlaceBid = createAsyncThunk(
     // In other words, the Promise isn't rejected even when the response has an HTTP 400 or 500 status code.
     if (response.error) return Promise.reject(response.error);
 
-    const nextBody = JSON.stringify({ owner: txDetails.from });
-
-    const nextResponse: any = await fetch(
-      `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "",
-      {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: nextBody,
-      }
-    ).then((res) => res.json());
-    if (nextResponse.error) return Promise.reject(nextResponse.error);
-
-    if (nextResponse.data?.length) {
-      return sortProductsByDescription(nextResponse.data);
-    }
-
-    return nextResponse.data;
+    const data = await getListings({ seller: txDetails.from });
+    return data;
   }
 );
 
@@ -179,6 +143,7 @@ type SliceState = {
   error?: null | string;
   loading: boolean;
   data: IProduct[] | null;
+  details: IListing[] | null;
 };
 
 // First approach: define the initial state using that type
@@ -186,6 +151,7 @@ const initialState: SliceState = {
   error: null,
   loading: false,
   data: null,
+  details: null,
 };
 
 export const ListingsSlice = createSlice({
@@ -207,7 +173,8 @@ export const ListingsSlice = createSlice({
     });
     builder.addCase(fetchListings.fulfilled, (state, action) => {
       state.loading = false;
-      state.data = action.payload;
+      state.data = action.payload?.data || null;
+      state.details = action.payload?.details || null;
     });
     builder.addCase(fetchListings.rejected, (state, action) => {
       // If abortController.abort(), error name will be 'AbortError'
@@ -221,8 +188,9 @@ export const ListingsSlice = createSlice({
     });
     builder.addCase(
       updateDBAfterMarketPlaceListing.fulfilled,
-      (state, action: { payload: IProduct[] }) => {
-        state.data = action.payload;
+      (state, action) => {
+        state.data = action.payload?.data || null;
+        state.details = action.payload?.details || null;
       }
     );
     builder.addCase(
@@ -236,8 +204,9 @@ export const ListingsSlice = createSlice({
     });
     builder.addCase(
       updateDBAfterMarketPlaceWithdrawal.fulfilled,
-      (state, action: { payload: IProduct[] }) => {
-        state.data = action.payload;
+      (state, action) => {
+        state.data = action.payload?.data || null;
+        state.details = action.payload?.details || null;
       }
     );
     builder.addCase(
@@ -249,12 +218,10 @@ export const ListingsSlice = createSlice({
     builder.addCase(updateDBAfterMarketPlaceBid.pending, (state) => {
       // Runs 'silently'
     });
-    builder.addCase(
-      updateDBAfterMarketPlaceBid.fulfilled,
-      (state, action: { payload: IProduct[] }) => {
-        state.data = action.payload;
-      }
-    );
+    builder.addCase(updateDBAfterMarketPlaceBid.fulfilled, (state, action) => {
+      state.data = action.payload?.data || null;
+      state.details = action.payload?.details || null;
+    });
     builder.addCase(updateDBAfterMarketPlaceBid.rejected, (state, action) => {
       state.error = action.error.message;
     });
