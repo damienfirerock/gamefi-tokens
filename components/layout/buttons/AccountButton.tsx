@@ -5,6 +5,7 @@ import OilBarrelIcon from "@mui/icons-material/OilBarrel";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 import HouseIcon from "@mui/icons-material/House";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
+import StadiumIcon from "@mui/icons-material/Stadium";
 import { styled } from "@mui/material/styles";
 
 import MetaMaskButton from "./common/MetaMaskButton";
@@ -145,6 +146,8 @@ const AccountButton: React.FunctionComponent = () => {
             text="Market Place"
             icon={<ShoppingBasketIcon />}
           />
+
+          <AccountLink href="/arena" text="Arena" icon={<StadiumIcon />} />
         </PopoverBox>
       </Popover>
     </>
