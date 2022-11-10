@@ -90,7 +90,7 @@ export const updateDBAfterMarketPlaceBid = createAsyncThunk(
     const data = await getProductsAndListings({
       owner: NEXT_PUBLIC_MARKETPLACE_ADDRESS,
     });
-    console.log({ data });
+
     return data;
   }
 );

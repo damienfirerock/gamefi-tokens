@@ -8,16 +8,24 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { useSelector } from "react-redux";
 
 import Layout from "../layout/Layout";
 import { Header } from "../common";
 import ArenaCard from "../product/ArenaCard";
 
+import { RootState } from "../../store";
 import { ZERO_ADDRESS } from "../../constants";
+import { PokemonType } from "../../interfaces/IArena";
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
   justifyContent: "center",
+  margin: theme.spacing(4, 0),
+}));
+
+const StyledResults = styled(Box)<BoxProps>(({ theme }) => ({
+  textAlign: "center",
   margin: theme.spacing(4, 0),
 }));
 
@@ -31,12 +39,6 @@ const CardsBox = styled(Container)<ContainerProps>(({ theme }) => ({
   flexWrap: "wrap",
   justifyContent: "center",
 }));
-
-export enum PokemonType {
-  PLANT = "Plant",
-  FIRE = "Fire",
-  WATER = "Water",
-}
 
 const options = [
   {
@@ -68,6 +70,11 @@ const options = [
 const { NEXT_PUBLIC_ARENA_ADDRESS } = process.env;
 
 const LuckyDraw: React.FunctionComponent = () => {
+  const arenaSlice = useSelector((state: RootState) => state.arena);
+  const { data } = arenaSlice;
+
+  console.log({ data });
+
   return (
     <Layout>
       {/* Header */}
@@ -96,9 +103,18 @@ const LuckyDraw: React.FunctionComponent = () => {
           ))}
         </CardsBox>
 
-        <StyledBox>
-          <Header text="Results" variant="h4" />
-        </StyledBox>
+        {data && (
+          <StyledResults>
+            <Header text="Results" variant="h4" />
+
+            <Header text={`${data.outcome}!`} variant="h6" />
+
+            <Header
+              text={`Computer chose ${data.serverAction}!`}
+              variant="h6"
+            />
+          </StyledResults>
+        )}
 
         <StyledBox>
           <Header text="Claim Experience Points" variant="h4" />
