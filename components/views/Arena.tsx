@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Box,
   BoxProps,
@@ -8,18 +8,12 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useDispatch, useSelector } from "react-redux";
 
 import Layout from "../layout/Layout";
 import { Header } from "../common";
-import LuckyDrawCard from "../product/LuckyDrawCard";
-import SkeletonPokemonCard from "../product/common/SkeletonPokemonCard";
+import ArenaCard from "../product/ArenaCard";
 
-import { AppDispatch, RootState } from "../../store";
-import { fetchProducts } from "../../features/ProductsSlice";
-import { fetchLuckyDrawEntrants } from "../../features/LuckyDrawEntrantsSlice";
-import { IProduct } from "../../interfaces/IProduct";
-import useConnectWallet from "../../utils/hooks/useConnectWallet";
+import { ZERO_ADDRESS } from "../../constants";
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
@@ -38,30 +32,42 @@ const CardsBox = styled(Container)<ContainerProps>(({ theme }) => ({
   justifyContent: "center",
 }));
 
+export enum PokemonType {
+  PLANT = "Plant",
+  FIRE = "Fire",
+  WATER = "Water",
+}
+
+const options = [
+  {
+    tokenId: 0,
+    owner: ZERO_ADDRESS,
+    name: "venusaur",
+    description: PokemonType.PLANT,
+    image:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png",
+  },
+  {
+    tokenId: 0,
+    owner: ZERO_ADDRESS,
+    name: "charizard",
+    description: PokemonType.FIRE,
+    image:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png",
+  },
+  {
+    tokenId: 0,
+    owner: ZERO_ADDRESS,
+    name: "blastoise",
+    description: PokemonType.WATER,
+    image:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/9.png",
+  },
+];
+
 const { NEXT_PUBLIC_ARENA_ADDRESS } = process.env;
 
-const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
-  const dispatch = useDispatch<AppDispatch>();
-
-  const { account } = useConnectWallet();
-
-  const productsSlice = useSelector((state: RootState) => state.products);
-  const { loading, data } = productsSlice;
-
-  const luckyDrawEntrantsSlice = useSelector(
-    (state: RootState) => state.luckyDrawEntrants
-  );
-  const { data: entrants, loading: entrantsLoading } = luckyDrawEntrantsSlice;
-
-  // useEffect(() => {
-  //   dispatch(
-  //     fetchProducts({
-  //       tokenId: process.env.NEXT_PUBLIC_ARENA_PRIZE_TOKEN_ID || "",
-  //     })
-  //   );
-  //   dispatch(fetchLuckyDrawEntrants());
-  // }, [account]);
-
+const LuckyDraw: React.FunctionComponent = () => {
   return (
     <Layout>
       {/* Header */}
@@ -79,24 +85,26 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
         </StyledBox>
         <StyledBox>
           <Header
-            text={loading ? "Getting Prize..." : "Current Prize:"}
+            text={"Plant beats Water, Water beats Fire, Fire beats Plant"}
             variant="h4"
           />
         </StyledBox>
 
         <CardsBox>
-          {loading ? (
-            <SkeletonPokemonCard />
-          ) : data?.length ? (
-            data.map((element) => (
-              <LuckyDrawCard key={element.tokenId} {...element} />
-            ))
-          ) : (
-            <Typography variant="h6">No prize currently :(</Typography>
-          )}
+          {options.map((element) => (
+            <ArenaCard key={element.name} {...element} />
+          ))}
         </CardsBox>
 
         <StyledBox>
+          <Header text="Results" variant="h4" />
+        </StyledBox>
+
+        <StyledBox>
+          <Header text="Claim Experience Points" variant="h4" />
+        </StyledBox>
+
+        {/* <StyledBox>
           <Header
             text={
               entrantsLoading
@@ -109,7 +117,7 @@ const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
             }
             variant="h4"
           />
-        </StyledBox>
+        </StyledBox> */}
       </StyledContainer>
     </Layout>
   );

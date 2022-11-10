@@ -44,7 +44,7 @@ const NEXT_PUBLIC_THUNDERDOME_NFT_ADDRESS =
 const NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS =
   process.env.NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS;
 
-const MainPage: React.FunctionComponent<{ data: IProduct[] }> = () => {
+const MainPage: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const productsSlice = useSelector((state: RootState) => state.products);

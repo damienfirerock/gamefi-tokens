@@ -43,7 +43,7 @@ const CardsBox = styled(Container)<ContainerProps>(({ theme }) => ({
 
 const { NEXT_PUBLIC_MARKETPLACE_ADDRESS } = process.env;
 
-const LuckyDraw: React.FunctionComponent<{ data: IProduct[] }> = () => {
+const LuckyDraw: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { account } = useConnectWallet();

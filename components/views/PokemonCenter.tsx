@@ -43,7 +43,7 @@ const CardsBox = styled(Container)<ContainerProps>(({ theme }) => ({
 
 const { NEXT_PUBLIC_POKEMON_CENTER_ADDRESS } = process.env;
 
-const PokemonCenter: React.FunctionComponent<{ data: IProduct[] }> = () => {
+const PokemonCenter: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { account } = useConnectWallet();
