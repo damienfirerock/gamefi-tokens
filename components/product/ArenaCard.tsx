@@ -2,13 +2,19 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import PokemonCard from "./common/PokemonCard";
+import {
+  addPendingTransaction,
+  removePendingTransaction,
+} from "../../features/TransactionsSlice";
 
 import { AppDispatch, RootState } from "../../store";
 import { PokemonType } from "../views/Arena";
 import { enterArena } from "../../features/ArenaSlice";
 import useWeb3Transactions from "../../utils/hooks/useWeb3Transactions";
+import { TransactionType } from "../../interfaces/ITransaction";
 
 interface IPokemon {
+  tokenId: number;
   name: string;
   description: PokemonType;
   image: string;
@@ -16,21 +22,31 @@ interface IPokemon {
 }
 
 const ArenaCard: React.FunctionComponent<IPokemon> = (props) => {
-  const { name, description } = props;
+  const { name, description, tokenId } = props;
 
   const { enterLuckyDraw } = useWeb3Transactions();
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const handleClick = async () => {
-    dispatch(enterArena(description));
-  };
+  const arenaSlice = useSelector((state: RootState) => state.arena);
+  const { loading } = arenaSlice;
 
-  const disabled = false;
+  const handleClick = async () => {
+    const nextTransaction = {
+      tokenId,
+      description,
+      name,
+      type: TransactionType.ArenaEnter,
+    };
+
+    dispatch(addPendingTransaction(nextTransaction));
+    await dispatch(enterArena(description));
+    dispatch(removePendingTransaction(nextTransaction));
+  };
 
   return (
     <PokemonCard
-      disabled={disabled}
+      disabled={loading}
       buttonText="Select"
       handleClick={handleClick}
       {...props}
