@@ -26,6 +26,8 @@ const PokemonCenterJson = require("../abis/PokemonCenter.json");
 const PokePointJson = require("../abis/PokePoint.json");
 const LuckyDrawJson = require("../abis/LuckyDraw.json");
 const MarketPlaceJson = require("../abis/MarketPlace.json");
+const ExperiencePointsJson = require("../abis/ExperiencePoints.json");
+const ArenaJson = require("../abis/Arena.json");
 
 const NEXT_PUBLIC_THUNDERDOME_NFT_ADDRESS =
   process.env.NEXT_PUBLIC_THUNDERDOME_NFT_ADDRESS;
@@ -38,6 +40,9 @@ const NEXT_PUBLIC_LUCKY_DRAW_ADDRESS =
   process.env.NEXT_PUBLIC_LUCKY_DRAW_ADDRESS;
 const NEXT_PUBLIC_MARKETPLACE_ADDRESS =
   process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS;
+const NEXT_PUBLIC_EXPERIENCE_POINTS_ADDRESS =
+  process.env.NEXT_PUBLIC_EXPERIENCE_POINTS_ADDRESS;
+const NEXT_PUBLIC_ARENA_ADDRESS = process.env.NEXT_PUBLIC_ARENA_ADDRESS;
 
 interface INextTransaction {
   tokenId?: number;
@@ -715,6 +720,55 @@ const useWeb3Transactions = () => {
     dispatchesUponReceipt(receipt, dispatchAfterSuccess, nextTransaction);
   };
 
+  const enquireExpPointsBalance = async (address: string) => {
+    const { signer } = (await runPreChecks()) || {};
+
+    if (!signer) return; // errors should be caught in runPreTransactionChecks
+
+    const expPointsContract = new ethers.Contract(
+      NEXT_PUBLIC_EXPERIENCE_POINTS_ADDRESS || "",
+      ExperiencePointsJson.abi,
+      signer
+    );
+
+    let result;
+
+    try {
+      result = await expPointsContract.balanceOf(address);
+    } catch (error: any) {
+      sendTransactionErrorOnMetaMaskRequest(error);
+      return;
+    }
+
+    return Number(result);
+  };
+
+  const calculateExpPointsClaim = async (address: string) => {
+    const { signer } = (await runPreChecks()) || {};
+
+    if (!signer) return; // errors should be caught in runPreTransactionChecks
+
+    const arenaContract = new ethers.Contract(
+      NEXT_PUBLIC_ARENA_ADDRESS || "",
+      ArenaJson.abi,
+      signer
+    );
+
+    let result;
+
+    try {
+      const score = await arenaContract.gameScores(address);
+      const claimed = await arenaContract.userClaimed(address);
+
+      result = Number(score) - Number(claimed);
+    } catch (error: any) {
+      sendTransactionErrorOnMetaMaskRequest(error);
+      return;
+    }
+
+    return result;
+  };
+
   return {
     purchaseNFT,
     depositPokemon,
@@ -727,6 +781,8 @@ const useWeb3Transactions = () => {
     withdrawFromMarketPlace,
     bidInMarketPlace,
     acceptInMarketPlace,
+    enquireExpPointsBalance,
+    calculateExpPointsClaim,
   };
 };
 

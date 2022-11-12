@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 
 import Layout from "../layout/Layout";
 import { Header } from "../common";
+import ExpPointBalance from "../arena/ExpPointsBalance";
 import ArenaCard from "../product/ArenaCard";
 
 import { RootState } from "../../store";
@@ -116,24 +117,7 @@ const LuckyDraw: React.FunctionComponent = () => {
           </StyledResults>
         )}
 
-        <StyledBox>
-          <Header text="Claim Experience Points" variant="h4" />
-        </StyledBox>
-
-        {/* <StyledBox>
-          <Header
-            text={
-              entrantsLoading
-                ? "Getting Players..."
-                : `There ${entrants?.length === 1 ? "is" : "are"} currently ${
-                    entrants?.length || 0
-                  } player${
-                    entrants?.length === 1 ? "" : "s"
-                  } in the lucky draw`
-            }
-            variant="h4"
-          />
-        </StyledBox> */}
+        <ExpPointBalance />
       </StyledContainer>
     </Layout>
   );
