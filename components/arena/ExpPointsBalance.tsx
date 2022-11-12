@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, BoxProps, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { AppDispatch } from "../../store";
+import { AppDispatch, RootState } from "../../store";
 import { claimExpPoints } from "../../features/ArenaSlice";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import useWeb3Transactions from "../../utils/hooks/useWeb3Transactions";
@@ -23,6 +23,8 @@ const ExpPointBalance: React.FunctionComponent = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
+  const { loading } = useSelector((state: RootState) => state.arena);
+
   const [balance, setBalance] = useState<number>(0);
   const [potentialClaim, setPotentialClaim] = useState<number>(0);
 
@@ -39,16 +41,18 @@ const ExpPointBalance: React.FunctionComponent = () => {
   const claimPoints = async () => {
     if (!account) return;
 
-    await dispatch(claimExpPoints(account));
+    await dispatch(claimExpPoints({ address: account }));
 
     await updatePokePointsBalance();
   };
 
   useEffect(() => {
-    if (!account) return;
+    if (!account || loading) return;
 
+    // This updates balance after loading is done
+    // By right, should update balance only upon arena victory
     updatePokePointsBalance();
-  }, [account]);
+  }, [account, loading]);
 
   return (
     <>
