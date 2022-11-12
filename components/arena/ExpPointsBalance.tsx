@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, BoxProps, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { useDispatch } from "react-redux";
 
+import { AppDispatch } from "../../store";
+import { claimExpPoints } from "../../features/ArenaSlice";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import useWeb3Transactions from "../../utils/hooks/useWeb3Transactions";
 
@@ -17,6 +20,8 @@ const ExpPointBalance: React.FunctionComponent = () => {
   const { account } = useConnectWallet();
   const { enquireExpPointsBalance, calculateExpPointsClaim } =
     useWeb3Transactions();
+
+  const dispatch = useDispatch<AppDispatch>();
 
   const [balance, setBalance] = useState<number>(0);
   const [potentialClaim, setPotentialClaim] = useState<number>(0);
@@ -34,7 +39,7 @@ const ExpPointBalance: React.FunctionComponent = () => {
   const claimPoints = async () => {
     if (!account) return;
 
-    // TODO: Despatch to claim points
+    await dispatch(claimExpPoints(account));
 
     await updatePokePointsBalance();
   };
