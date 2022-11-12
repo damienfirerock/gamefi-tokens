@@ -72,10 +72,8 @@ export const ArenaSlice = createSlice({
   name: "Arena",
   initialState,
   reducers: {
-    clearArena: (state) => {
+    clearError: (state) => {
       state.error = null;
-      state.loading = false;
-      state.data = null;
     },
   },
   extraReducers: (builder) => {
@@ -117,6 +115,6 @@ export const ArenaSlice = createSlice({
   },
 });
 
-export const { clearArena } = ArenaSlice.actions;
+export const { clearError } = ArenaSlice.actions;
 
 export default ArenaSlice.reducer;

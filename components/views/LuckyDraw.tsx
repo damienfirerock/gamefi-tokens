@@ -18,7 +18,6 @@ import SkeletonPokemonCard from "../product/common/SkeletonPokemonCard";
 import { AppDispatch, RootState } from "../../store";
 import { fetchProducts } from "../../features/ProductsSlice";
 import { fetchLuckyDrawEntrants } from "../../features/LuckyDrawEntrantsSlice";
-import { IProduct } from "../../interfaces/IProduct";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({

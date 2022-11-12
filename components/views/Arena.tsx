@@ -8,16 +8,18 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Layout from "../layout/Layout";
 import { Header } from "../common";
 import ExpPointBalance from "../arena/ExpPointsBalance";
 import ArenaCard from "../product/ArenaCard";
+import AlertBar from "../common/AlertBar";
 
-import { RootState } from "../../store";
+import { AppDispatch, RootState } from "../../store";
 import { ZERO_ADDRESS } from "../../constants";
 import { PokemonType } from "../../interfaces/IArena";
+import { clearError } from "../../features/ArenaSlice";
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
@@ -71,10 +73,11 @@ const options = [
 const { NEXT_PUBLIC_ARENA_ADDRESS } = process.env;
 
 const LuckyDraw: React.FunctionComponent = () => {
-  const arenaSlice = useSelector((state: RootState) => state.arena);
-  const { data } = arenaSlice;
+  const dispatch = useDispatch<AppDispatch>();
 
-  console.log({ data });
+  const arenaSlice = useSelector((state: RootState) => state.arena);
+
+  const { data, error } = arenaSlice;
 
   return (
     <Layout>
@@ -119,6 +122,12 @@ const LuckyDraw: React.FunctionComponent = () => {
 
         <ExpPointBalance />
       </StyledContainer>
+
+      <AlertBar
+        severity="warning"
+        text={error}
+        handleClearAlertSource={() => dispatch(clearError())}
+      />
     </Layout>
   );
 };
