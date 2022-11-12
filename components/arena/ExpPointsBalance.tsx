@@ -73,7 +73,7 @@ const ExpPointBalance: React.FunctionComponent = () => {
       {!!potentialClaim && (
         <StyledBox>
           <Typography variant="h5">
-            You can claim {potentialClaim} PokePoints
+            You can claim {potentialClaim} ExperiencePoints
           </Typography>{" "}
           <Button
             variant="outlined"
