@@ -3,6 +3,8 @@ import { Box, Button, BoxProps, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 
+import { StyledCircularProgress } from "../product/common/PokemonCard";
+
 import { AppDispatch, RootState } from "../../store";
 import { claimExpPoints } from "../../features/ArenaSlice";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
@@ -82,6 +84,7 @@ const ExpPointBalance: React.FunctionComponent = () => {
             disabled={loading}
           >
             Claim
+            {loading && <StyledCircularProgress size={24} />}
           </Button>
         </StyledBox>
       )}
