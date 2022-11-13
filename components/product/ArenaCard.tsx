@@ -28,7 +28,6 @@ const ArenaCard: React.FunctionComponent<IPokemon> = (props) => {
   const { name, description, tokenId } = props;
 
   const { account } = useConnectWallet();
-  const { enterLuckyDraw } = useWeb3Transactions();
   const { sendTransactionError } = useDispatchErrors();
 
   const dispatch = useDispatch<AppDispatch>();

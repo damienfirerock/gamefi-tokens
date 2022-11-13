@@ -79,6 +79,7 @@ const ExpPointBalance: React.FunctionComponent = () => {
             variant="outlined"
             sx={{ marginLeft: 1 }}
             onClick={claimPoints}
+            disabled={loading}
           >
             Claim
           </Button>
