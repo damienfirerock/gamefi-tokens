@@ -148,19 +148,7 @@ const PokemonCard: React.FunctionComponent<IPokemonCard> = (props) => {
           >
             {buttonText}
           </Button>
-          {pending && (
-            <StyledCircularProgress
-              size={24}
-              sx={{
-                color: "rgba(60, 60, 60, 0.1)",
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                marginTop: "-12px",
-                marginLeft: "-12px",
-              }}
-            />
-          )}
+          {pending && <StyledCircularProgress size={24} />}
         </Box>
       </StyledCardActions>
     </StyledCard>
