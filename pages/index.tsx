@@ -1,3 +1,3 @@
-import MainPage from "../components/views/Main";
+import SequenceWalletDetailsPage from "../components/views/SequenceWalletDetails";
 
-export default MainPage;
+export default SequenceWalletDetailsPage;
