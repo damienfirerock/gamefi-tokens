@@ -25,12 +25,15 @@ export const fetchTransactions = createAsyncThunk(
   async (address: string) => {
     const body = JSON.stringify({ address });
 
-    const response: { success: boolean; data: ITransaction[]; error?: any } =
-      await fetch(`${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body,
-      }).then((res) => res.json());
+    const response: {
+      success: boolean;
+      data: ITransaction[];
+      error?: any;
+    } = await fetch(`${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}` || "", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body,
+    }).then((res) => res.json());
 
     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
     //The fetch() method returns a Promise that resolves regardless of whether the request is successful,

@@ -14,8 +14,7 @@ const useSequenceWallet = () => {
   const [account, setAccount] = useState(null);
   const [chainId, setChainId] = useState(null);
   const [provider, setProvider] = useState<any>(null);
-  const [isWalletConnected, setIsWalletConnected] =
-    useState<boolean>(false);
+  const [isWalletConnected, setIsWalletConnected] = useState<boolean>(false);
 
   const wallet = sequence.getWallet();
 
