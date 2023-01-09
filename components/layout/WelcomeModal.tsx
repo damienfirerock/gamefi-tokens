@@ -21,11 +21,11 @@ const WelcomeModal: React.FunctionComponent = () => {
 
   const handleClose = () => {
     setOpen(false);
-    localStorage.setItem("thunderDomeWelcomeModalShown", "true");
+    localStorage.setItem("XY3WelcomeModalShown", "true");
   };
 
   useEffect(() => {
-    const modalShown = localStorage.getItem("thunderDomeWelcomeModalShown");
+    const modalShown = localStorage.getItem("XY3WelcomeModalShown");
     if (modalShown !== "true") setOpen(true);
   }, []);
 

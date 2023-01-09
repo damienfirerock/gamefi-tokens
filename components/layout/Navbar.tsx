@@ -22,7 +22,7 @@ const NavBar: React.FunctionComponent = () => {
       <AppBar position="fixed" color="secondary" elevation={5}>
         <Toolbar>
           <StyledBox>
-            <Header text="ThunderDome" variant="h4" />
+            <Header text="XY3" variant="h4" />
           </StyledBox>
           {router.pathname !== "/" && (
             <NextLink href="/" passHref>
