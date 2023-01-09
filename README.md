@@ -19,3 +19,10 @@ NEXT_PUBLIC_BACKEND_URL=
 
 NEXT_PUBLIC_NETWORK_CHAIN_ID=80001
 ```
+
+## Packages used
+
+- Material UI (https://mui.com/) for quick styling (MUI used emotion as a dependency)
+- Redux (specifically https://redux-toolkit.js.org/) for global state management
+- ethersjs (https://docs.ethers.org/v5/) to read blockchain data, work with browser wallets, and submit transactions to the network
+- 0xsequence (https://docs.sequence.xyz/quickstart) as an browser wallet which should hopefully remove the need for a browser extension wallet
