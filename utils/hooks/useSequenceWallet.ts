@@ -98,7 +98,7 @@ const useSequenceWallet = () => {
         settings,
       },
     };
-    const path = "wallet/add-funds";
+    const path = "wallet";
     wallet.openWallet(path, intent);
   };
 
@@ -116,11 +116,6 @@ const useSequenceWallet = () => {
   }, [wallet]);
 
   return {
-    // provider,
-    // account,
-    // chainId,
-    // requestConnect,
-    // requestChangeChainId,
     isWalletConnected,
     loading,
     connect,
