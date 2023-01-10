@@ -35,7 +35,7 @@ const NavBar: React.FunctionComponent = () => {
             </NextLink>
           )}
           <TransactionsButton />
-          <WalletButton />
+          {/* <WalletButton /> */}
         </Toolbar>
       </AppBar>
     </div>

@@ -6,33 +6,42 @@ import { OpenWalletIntent, Settings } from "@0xsequence/provider";
 
 import useDispatchErrors from "./useDispatchErrors";
 
-sequence.initWallet("mumbai");
-
 const useSequenceWallet = () => {
   const { sendTransactionErrorOnMetaMaskRequest } = useDispatchErrors();
 
-  const [account, setAccount] = useState(null);
-  const [chainId, setChainId] = useState(null);
-  const [provider, setProvider] = useState<any>(null);
+  const [wallet, setWallet] = useState<sequence.provider.Wallet | null>(null);
   const [isWalletConnected, setIsWalletConnected] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const wallet = sequence.getWallet();
+  console.log({ wallet });
+
+  const initSequence = async () => {
+    setLoading(true);
+
+    const sequenceInstance = sequence;
+    await sequenceInstance.initWallet("mumbai");
+    const wallet = sequenceInstance.getWallet();
+    setWallet(wallet);
+
+    setLoading(false);
+  };
 
   const connect = async (
     authorize: boolean = false,
     withSettings: boolean = false
   ) => {
+    setLoading(true);
+
     if (isWalletConnected) {
-      // addNewConsoleLine("Wallet already connected!");
-      // setConsoleLoading(false);
+      setLoading(false);
+      sendTransactionErrorOnMetaMaskRequest("Already connected");
       return;
     }
 
     try {
-      // addNewConsoleLine("Connecting");
       const wallet = sequence.getWallet();
 
-      const connectDetails = await wallet.connect({
+      await wallet.connect({
         app: "XY3",
         authorize,
         askForEmail: true,
@@ -43,8 +52,8 @@ const useSequenceWallet = () => {
             // signInWithEmail: 'user@email.com',
             // Specify signInOptions to pick the available sign in options.
             // signInOptions: ['email', 'google', 'apple'],
-            theme: "indigoDark",
-            // bannerUrl: `${window.location.origin}${skyweaverBannerUrl}`,
+            theme: "goldDark",
+            bannerUrl: `${window.location.origin}/XY3-banner.png`, // FIXME: Not showing for unknown reason
             includedPaymentProviders: ["moonpay"],
             defaultFundingCurrency: "matic",
             defaultPurchaseAmount: 111,
@@ -52,38 +61,13 @@ const useSequenceWallet = () => {
         }),
       });
 
-      console.warn("connectDetails", {
-        connectDetails,
-      });
+      const connectionResult = wallet.isConnected();
 
-      if (authorize) {
-        const ethAuth = new ETHAuth();
-
-        if (connectDetails.proof) {
-          const decodedProof = await ethAuth.decodeProof(
-            connectDetails.proof.proofString,
-            true
-          );
-
-          console.warn({ decodedProof });
-
-          const isValid = await wallet.utils.isValidTypedDataSignature(
-            await wallet.getAddress(),
-            connectDetails.proof.typedData,
-            decodedProof.signature,
-            await wallet.getAuthChainId()
-          );
-          console.log("isValid?", isValid);
-          // appendConsoleLine(`isValid?: ${isValid}`);
-          if (!isValid) throw new Error("sig invalid");
-        }
-      }
-      // appendConsoleLine("Wallet connected!");
-      // setConsoleLoading(false);
-      setIsWalletConnected(true);
+      setIsWalletConnected(connectionResult);
+      setLoading(false);
     } catch (e) {
-      console.error(e);
-      // consoleErrorMessage();
+      sendTransactionErrorOnMetaMaskRequest(e);
+      setLoading(false);
     }
   };
 
@@ -98,25 +82,25 @@ const useSequenceWallet = () => {
     wallet.openWallet();
   };
 
-  // const openWalletWithSettings = () => {
-  //   const wallet = sequence.getWallet();
+  const openWalletWithSettings = () => {
+    const wallet = sequence.getWallet();
 
-  //   const settings: Settings = {
-  //     theme: "goldDark",
-  //     includedPaymentProviders: ["moonpay", "ramp", "wyre"],
-  //     defaultFundingCurrency: "eth",
-  //     defaultPurchaseAmount: 400,
-  //     lockFundingCurrencyToDefault: false,
-  //   };
-  //   const intent: OpenWalletIntent = {
-  //     type: "openWithOptions",
-  //     options: {
-  //       settings,
-  //     },
-  //   };
-  //   const path = "wallet/add-funds";
-  //   wallet.openWallet(path, intent);
-  // };
+    const settings: Settings = {
+      theme: "goldDark",
+      includedPaymentProviders: ["moonpay", "ramp", "wyre"],
+      defaultFundingCurrency: "matic", // Default is USDC
+      defaultPurchaseAmount: 400,
+      lockFundingCurrencyToDefault: false,
+    };
+    const intent: OpenWalletIntent = {
+      type: "openWithOptions",
+      options: {
+        settings,
+      },
+    };
+    const path = "wallet/add-funds";
+    wallet.openWallet(path, intent);
+  };
 
   const closeWallet = () => {
     const wallet = sequence.getWallet();
@@ -124,7 +108,11 @@ const useSequenceWallet = () => {
   };
 
   useEffect(() => {
-    setIsWalletConnected(wallet.isConnected());
+    initSequence();
+  }, []);
+
+  useEffect(() => {
+    wallet && setIsWalletConnected(wallet.isConnected());
   }, [wallet]);
 
   return {
@@ -134,9 +122,11 @@ const useSequenceWallet = () => {
     // requestConnect,
     // requestChangeChainId,
     isWalletConnected,
+    loading,
     connect,
     disconnect,
     openWallet,
+    openWalletWithSettings,
     closeWallet,
   };
 };
