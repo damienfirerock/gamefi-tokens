@@ -62,10 +62,10 @@ const MainPage: React.FunctionComponent = () => {
     sendFrg,
   } = useSequenceWallet();
 
-  const [maticAmount, setMaticAmount] = useState<string>("0");
-  const [maticAddress, setMaticAddress] = useState<string>("0x");
-  const [frgAmount, setFrgAmount] = useState<string>("0");
-  const [frgAddress, setFrgAddress] = useState<string>("0x");
+  const [maticAmount, setMaticAmount] = useState<string>("");
+  const [maticAddress, setMaticAddress] = useState<string>("");
+  const [frgAmount, setFrgAmount] = useState<string>("");
+  const [frgAddress, setFrgAddress] = useState<string>("");
 
   const handleMaticAmountChange = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -145,6 +145,8 @@ const MainPage: React.FunctionComponent = () => {
                 variant="standard"
                 type="number"
                 onChange={handleMaticAmountChange}
+                placeholder="0"
+                InputLabelProps={{ shrink: true }}
               />
               <TextField
                 label="Address"
@@ -152,6 +154,8 @@ const MainPage: React.FunctionComponent = () => {
                 style={{ marginRight: 10 }}
                 variant="standard"
                 onChange={handleMaticAddressChange}
+                placeholder="0x"
+                InputLabelProps={{ shrink: true }}
               />
               <InteractButton
                 text="Transfer"
@@ -167,6 +171,8 @@ const MainPage: React.FunctionComponent = () => {
                 variant="standard"
                 type="number"
                 onChange={handleFrgAmountChange}
+                placeholder="0"
+                InputLabelProps={{ shrink: true }}
               />
               <TextField
                 label="Address"
@@ -174,6 +180,8 @@ const MainPage: React.FunctionComponent = () => {
                 style={{ marginRight: 10 }}
                 variant="standard"
                 onChange={handleFrgAddressChange}
+                placeholder="0x"
+                InputLabelProps={{ shrink: true }}
               />
               <InteractButton
                 text="Transfer"
