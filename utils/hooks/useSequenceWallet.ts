@@ -107,6 +107,35 @@ const useSequenceWallet = () => {
     wallet.closeWallet();
   };
 
+  const sendMatic = async (amount: string, address: string) => {
+    setLoading(true);
+
+    // Get the wallet signer interface
+    const wallet = sequence.getWallet();
+    const signer = wallet.getSigner();
+
+    const value = ethers.utils.parseUnits(amount, 18);
+    // Prepare Transaction object
+    const tx: sequence.transactions.Transaction = {
+      to: address,
+      value,
+    };
+
+    try {
+      // Send the transaction via the signer to the blockchain :D The signer will prompt the user
+      // sign+send the transaction, and once the user confirms it will be transmitted.
+      const txnResp = await signer.sendTransaction(tx);
+
+      // Wait for the transaction to be mined by the network
+      await txnResp.wait();
+
+      setLoading(false);
+    } catch (e) {
+      sendTransactionErrorOnMetaMaskRequest(e);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     initSequence();
   }, []);
@@ -123,6 +152,7 @@ const useSequenceWallet = () => {
     openWallet,
     openWalletWithSettings,
     closeWallet,
+    sendMatic,
   };
 };
 
