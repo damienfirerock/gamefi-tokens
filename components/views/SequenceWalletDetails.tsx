@@ -197,7 +197,6 @@ const MainPage: React.FunctionComponent = () => {
           </Typography>
         </ContractsBox>
       </StyledContainer>
-      <WelcomeModal />
     </Layout>
   );
 };
