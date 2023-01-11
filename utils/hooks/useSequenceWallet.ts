@@ -6,6 +6,9 @@ import { OpenWalletIntent, Settings } from "@0xsequence/provider";
 
 import useDispatchErrors from "./useDispatchErrors";
 
+const NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS =
+  process.env.NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS;
+
 const useSequenceWallet = () => {
   const { sendTransactionErrorOnMetaMaskRequest } = useDispatchErrors();
 
@@ -136,6 +139,47 @@ const useSequenceWallet = () => {
     }
   };
 
+  const sendFrg = async (amount: string, address: string) => {
+    setLoading(true);
+
+    // Part of the ERC20 ABI, so we can encode a `transfer` call
+    const erc20Interface = new ethers.utils.Interface([
+      "function transfer(address _to, uint256 _value)",
+    ]);
+
+    // Get the wallet signer interface
+    const wallet = sequence.getWallet();
+    const signer = wallet.getSigner();
+
+    const value = ethers.utils.parseUnits(amount, 18);
+
+    // Encode an ERC-20 token transfer to recipient of the specified amount
+    const data = erc20Interface.encodeFunctionData("transfer", [
+      address,
+      value,
+    ]);
+
+    // Prepare Transaction object
+    const tx: sequence.transactions.Transaction = {
+      to: NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS || "",
+      data,
+    };
+
+    try {
+      // Send the transaction via the signer to the blockchain :D The signer will prompt the user
+      // sign+send the transaction, and once the user confirms it will be transmitted.
+      const txnResp = await signer.sendTransaction(tx);
+
+      // Wait for the transaction to be mined by the network
+      await txnResp.wait();
+
+      setLoading(false);
+    } catch (e) {
+      sendTransactionErrorOnMetaMaskRequest(e);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     initSequence();
   }, []);
@@ -153,6 +197,7 @@ const useSequenceWallet = () => {
     openWalletWithSettings,
     closeWallet,
     sendMatic,
+    sendFrg,
   };
 };
 
