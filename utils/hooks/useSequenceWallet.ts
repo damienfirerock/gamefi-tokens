@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { ETHAuth, Proof } from "@0xsequence/ethauth";
 import { sequence } from "0xsequence";
@@ -56,7 +56,7 @@ const useSequenceWallet = () => {
             // Specify signInOptions to pick the available sign in options.
             // signInOptions: ['email', 'google', 'apple'],
             theme: "goldDark",
-            bannerUrl: `${window.location.origin}/XY3-banner.png`, // FIXME: Not showing for unknown reason
+            bannerUrl: `${window.location.origin}/XY3-banner.png`, // Note: Does not work on localhost, but works when hosted
             includedPaymentProviders: ["moonpay"],
             defaultFundingCurrency: "matic",
             defaultPurchaseAmount: 111,

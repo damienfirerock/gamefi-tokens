@@ -13,7 +13,6 @@ import {
 import { styled } from "@mui/material/styles";
 
 import Layout from "../layout/Layout";
-import WelcomeModal from "../layout/WelcomeModal";
 import { StyledCircularProgress } from "../product/common/PokemonCard";
 
 import useSequenceWallet from "../../utils/hooks/useSequenceWallet";
@@ -96,6 +95,18 @@ const MainPage: React.FunctionComponent = () => {
     <Layout>
       {/* Header */}
       <StyledContainer>
+        <StyledBox>
+          <Typography variant="h4">
+            * This is on the Polygon Mumbai Testnet. Faucet:{" "}
+            <Link
+              href={"https://faucet.polygon.technology/"}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              https://faucet.polygon.technology/
+            </Link>
+          </Typography>
+        </StyledBox>
         <StyledBox>
           <Typography variant="h2">
             {isWalletConnected ? "Wallet Connected" : "Wallet not Connected"}
