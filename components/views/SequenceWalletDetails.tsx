@@ -1,12 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
   BoxProps,
   Button,
   Container,
   ContainerProps,
+  InputAdornment,
   Link,
   Typography,
+  TextField,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -56,10 +58,39 @@ const MainPage: React.FunctionComponent = () => {
     loading,
     connect,
     disconnect,
-    openWallet,
     openWalletWithSettings,
-    closeWallet,
+    sendMatic,
+    sendFrg,
   } = useSequenceWallet();
+
+  const [maticAmount, setMaticAmount] = useState<string>("0");
+  const [maticAddress, setMaticAddress] = useState<string>("0x");
+  const [frgAmount, setFrgAmount] = useState<string>("0");
+  const [frgAddress, setFrgAddress] = useState<string>("0x");
+
+  const handleMaticAmountChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    setMaticAmount(event.target.value);
+  };
+
+  const handleMaticAddressChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    setMaticAddress(event.target.value);
+  };
+
+  const handleFrgAmountChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    setFrgAmount(event.target.value);
+  };
+
+  const handleFrgAddressChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    setFrgAddress(event.target.value);
+  };
 
   return (
     <Layout>
@@ -87,13 +118,59 @@ const MainPage: React.FunctionComponent = () => {
         </StyledBox>
 
         {isWalletConnected && (
-          <StyledBox>
-            <InteractButton
-              text="Open Wallet"
-              method={openWalletWithSettings}
-              loading={loading}
-            />
-          </StyledBox>
+          <>
+            <StyledBox>
+              <InteractButton
+                text="Open Wallet"
+                method={openWalletWithSettings}
+                loading={loading}
+              />
+            </StyledBox>{" "}
+            <StyledBox>
+              <TextField
+                label="Amount (MATIC)"
+                value={maticAmount}
+                style={{ marginRight: 10 }}
+                variant="standard"
+                type="number"
+                onChange={handleMaticAmountChange}
+              />
+              <TextField
+                label="Address"
+                value={maticAddress}
+                style={{ marginRight: 10 }}
+                variant="standard"
+                onChange={handleMaticAddressChange}
+              />
+              <InteractButton
+                text="Transfer"
+                method={() => sendMatic(maticAmount, maticAddress)}
+                loading={loading}
+              />
+            </StyledBox>
+            <StyledBox>
+              <TextField
+                label="Amount (FRG)"
+                value={frgAmount}
+                style={{ marginRight: 10 }}
+                variant="standard"
+                type="number"
+                onChange={handleFrgAmountChange}
+              />
+              <TextField
+                label="Address"
+                value={frgAddress}
+                style={{ marginRight: 10 }}
+                variant="standard"
+                onChange={handleFrgAddressChange}
+              />
+              <InteractButton
+                text="Transfer"
+                method={() => sendFrg(frgAmount, frgAddress)}
+                loading={loading}
+              />
+            </StyledBox>
+          </>
         )}
 
         <ContractsBox>
