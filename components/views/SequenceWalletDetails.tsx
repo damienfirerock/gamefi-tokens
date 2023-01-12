@@ -22,6 +22,8 @@ const NEXT_PUBLIC_POLYGONSCAN_URL = process.env.NEXT_PUBLIC_POLYGONSCAN_URL;
 const NEXT_PUBLIC_MULTISIG_ADDRESS = process.env.NEXT_PUBLIC_MULTISIG_ADDRESS;
 const NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS =
   process.env.NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS;
+const NEXT_PUBLIC_SACRED_TROPHY_ADDRESS =
+  process.env.NEXT_PUBLIC_SACRED_TROPHY_ADDRESS;
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
@@ -212,6 +214,16 @@ const MainPage: React.FunctionComponent = () => {
               rel="noopener noreferrer"
             >
               {NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS}
+            </Link>
+          </Typography>
+          <Typography variant="h4">
+            $STR NFT:
+            <Link
+              href={`${NEXT_PUBLIC_POLYGONSCAN_URL}${NEXT_PUBLIC_SACRED_TROPHY_ADDRESS}#code`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {NEXT_PUBLIC_SACRED_TROPHY_ADDRESS}
             </Link>
           </Typography>
         </ContractsBox>

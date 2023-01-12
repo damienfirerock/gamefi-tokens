@@ -56,7 +56,7 @@ const useSequenceWallet = () => {
             // Specify signInOptions to pick the available sign in options.
             // signInOptions: ['email', 'google', 'apple'],
             theme: "goldDark",
-            bannerUrl: `${window.location.origin}/XY3-banner.png`, // Note: Does not work on localhost, but works when hosted
+            bannerUrl: `${window.location.origin}/XY3-banner.png`, // Note: Does not work on localhost, but works on external server
             includedPaymentProviders: ["moonpay"],
             defaultFundingCurrency: "matic",
             defaultPurchaseAmount: 111,
