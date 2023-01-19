@@ -14,8 +14,8 @@ import { styled } from "@mui/material/styles";
 import Layout from "../layout/Layout";
 import { StyledCircularProgress } from "../product/common/PokemonCard";
 
-import useSequenceWallet from "../../utils/hooks/useSequenceWallet";
-import useMultiSigTransactions from "../../utils/hooks/useMultiSigTransactions";
+import useMultiSigTransactionsMetamask from "../../utils/hooks/useMultiSigTransactionsMetamask";
+import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
 
 // https://github.com/vercel/next.js/issues/19420
@@ -52,20 +52,17 @@ const StyledContainer = styled(Container)<ContainerProps>(({ theme }) => ({
 }));
 
 const MainPage: React.FunctionComponent = () => {
+  const { provider, account, chainId, requestConnect, requestChangeChainId } =
+    useConnectWallet();
+
   const {
-    isWalletConnected,
     isOwner,
-    loading,
-    connect,
-    disconnect,
-    openWalletWithSettings,
-  } = useSequenceWallet();
-  const {
     getTransactionCount,
     getTransactionDetails,
     getOwnerConfirmationStatus,
+    checkIfMultiSigOwner,
     getTxnSignature,
-  } = useMultiSigTransactions();
+  } = useMultiSigTransactionsMetamask();
 
   const [txnCount, setTxnCount] = useState<number>(0);
   const [txn, setTxn] = useState<Array<any>>([]);
@@ -78,6 +75,7 @@ const MainPage: React.FunctionComponent = () => {
     const nextTxn = await getTransactionDetails(nextTxnCount - 1);
     setTxn(nextTxn);
     setTxIndex(nextTxnCount - 1);
+    await checkIfMultiSigOwner();
 
     if (nextTxn.length === 5 && !nextTxn[3].executed) {
       const userConfirmation = await getOwnerConfirmationStatus(
@@ -92,10 +90,10 @@ const MainPage: React.FunctionComponent = () => {
   };
 
   useEffect(() => {
-    if (isWalletConnected && isOwner) {
+    if (account) {
       setUpDetails();
     }
-  }, [isWalletConnected, isOwner]);
+  }, [account]);
 
   return (
     <Layout>
@@ -119,36 +117,23 @@ const MainPage: React.FunctionComponent = () => {
           </Typography>
         </StyledBox>
         <StyledBox>
-          {isWalletConnected ? (
-            <InteractButton
-              text="Dis-Connect"
-              method={disconnect}
-              loading={loading}
-            />
-          ) : (
+          {!account && (
             <InteractButton
               text="Connect"
-              method={() => connect(false, true)}
-              loading={loading}
+              method={requestConnect}
+              loading={false}
             />
           )}
         </StyledBox>
 
-        {isWalletConnected && !isOwner && (
+        {account && !isOwner && (
           <StyledBox>
             <Typography variant="h3">Not Authorised</Typography>
           </StyledBox>
         )}
 
-        {isWalletConnected && isOwner && (
+        {account && isOwner && (
           <>
-            <StyledBox>
-              <InteractButton
-                text="Open Wallet"
-                method={openWalletWithSettings}
-                loading={loading}
-              />
-            </StyledBox>{" "}
             <ContractsBox>
               <Typography variant="h4">Latest Transaction</Typography>
               {txnCount > 0 && txn.length === 5 && (
@@ -183,7 +168,7 @@ const MainPage: React.FunctionComponent = () => {
                       txnConfirmed ? "revoke" : "confirm"
                     }`}
                     method={getSignature}
-                    loading={loading}
+                    loading={false}
                   />
                 </>
               )}
