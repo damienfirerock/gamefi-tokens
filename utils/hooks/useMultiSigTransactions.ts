@@ -87,10 +87,39 @@ const useMultiSigTransactions = () => {
     return result;
   };
 
+  const getOwnerConfirmationStatus = async (
+    txIndex: number
+  ): Promise<boolean> => {
+    const wallet = sequence.getWallet();
+    const signer = wallet.getSigner();
+
+    if (!signer) return false;
+
+    const multiSigContract = new ethers.Contract(
+      NEXT_PUBLIC_MULTISIG_ADDRESS || "",
+      MultiSigWalletJson.abi,
+      signer
+    );
+
+    const address = await wallet.getAddress();
+
+    let result;
+
+    try {
+      result = await multiSigContract.isConfirmed(txIndex, address);
+    } catch (error: any) {
+      sendTransactionErrorOnMetaMaskRequest(error);
+      return false;
+    }
+
+    return result;
+  };
+
   return {
     checkIfMultiSigOwner,
     getTransactionCount,
     getTransactionDetails,
+    getOwnerConfirmationStatus,
   };
 };
 

@@ -28,8 +28,9 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   margin: theme.spacing(4, 0),
 }));
 
-const ContractsBox = styled(Box)<BoxProps>(() => ({
+const ContractsBox = styled(Box)<BoxProps>(({ theme }) => ({
   textAlign: "center",
+  margin: theme.spacing(4, 0),
 }));
 
 const InteractButton = (props: {
@@ -59,17 +60,28 @@ const MainPage: React.FunctionComponent = () => {
     disconnect,
     openWalletWithSettings,
   } = useSequenceWallet();
-  const { getTransactionCount, getTransactionDetails } =
-    useMultiSigTransactions();
+  const {
+    getTransactionCount,
+    getTransactionDetails,
+    getOwnerConfirmationStatus,
+  } = useMultiSigTransactions();
 
   const [txnCount, setTxnCount] = useState<number>(0);
-  const [txn, setTxn] = useState<Array<any>>({});
+  const [txn, setTxn] = useState<Array<any>>([]);
+  const [txnConfirmed, setTxnConfirmed] = useState<boolean>(false);
 
   const setUpDetails = async () => {
     const nextTxnCount = await getTransactionCount();
     setTxnCount(nextTxnCount);
     const nextTxn = await getTransactionDetails(nextTxnCount - 1);
     setTxn(nextTxn);
+
+    if (nextTxn.length === 5 && !nextTxn[3].executed) {
+      const userConfirmation = await getOwnerConfirmationStatus(
+        nextTxnCount - 1
+      );
+      setTxnConfirmed(userConfirmation);
+    }
   };
 
   useEffect(() => {
@@ -147,6 +159,17 @@ const MainPage: React.FunctionComponent = () => {
                     Confirmations: {Number(txn[4])}
                   </Typography>
                 </>
+              )}
+              {txn[3] && (
+                <Typography variant="h4">
+                  Transaction has been executed
+                </Typography>
+              )}
+              {txn.length === 5 && !txn[3] && (
+                <Typography variant="h4">
+                  You may still {txnConfirmed ? "revoke" : "confirm"} the
+                  transaction.
+                </Typography>
               )}
             </ContractsBox>
             <ContractsBox>
