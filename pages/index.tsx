@@ -1,3 +1,3 @@
-import SequenceWalletDetailsPage from "../components/views/SequenceWalletDetails";
+import MultiSigPage from "../components/views/MultiSig";
 
-export default SequenceWalletDetailsPage;
+export default MultiSigPage;

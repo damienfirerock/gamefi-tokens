@@ -45,7 +45,7 @@ const useSequenceWallet = () => {
       const wallet = sequence.getWallet();
 
       await wallet.connect({
-        app: "XY3",
+        app: "MultiSig",
         authorize,
         askForEmail: true,
         // keepWalletOpened: true,

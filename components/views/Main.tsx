@@ -14,7 +14,6 @@ import Layout from "../layout/Layout";
 import { Header } from "../common";
 import ProductCard from "../product/ProductCard";
 import LoadingPokemonCards from "../product/LoadingPokemonCards";
-import WelcomeModal from "../layout/WelcomeModal";
 
 import { RootState } from "../../store";
 import { fetchProducts } from "../../features/ProductsSlice";
@@ -104,7 +103,6 @@ const MainPage: React.FunctionComponent = () => {
           )}
         </CardsBox>
       </StyledContainer>
-      <WelcomeModal />
     </Layout>
   );
 };
