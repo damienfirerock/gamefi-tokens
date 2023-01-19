@@ -64,10 +64,12 @@ const MainPage: React.FunctionComponent = () => {
     getTransactionCount,
     getTransactionDetails,
     getOwnerConfirmationStatus,
+    getTxnSignature,
   } = useMultiSigTransactions();
 
   const [txnCount, setTxnCount] = useState<number>(0);
   const [txn, setTxn] = useState<Array<any>>([]);
+  const [txIndex, setTxIndex] = useState<number | null>(null);
   const [txnConfirmed, setTxnConfirmed] = useState<boolean>(false);
 
   const setUpDetails = async () => {
@@ -75,6 +77,7 @@ const MainPage: React.FunctionComponent = () => {
     setTxnCount(nextTxnCount);
     const nextTxn = await getTransactionDetails(nextTxnCount - 1);
     setTxn(nextTxn);
+    setTxIndex(nextTxnCount - 1);
 
     if (nextTxn.length === 5 && !nextTxn[3].executed) {
       const userConfirmation = await getOwnerConfirmationStatus(
@@ -82,6 +85,10 @@ const MainPage: React.FunctionComponent = () => {
       );
       setTxnConfirmed(userConfirmation);
     }
+  };
+
+  const getSignature = async () => {
+    if (typeof txIndex === "number") await getTxnSignature(txIndex);
   };
 
   useEffect(() => {
@@ -166,10 +173,19 @@ const MainPage: React.FunctionComponent = () => {
                 </Typography>
               )}
               {txn.length === 5 && !txn[3] && (
-                <Typography variant="h4">
-                  You may still {txnConfirmed ? "revoke" : "confirm"} the
-                  transaction.
-                </Typography>
+                <>
+                  <Typography variant="h4">
+                    You may still {txnConfirmed ? "revoke" : "confirm"} the
+                    transaction.
+                  </Typography>
+                  <InteractButton
+                    text={`Submit Signature to ${
+                      txnConfirmed ? "revoke" : "confirm"
+                    }`}
+                    method={getSignature}
+                    loading={loading}
+                  />
+                </>
               )}
             </ContractsBox>
             <ContractsBox>
