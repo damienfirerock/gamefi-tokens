@@ -5,15 +5,14 @@ import { sequence } from "0xsequence";
 import { OpenWalletIntent, Settings } from "@0xsequence/provider";
 
 import useDispatchErrors from "./useDispatchErrors";
+import useMultiSigTransactions from "./useMultiSigTransactions";
 
-const MultiSigWalletJson = require("../abis/MultiSigWallet.json");
-
-const NEXT_PUBLIC_MULTISIG_ADDRESS = process.env.NEXT_PUBLIC_MULTISIG_ADDRESS;
 const NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS =
   process.env.NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS;
 
 const useSequenceWallet = () => {
   const { sendTransactionErrorOnMetaMaskRequest } = useDispatchErrors();
+  const { checkIfMultiSigOwner } = useMultiSigTransactions();
 
   const [wallet, setWallet] = useState<sequence.provider.Wallet | null>(null);
   const [isWalletConnected, setIsWalletConnected] = useState<boolean>(false);
@@ -118,31 +117,6 @@ const useSequenceWallet = () => {
   const closeWallet = () => {
     const wallet = sequence.getWallet();
     wallet.closeWallet();
-  };
-
-  const checkIfMultiSigOwner = async (address: string): Promise<boolean> => {
-    // Get the wallet signer interface
-    const wallet = sequence.getWallet();
-    const signer = wallet.getSigner();
-
-    if (!signer) return false;
-
-    const multiSigContract = new ethers.Contract(
-      NEXT_PUBLIC_MULTISIG_ADDRESS || "",
-      MultiSigWalletJson.abi,
-      signer
-    );
-
-    let result;
-
-    try {
-      result = await multiSigContract.isOwner(address);
-    } catch (error: any) {
-      sendTransactionErrorOnMetaMaskRequest(error);
-      return false;
-    }
-    console.log({ result });
-    return result;
   };
 
   const sendMatic = async (amount: string, address: string) => {

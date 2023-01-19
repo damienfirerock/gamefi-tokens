@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   BoxProps,
@@ -15,6 +15,7 @@ import Layout from "../layout/Layout";
 import { StyledCircularProgress } from "../product/common/PokemonCard";
 
 import useSequenceWallet from "../../utils/hooks/useSequenceWallet";
+import useMultiSigTransactions from "../../utils/hooks/useMultiSigTransactions";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
 
 // https://github.com/vercel/next.js/issues/19420
@@ -57,38 +58,25 @@ const MainPage: React.FunctionComponent = () => {
     connect,
     disconnect,
     openWalletWithSettings,
-    sendMatic,
-    sendFrg,
   } = useSequenceWallet();
+  const { getTransactionCount, getTransactionDetails } =
+    useMultiSigTransactions();
 
-  const [maticAmount, setMaticAmount] = useState<string>("");
-  const [maticAddress, setMaticAddress] = useState<string>("");
-  const [frgAmount, setFrgAmount] = useState<string>("");
-  const [frgAddress, setFrgAddress] = useState<string>("");
+  const [txnCount, setTxnCount] = useState<number>(0);
+  const [txn, setTxn] = useState<Array<any>>({});
 
-  const handleMaticAmountChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
-    setMaticAmount(event.target.value);
+  const setUpDetails = async () => {
+    const nextTxnCount = await getTransactionCount();
+    setTxnCount(nextTxnCount);
+    const nextTxn = await getTransactionDetails(nextTxnCount - 1);
+    setTxn(nextTxn);
   };
 
-  const handleMaticAddressChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
-    setMaticAddress(event.target.value);
-  };
-
-  const handleFrgAmountChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
-    setFrgAmount(event.target.value);
-  };
-
-  const handleFrgAddressChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
-    setFrgAddress(event.target.value);
-  };
+  useEffect(() => {
+    if (isWalletConnected && isOwner) {
+      setUpDetails();
+    }
+  }, [isWalletConnected, isOwner]);
 
   return (
     <Layout>
@@ -107,7 +95,9 @@ const MainPage: React.FunctionComponent = () => {
           </Typography>
         </StyledBox>
         <StyledBox>
-          <Typography variant="h2">MultiSig Transactions</Typography>
+          <Typography variant="h2">
+            {txnCount || ""} MultiSig Transactions
+          </Typography>
         </StyledBox>
         <StyledBox>
           {isWalletConnected ? (
@@ -140,58 +130,25 @@ const MainPage: React.FunctionComponent = () => {
                 loading={loading}
               />
             </StyledBox>{" "}
-            <StyledBox>
-              <TextField
-                label="Amount (MATIC)"
-                value={maticAmount}
-                style={{ marginRight: 10 }}
-                variant="standard"
-                type="number"
-                onChange={handleMaticAmountChange}
-                placeholder="0"
-                InputLabelProps={{ shrink: true }}
-              />
-              <TextField
-                label="Address"
-                value={maticAddress}
-                style={{ marginRight: 10 }}
-                variant="standard"
-                onChange={handleMaticAddressChange}
-                placeholder="0x"
-                InputLabelProps={{ shrink: true }}
-              />
-              <InteractButton
-                text="Transfer"
-                method={() => sendMatic(maticAmount, maticAddress)}
-                loading={loading}
-              />
-            </StyledBox>
-            <StyledBox>
-              <TextField
-                label="Amount (FRG)"
-                value={frgAmount}
-                style={{ marginRight: 10 }}
-                variant="standard"
-                type="number"
-                onChange={handleFrgAmountChange}
-                placeholder="0"
-                InputLabelProps={{ shrink: true }}
-              />
-              <TextField
-                label="Address"
-                value={frgAddress}
-                style={{ marginRight: 10 }}
-                variant="standard"
-                onChange={handleFrgAddressChange}
-                placeholder="0x"
-                InputLabelProps={{ shrink: true }}
-              />
-              <InteractButton
-                text="Transfer"
-                method={() => sendFrg(frgAmount, frgAddress)}
-                loading={loading}
-              />
-            </StyledBox>
+            <ContractsBox>
+              <Typography variant="h4">Latest Transaction</Typography>
+              {txnCount > 0 && txn.length === 5 && (
+                <>
+                  <Typography variant="h5">
+                    To: {txn[0]}
+                    {ADDRESS_NAMES[txn[0]] && `(${ADDRESS_NAMES[txn[0]]})`}
+                  </Typography>
+                  <Typography variant="h5">Value: {Number(txn[1])}</Typography>
+                  <Typography variant="h5">Data: {txn[2]}</Typography>
+                  <Typography variant="h5">
+                    Executed: {txn[3].toString()}
+                  </Typography>
+                  <Typography variant="h5">
+                    Confirmations: {Number(txn[4])}
+                  </Typography>
+                </>
+              )}
+            </ContractsBox>
             <ContractsBox>
               <Typography variant="h3">Contracts</Typography>
               {addresses.map((address) => {
