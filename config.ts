@@ -7,8 +7,11 @@ const NEXT_PUBLIC_OWNER_ADDRESS_2 = process.env.NEXT_PUBLIC_OWNER_ADDRESS_2;
 const NEXT_PUBLIC_OWNER_ADDRESS_3 = process.env.NEXT_PUBLIC_OWNER_ADDRESS_3;
 const NEXT_PUBLIC_OWNER_ADDRESS_4 = process.env.NEXT_PUBLIC_OWNER_ADDRESS_4;
 const NEXT_PUBLIC_OWNER_ADDRESS_5 = process.env.NEXT_PUBLIC_OWNER_ADDRESS_5;
+const NEXT_PUBLIC_OWNER_ADDRESS_6 = process.env.NEXT_PUBLIC_OWNER_ADDRESS_6;
 
-const config = {
+const NEXT_PUBLIC_POLYGONSCAN_URL = process.env.NEXT_PUBLIC_POLYGONSCAN_URL;
+
+export const CONTRACT_ADDRESSES = {
   fireRockToken: NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS,
   multisig: NEXT_PUBLIC_MULTISIG_ADDRESS,
   owner1: NEXT_PUBLIC_OWNER_ADDRESS_1,
@@ -16,9 +19,15 @@ const config = {
   owner3: NEXT_PUBLIC_OWNER_ADDRESS_3,
   owner4: NEXT_PUBLIC_OWNER_ADDRESS_4,
   owner5: NEXT_PUBLIC_OWNER_ADDRESS_5,
+  owner6: NEXT_PUBLIC_OWNER_ADDRESS_6,
 };
 
-export const configNames: Record<string, string> = {
+const CONFIG = {
+  ...CONTRACT_ADDRESSES,
+  polygonScanUrl: NEXT_PUBLIC_POLYGONSCAN_URL,
+};
+
+export const ADDRESS_NAMES: Record<string, string> = {
   "0xb3170835AfebF0F69dfEE0c70Bf0207E269C0ffe": "FireRock Token",
   "0x5d3d329083c6E7aef59bDF49D4630D2B46048Bb9": "MultiSig Wallet",
   "0x2F8C6C5D12391F8D6AcE02A63a579f391F04b40f": "Owner 1",
@@ -26,6 +35,7 @@ export const configNames: Record<string, string> = {
   "0xe2A2C2bB5014Ed1922F0c93f30CAd1e3af0ed60B": "Owner 3",
   "0x9fCCaf1654B0fA5DBBf2A40617a3CAF952Db166D": "Owner 4",
   "0x6F5744B20A60A3A6aCF73bfBee6C2BaCE4Ed1140": "Owner 5",
+  "0x75B59c086D31B4c8BbbD26DA29B1100c2928410A": "Owner 6",
 };
 
-export default config;
+export default CONFIG;
