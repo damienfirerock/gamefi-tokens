@@ -5,26 +5,21 @@ import {
   Button,
   Container,
   ContainerProps,
-  InputAdornment,
   Link,
   Typography,
   TextField,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Core } from "@walletconnect/core";
-import { Web3Wallet } from "@walletconnect/web3wallet";
 
 import Layout from "../layout/Layout";
 import { StyledCircularProgress } from "../product/common/PokemonCard";
 
 import useSequenceWallet from "../../utils/hooks/useSequenceWallet";
-import config, { configNames } from "../../config";
+import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
 
 // https://github.com/vercel/next.js/issues/19420
-const NEXT_PUBLIC_POLYGONSCAN_URL = process.env.NEXT_PUBLIC_POLYGONSCAN_URL;
-const NEXT_PUBLIC_MULTISIG_ADDRESS = process.env.NEXT_PUBLIC_MULTISIG_ADDRESS;
 
-const addresses = Object.values(config);
+const addresses = Object.values(CONTRACT_ADDRESSES);
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
@@ -57,6 +52,7 @@ const StyledContainer = styled(Container)<ContainerProps>(({ theme }) => ({
 const MainPage: React.FunctionComponent = () => {
   const {
     isWalletConnected,
+    isOwner,
     loading,
     connect,
     disconnect,
@@ -129,7 +125,13 @@ const MainPage: React.FunctionComponent = () => {
           )}
         </StyledBox>
 
-        {isWalletConnected && (
+        {isWalletConnected && !isOwner && (
+          <StyledBox>
+            <Typography variant="h3">Not Authorised</Typography>
+          </StyledBox>
+        )}
+
+        {isWalletConnected && isOwner && (
           <>
             <StyledBox>
               <InteractButton
@@ -190,27 +192,26 @@ const MainPage: React.FunctionComponent = () => {
                 loading={loading}
               />
             </StyledBox>
+            <ContractsBox>
+              <Typography variant="h3">Contracts</Typography>
+              {addresses.map((address) => {
+                if (!address) return;
+                return (
+                  <Typography variant="h4" key={address}>
+                    {ADDRESS_NAMES[address]}:{" "}
+                    <Link
+                      href={`${CONFIG.polygonScanUrl}${address}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {address}
+                    </Link>
+                  </Typography>
+                );
+              })}
+            </ContractsBox>
           </>
         )}
-
-        <ContractsBox>
-          <Typography variant="h3">Contracts</Typography>
-          {addresses.map((address) => {
-            if (!address) return;
-            return (
-              <Typography variant="h4" key={address}>
-                {configNames[address]}:{" "}
-                <Link
-                  href={`${NEXT_PUBLIC_POLYGONSCAN_URL}${address}#code`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {address}
-                </Link>
-              </Typography>
-            );
-          })}
-        </ContractsBox>
       </StyledContainer>
     </Layout>
   );

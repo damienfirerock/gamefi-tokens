@@ -6,6 +6,9 @@ import { OpenWalletIntent, Settings } from "@0xsequence/provider";
 
 import useDispatchErrors from "./useDispatchErrors";
 
+const MultiSigWalletJson = require("../abis/MultiSigWallet.json");
+
+const NEXT_PUBLIC_MULTISIG_ADDRESS = process.env.NEXT_PUBLIC_MULTISIG_ADDRESS;
 const NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS =
   process.env.NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS;
 
@@ -14,9 +17,9 @@ const useSequenceWallet = () => {
 
   const [wallet, setWallet] = useState<sequence.provider.Wallet | null>(null);
   const [isWalletConnected, setIsWalletConnected] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
 
-  console.log({ wallet });
+  const [isOwner, setOwner] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const initSequence = async () => {
     setLoading(true);
@@ -67,6 +70,12 @@ const useSequenceWallet = () => {
       const connectionResult = wallet.isConnected();
 
       setIsWalletConnected(connectionResult);
+
+      const address = await wallet.getAddress();
+      const isOwner = await checkIfMultiSigOwner(address);
+
+      setOwner(isOwner);
+
       setLoading(false);
     } catch (e) {
       sendTransactionErrorOnMetaMaskRequest(e);
@@ -78,6 +87,7 @@ const useSequenceWallet = () => {
     const wallet = sequence.getWallet();
     wallet.disconnect();
     setIsWalletConnected(false);
+    setOwner(false);
   };
 
   const openWallet = () => {
@@ -108,6 +118,31 @@ const useSequenceWallet = () => {
   const closeWallet = () => {
     const wallet = sequence.getWallet();
     wallet.closeWallet();
+  };
+
+  const checkIfMultiSigOwner = async (address: string): Promise<boolean> => {
+    // Get the wallet signer interface
+    const wallet = sequence.getWallet();
+    const signer = wallet.getSigner();
+
+    if (!signer) return false;
+
+    const multiSigContract = new ethers.Contract(
+      NEXT_PUBLIC_MULTISIG_ADDRESS || "",
+      MultiSigWalletJson.abi,
+      signer
+    );
+
+    let result;
+
+    try {
+      result = await multiSigContract.isOwner(address);
+    } catch (error: any) {
+      sendTransactionErrorOnMetaMaskRequest(error);
+      return false;
+    }
+    console.log({ result });
+    return result;
   };
 
   const sendMatic = async (amount: string, address: string) => {
@@ -191,6 +226,7 @@ const useSequenceWallet = () => {
   return {
     isWalletConnected,
     loading,
+    isOwner,
     connect,
     disconnect,
     openWallet,
