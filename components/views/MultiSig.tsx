@@ -135,7 +135,7 @@ const MainPage: React.FunctionComponent = () => {
       <StyledContainer>
         <StyledBox>
           <Typography variant="h4">
-            * This is on the Polygon Mumbai Testnet. Faucet:{" "}
+            * This is on the Polygon Mumbai Testnet Faucet:{" "}
             <Link
               href={"https://faucet.polygon.technology/"}
               target="_blank"
@@ -213,7 +213,7 @@ const MainPage: React.FunctionComponent = () => {
               )}
             </ContractsBox>
             <ContractsBox>
-              <Typography variant="h3">Contracts</Typography>
+              <Typography variant="h3">Addresses</Typography>
               {addresses.map((address) => {
                 if (!address) return;
                 return (
