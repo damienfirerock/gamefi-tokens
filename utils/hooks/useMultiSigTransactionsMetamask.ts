@@ -38,7 +38,7 @@ const useMultiSigTransactions = () => {
     const { chainId } = await provider.getNetwork();
 
     if (chainId !== parseInt(process.env.NEXT_PUBLIC_NETWORK_CHAIN_ID || "")) {
-      sendTransactionError("Please switch to Goerli network");
+      sendTransactionError("Please switch to Mumbai network");
       return;
     }
 
@@ -64,7 +64,6 @@ const useMultiSigTransactions = () => {
       const address = await signer.getAddress();
       result = await multiSigContract.isOwner(address);
       setIsOwner(result);
-      console.log({ owneresult: result });
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
       return false;
@@ -88,7 +87,6 @@ const useMultiSigTransactions = () => {
 
     try {
       result = await multiSigContract.getTransactionCount();
-      console.log({ result });
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
       return 0;
@@ -118,7 +116,7 @@ const useMultiSigTransactions = () => {
       sendTransactionErrorOnMetaMaskRequest(error);
       return [];
     }
-    console.log({ result });
+
     return result;
   };
 
@@ -149,6 +147,33 @@ const useMultiSigTransactions = () => {
     return result;
   };
 
+  const getSignatureDetails = async (txIndex: number) => {
+    const { signer } = (await runPreChecks()) || {};
+
+    if (!signer) return;
+
+    const multiSigContract = new ethers.Contract(
+      NEXT_PUBLIC_MULTISIG_ADDRESS || "",
+      MultiSigWalletJson.abi,
+      signer
+    );
+
+    const address = await signer.getAddress();
+
+    try {
+      const nextNonce = await multiSigContract.getNextNonce();
+      const hash = await multiSigContract.getMessageHash(
+        Number(nextNonce),
+        txIndex,
+        address
+      );
+
+      return { hash, txIndex, address, nonce: Number(nextNonce) };
+    } catch (error: any) {
+      sendTransactionErrorOnMetaMaskRequest(error);
+    }
+  };
+
   const getTxnSignature = async (txIndex: number) => {
     const { signer } = (await runPreChecks()) || {};
 
@@ -170,9 +195,6 @@ const useMultiSigTransactions = () => {
         address
       );
       const signature = await signer.signMessage(ethers.utils.arrayify(hash));
-      console.log({ nextNonce, txIndex, address, signature });
-
-      console.log("verifying....");
 
       const result = await multiSigContract.verify(
         nextNonce,
@@ -193,6 +215,7 @@ const useMultiSigTransactions = () => {
     getTransactionCount,
     getTransactionDetails,
     getOwnerConfirmationStatus,
+    getSignatureDetails,
     getTxnSignature,
   };
 };

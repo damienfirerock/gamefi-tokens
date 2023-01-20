@@ -58,6 +58,7 @@ const MainPage: React.FunctionComponent = () => {
   const {
     isOwner,
     getTransactionCount,
+    getSignatureDetails,
     getTransactionDetails,
     getOwnerConfirmationStatus,
     checkIfMultiSigOwner,
@@ -68,6 +69,13 @@ const MainPage: React.FunctionComponent = () => {
   const [txn, setTxn] = useState<Array<any>>([]);
   const [txIndex, setTxIndex] = useState<number | null>(null);
   const [txnConfirmed, setTxnConfirmed] = useState<boolean>(false);
+  const [sigDetails, setSigDetails] = useState<{
+    hash: any;
+    txIndex: number;
+    address: string;
+    nonce: number;
+  } | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const setUpDetails = async () => {
     const nextTxnCount = await getTransactionCount();
@@ -82,11 +90,15 @@ const MainPage: React.FunctionComponent = () => {
         nextTxnCount - 1
       );
       setTxnConfirmed(userConfirmation);
+      const details = await getSignatureDetails(nextTxnCount - 1);
+      if (details) setSigDetails(details);
     }
   };
 
   const getSignature = async () => {
+    setLoading(true);
     if (typeof txIndex === "number") await getTxnSignature(txIndex);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -121,7 +133,7 @@ const MainPage: React.FunctionComponent = () => {
             <InteractButton
               text="Connect"
               method={requestConnect}
-              loading={false}
+              loading={loading}
             />
           )}
         </StyledBox>
@@ -163,12 +175,17 @@ const MainPage: React.FunctionComponent = () => {
                     You may still {txnConfirmed ? "revoke" : "confirm"} the
                     transaction.
                   </Typography>
+                  {sigDetails && (
+                    <Typography variant="h6">
+                      {`The signing message (${sigDetails.hash}) is a hash of the nonce (${sigDetails.nonce}), txIndex (${sigDetails.txIndex}), and your address (${sigDetails.address})`}
+                    </Typography>
+                  )}
                   <InteractButton
                     text={`Submit Signature to ${
                       txnConfirmed ? "revoke" : "confirm"
                     }`}
                     method={getSignature}
-                    loading={false}
+                    loading={loading}
                   />
                 </>
               )}

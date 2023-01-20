@@ -87,7 +87,7 @@ const useMultiSigTransactions = () => {
       sendTransactionErrorOnMetaMaskRequest(error);
       return [];
     }
-    console.log({ result });
+
     return result;
   };
 
@@ -141,7 +141,6 @@ const useMultiSigTransactions = () => {
         address
       );
       const signature = await signer.signMessage(ethers.utils.arrayify(hash));
-      console.log({ nextNonce, txIndex, address, signature });
 
       const provider = wallet.getProvider();
 
@@ -153,12 +152,8 @@ const useMultiSigTransactions = () => {
           provider
         );
 
-        console.log("isValid?", isValid);
-
         if (!isValid) throw new Error("signature is invalid");
       }
-
-      console.log("verifying....");
 
       const result = await multiSigContract.verify(
         nextNonce,
@@ -166,8 +161,6 @@ const useMultiSigTransactions = () => {
         address,
         signature
       );
-
-      console.log({ verifyResult: result });
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
     }
