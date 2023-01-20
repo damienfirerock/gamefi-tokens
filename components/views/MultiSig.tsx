@@ -10,13 +10,17 @@ import {
   TextField,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { useDispatch, useSelector } from "react-redux";
 
 import Layout from "../layout/Layout";
 import { StyledCircularProgress } from "../product/common/PokemonCard";
+import AlertBar from "../common/AlertBar";
 
+import { AppDispatch, RootState } from "../../store";
 import useMultiSigTransactionsMetamask from "../../utils/hooks/useMultiSigTransactionsMetamask";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
+import { clearError, submitSignature } from "../../features/MultiSigSlice";
 
 // https://github.com/vercel/next.js/issues/19420
 
@@ -52,8 +56,12 @@ const StyledContainer = styled(Container)<ContainerProps>(({ theme }) => ({
 }));
 
 const MainPage: React.FunctionComponent = () => {
-  const { provider, account, chainId, requestConnect, requestChangeChainId } =
-    useConnectWallet();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { account, requestConnect } = useConnectWallet();
+
+  const multiSigSlice = useSelector((state: RootState) => state.multiSig);
+  const { error, loading: multiSigLoading } = multiSigSlice;
 
   const {
     isOwner,
@@ -97,7 +105,10 @@ const MainPage: React.FunctionComponent = () => {
 
   const getSignature = async () => {
     setLoading(true);
-    if (typeof txIndex === "number") await getTxnSignature(txIndex);
+    if (typeof txIndex === "number") {
+      const signature = await getTxnSignature(txIndex);
+      if (signature) await dispatch(submitSignature({ signature }));
+    }
     setLoading(false);
   };
 
@@ -185,7 +196,7 @@ const MainPage: React.FunctionComponent = () => {
                       txnConfirmed ? "revoke" : "confirm"
                     }`}
                     method={getSignature}
-                    loading={loading}
+                    loading={loading || multiSigLoading}
                   />
                 </>
               )}
@@ -211,6 +222,12 @@ const MainPage: React.FunctionComponent = () => {
           </>
         )}
       </StyledContainer>
+
+      <AlertBar
+        severity="warning"
+        text={error}
+        handleClearAlertSource={() => dispatch(clearError())}
+      />
     </Layout>
   );
 };
