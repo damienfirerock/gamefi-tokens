@@ -4,6 +4,12 @@ const { NEXT_PUBLIC_BACKEND_URL } = process.env;
 
 const ENDPOINT = "/api/v1/multisig";
 
+export enum MultiSigTxnType {
+  CONFIRM = "Confirm",
+  REVOKE = "Revoke",
+  EXECUTE = "Execute",
+}
+
 export const submitSignature = createAsyncThunk(
   "get/submitSignature",
   async (props: {
@@ -11,6 +17,7 @@ export const submitSignature = createAsyncThunk(
     address: string;
     nonce: number;
     signature: string;
+    type: MultiSigTxnType;
   }) => {
     const body = JSON.stringify(props);
 
