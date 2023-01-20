@@ -6,17 +6,25 @@ const ENDPOINT = "/api/v1/multisig";
 
 export const submitSignature = createAsyncThunk(
   "get/submitSignature",
-  async (props: { signature: string }) => {
+  async (props: {
+    txIndex: number;
+    address: string;
+    nonce: number;
+    signature: string;
+  }) => {
     const body = JSON.stringify(props);
 
     const response: {
       success: boolean;
       error?: any;
-    } = await fetch(`${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}/sign` || "", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body,
-    }).then((res) => res.json());
+    } = await fetch(
+      `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}/submitSignature` || "",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body,
+      }
+    ).then((res) => res.json());
 
     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
     //The fetch() method returns a Promise that resolves regardless of whether the request is successful,

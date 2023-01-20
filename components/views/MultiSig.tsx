@@ -107,7 +107,10 @@ const MainPage: React.FunctionComponent = () => {
     setLoading(true);
     if (typeof txIndex === "number") {
       const signature = await getTxnSignature(txIndex);
-      if (signature) await dispatch(submitSignature({ signature }));
+      if (signature) {
+        const { hash, ...details } = sigDetails!;
+        await dispatch(submitSignature({ signature, ...details }));
+      }
     }
     setLoading(false);
   };
