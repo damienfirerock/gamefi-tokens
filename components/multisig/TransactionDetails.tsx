@@ -24,9 +24,29 @@ const ContractsBox = styled(Box)<BoxProps>(({ theme }) => ({
   margin: theme.spacing(4, 0, 0),
 }));
 
-const PageButton = styled(Button)<ButtonProps>(({ theme }) => ({
-  margin: theme.spacing(0, 0.5),
+const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
+  margin: theme.spacing(0.25),
 }));
+
+const PageButton = (props: {
+  text: string;
+  method: () => void;
+  loading: boolean;
+  disabled?: boolean;
+}) => {
+  const { text, method, loading, disabled } = props;
+  return (
+    <StyledButton
+      variant="outlined"
+      size="small"
+      onClick={method}
+      disabled={loading || disabled}
+    >
+      {text}
+      {loading && <StyledCircularProgress size={24} />}
+    </StyledButton>
+  );
+};
 
 const InteractButton = (props: {
   text: string;
@@ -98,6 +118,12 @@ const TransactionDetails: React.FunctionComponent = () => {
     return array;
   }, [txIndex, txCount]);
 
+  const shouldShowLatestButton = useMemo((): boolean => {
+    if (txCount - txIndex > sideButtonNumber + 1) return true;
+
+    return false;
+  }, [txIndex, txCount]);
+
   const setupTxn = async (nextTxIndex: number) => {
     const nextIndex = nextTxIndex;
 
@@ -162,16 +188,21 @@ const TransactionDetails: React.FunctionComponent = () => {
       {/* Pagination */}
       {txNumbers.map((number) => (
         <PageButton
-          variant="outlined"
           key={number}
-          size="small"
-          onClick={() => getTransaction(number)}
-          disabled={loading || number === txIndex}
-        >
-          {number}
-          {loading && <StyledCircularProgress size={24} />}
-        </PageButton>
+          text={number.toString()}
+          method={() => getTransaction(number)}
+          disabled={number === txIndex}
+          loading={loading}
+        />
       ))}
+
+      {shouldShowLatestButton && (
+        <PageButton
+          text="latest"
+          method={() => getTransaction(txCount - 1)}
+          loading={loading}
+        />
+      )}
 
       {/* Details */}
       {!!txnDetails && (
