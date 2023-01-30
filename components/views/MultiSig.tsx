@@ -116,11 +116,14 @@ const MainPage: React.FunctionComponent = () => {
     setLoading(true);
     if (typeof txIndex === "number") {
       const signature = await getTxnSignature(txIndex);
+
       if (signature) {
         const { hash, ...details } = sigDetails!;
+
         const type = txnConfirmed
           ? MultiSigTxnType.REVOKE
           : MultiSigTxnType.CONFIRM;
+
         await dispatch(submitSignature({ signature, type, ...details }));
         await setUpDetails();
       }

@@ -1,8 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const { NEXT_PUBLIC_BACKEND_URL } = process.env;
-
-const ENDPOINT = "/api/v1/multisig";
+const ENDPOINT = "/api/multisig";
 
 export enum MultiSigTxnType {
   CONFIRM = "Confirm",
@@ -24,14 +22,11 @@ export const submitSignature = createAsyncThunk(
     const response: {
       success: boolean;
       error?: any;
-    } = await fetch(
-      `${NEXT_PUBLIC_BACKEND_URL}${ENDPOINT}/submitSignature` || "",
-      {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body,
-      }
-    ).then((res) => res.json());
+    } = await fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body,
+    }).then((res) => res.json());
 
     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
     //The fetch() method returns a Promise that resolves regardless of whether the request is successful,

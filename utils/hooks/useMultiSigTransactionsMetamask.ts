@@ -203,8 +203,6 @@ const useMultiSigTransactions = () => {
         signature
       );
 
-      console.log({ verifyResult: result });
-
       return signature;
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
