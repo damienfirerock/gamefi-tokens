@@ -233,7 +233,7 @@ const MainPage: React.FunctionComponent = () => {
                   <Typography variant="h4" key={address}>
                     {ADDRESS_NAMES[address]}:{" "}
                     <Link
-                      href={`${CONFIG.polygonScanUrl}${address}`}
+                      href={`${CONFIG.POLYGONSCAN_URL}${address}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
