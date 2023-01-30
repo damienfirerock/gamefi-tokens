@@ -18,6 +18,7 @@ const useMultiSigTransactions = () => {
 
   const [isOwner, setIsOwner] = useState<Boolean>(false);
   const [txnCount, setTxnCount] = useState<number>(0);
+  const [txIndex, setTxnIndex] = useState<number>(0);
   const [txnDetails, setTxnDetails] = useState<IUserTransaction | null>(null);
   const [sigDetails, setSigDetails] = useState<ISignatureDetails | null>(null);
 
@@ -95,7 +96,9 @@ const useMultiSigTransactions = () => {
 
     try {
       result = await multiSigContract.getTransactionCount();
-      setTxnCount(Number(result));
+      const nextCount = Number(result);
+      setTxnCount(nextCount);
+      setTxnIndex(nextCount - 1);
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
       return 0;
@@ -239,6 +242,7 @@ const useMultiSigTransactions = () => {
   return {
     isOwner,
     txnCount,
+    txIndex,
     txnDetails,
     sigDetails,
     checkIfMultiSigOwner,
