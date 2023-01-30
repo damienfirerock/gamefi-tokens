@@ -5,8 +5,8 @@ import { useRouter } from "next/router";
 import NextLink from "next/link";
 
 import { Header } from "../common";
-// import WalletButton from "./buttons/WalletButton";
-// import TransactionsButton from "./buttons/TransactionsButton";
+import AccountButton from "./buttons/AccountButton";
+
 import MenuStyledButton from "./buttons/common/MenuStyledButton";
 
 const StyledBox = styled(Box)<BoxProps>(() => ({
@@ -34,8 +34,7 @@ const NavBar: React.FunctionComponent = () => {
               </MenuStyledButton>
             </NextLink>
           )}
-          {/* <TransactionsButton /> */}
-          {/* <WalletButton /> */}
+          <AccountButton />
         </Toolbar>
       </AppBar>
     </div>
