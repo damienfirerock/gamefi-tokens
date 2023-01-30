@@ -20,12 +20,9 @@ import { AppDispatch, RootState } from "../../store";
 import useMultiSigTransactionsMetamask from "../../utils/hooks/useMultiSigTransactionsMetamask";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
-import {
-  clearError,
-  submitSignature,
-  MultiSigTxnType,
-} from "../../features/MultiSigSlice";
+import { clearError, submitSignature } from "../../features/MultiSigSlice";
 import { clearError as clearTransactionError } from "../../features/TransactionsSlice";
+import { MultiSigTxnType } from "../../pages/api/multisig";
 
 // https://github.com/vercel/next.js/issues/19420
 

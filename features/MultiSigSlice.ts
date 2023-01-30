@@ -1,12 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const ENDPOINT = "/api/multisig";
+import { MultiSigTxnType } from "../pages/api/multisig";
 
-export enum MultiSigTxnType {
-  CONFIRM = "Confirm",
-  REVOKE = "Revoke",
-  EXECUTE = "Execute",
-}
+const ENDPOINT = "/api/multisig";
 
 const timeout = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
