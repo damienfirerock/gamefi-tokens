@@ -13,7 +13,7 @@ import {
 import { styled } from "@mui/material/styles";
 
 import Layout from "../layout/Layout";
-import { StyledCircularProgress } from "../product/common/PokemonCard";
+import StyledCircularProgress from "../common/StyledCircularProgress";
 
 import useSequenceWallet from "../../utils/hooks/useSequenceWallet";
 
