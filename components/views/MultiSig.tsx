@@ -17,7 +17,7 @@ import StyledCircularProgress from "../common/StyledCircularProgress";
 import AlertBar from "../common/AlertBar";
 
 import { AppDispatch, RootState } from "../../store";
-import useMultiSigTransactionsMetamask from "../../utils/hooks/useMultiSigTransactionsMetamask";
+import useMultiSigTransactions from "../../utils/hooks/useMultiSigTransactions";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
 import { clearError, submitSignature } from "../../features/MultiSigSlice";
@@ -61,57 +61,59 @@ const MainPage: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { account, requestConnect } = useConnectWallet();
+  const {
+    isOwner,
+    txnCount,
+    txnDetails,
+    sigDetails,
+    getTransactionCount,
+    getSignatureDetails,
+    getTransactionDetails,
+    checkIfMultiSigOwner,
+    getTxnSignature,
+  } = useMultiSigTransactions();
+
+  const { to, value, data, executed, confirmations, userConfirmed } =
+    txnDetails || {};
 
   const multiSigSlice = useSelector((state: RootState) => state.multiSig);
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { error, loading: multiSigLoading } = multiSigSlice;
   const { error: transactionError } = transactionSlice;
 
-  const {
-    isOwner,
-    getTransactionCount,
-    getSignatureDetails,
-    getTransactionDetails,
-    getOwnerConfirmationStatus,
-    checkIfMultiSigOwner,
-    getTxnSignature,
-  } = useMultiSigTransactionsMetamask();
-
-  const [txnCount, setTxnCount] = useState<number>(0);
-  const [txn, setTxn] = useState<Array<any>>([]);
   const [txIndex, setTxIndex] = useState<number | null>(null);
-  const [txnConfirmed, setTxnConfirmed] = useState<boolean>(false);
-  const [sigDetails, setSigDetails] = useState<{
-    hash: any;
-    txIndex: number;
-    address: string;
-    nonce: number;
-  } | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const setUpDetails = async () => {
+  const setupInitial = async () => {
+    setLoading(true);
+
     const isOwner = await checkIfMultiSigOwner();
 
     if (isOwner) {
-      // to clear
       const nextTxnCount = await getTransactionCount();
-      setTxnCount(nextTxnCount);
-      const nextTxn = await getTransactionDetails(nextTxnCount - 1);
-      setTxn(nextTxn);
-      setTxIndex(nextTxnCount - 1);
 
-      if (nextTxn.length === 5 && !nextTxn[3].executed) {
-        const userConfirmation = await getOwnerConfirmationStatus(
-          nextTxnCount - 1
-        );
-        setTxnConfirmed(userConfirmation);
-        const details = await getSignatureDetails(nextTxnCount - 1);
-        if (details) setSigDetails(details);
-      }
+      const latestTxnIndex = nextTxnCount - 1;
+      setTxIndex(latestTxnIndex);
+
+      setupTxn(latestTxnIndex);
+    }
+
+    setLoading(false);
+  };
+
+  const setupTxn = async (nextTxIndex?: number) => {
+    const nextIndex = nextTxIndex || txIndex;
+
+    if (!nextIndex && nextIndex !== 0) return;
+
+    const nextTxn = await getTransactionDetails(nextIndex);
+
+    if (nextTxn && !nextTxn.executed) {
+      await getSignatureDetails(nextIndex);
     }
   };
 
-  const getSignature = async () => {
+  const handleSubmitSignature = async () => {
     setLoading(true);
     if (typeof txIndex === "number") {
       const signature = await getTxnSignature(txIndex);
@@ -119,12 +121,12 @@ const MainPage: React.FunctionComponent = () => {
       if (signature) {
         const { hash, ...details } = sigDetails!;
 
-        const type = txnConfirmed
+        const type = userConfirmed
           ? MultiSigTxnType.REVOKE
           : MultiSigTxnType.CONFIRM;
 
         await dispatch(submitSignature({ signature, type, ...details }));
-        await setUpDetails();
+        await setupTxn(txIndex);
       }
     }
     setLoading(false);
@@ -140,7 +142,7 @@ const MainPage: React.FunctionComponent = () => {
 
   useEffect(() => {
     if (account) {
-      setUpDetails();
+      setupInitial();
     }
   }, [account]);
 
@@ -185,31 +187,31 @@ const MainPage: React.FunctionComponent = () => {
           <>
             <ContractsBox>
               <Typography variant="h4">Latest Transaction</Typography>
-              {txnCount > 0 && txn.length === 5 && (
+              {!!txnDetails && (
                 <>
                   <Typography variant="h5">
-                    To: {txn[0]}
-                    {ADDRESS_NAMES[txn[0]] && `(${ADDRESS_NAMES[txn[0]]})`}
+                    To: {to}
+                    {ADDRESS_NAMES[to!] && `(${ADDRESS_NAMES[to!]})`}
                   </Typography>
-                  <Typography variant="h5">Value: {Number(txn[1])}</Typography>
-                  <Typography variant="h5">Data: {txn[2]}</Typography>
+                  <Typography variant="h5">Value: {value}</Typography>
+                  <Typography variant="h5">Data: {data}</Typography>
                   <Typography variant="h5">
-                    Executed: {txn[3].toString()}
+                    Executed: {executed!.toString()}
                   </Typography>
                   <Typography variant="h5">
-                    Confirmations: {Number(txn[4])}
+                    Confirmations: {confirmations}
                   </Typography>
                 </>
               )}
-              {txn[3] && (
+              {executed && (
                 <Typography variant="h4">
                   Transaction has been executed
                 </Typography>
               )}
-              {txn.length === 5 && !txn[3] && (
+              {!!txnDetails && !executed && (
                 <>
                   <Typography variant="h4">
-                    You may still {txnConfirmed ? "revoke" : "confirm"} the
+                    You may still {userConfirmed ? "revoke" : "confirm"} the
                     transaction.
                   </Typography>
                   {sigDetails && (
@@ -219,9 +221,9 @@ const MainPage: React.FunctionComponent = () => {
                   )}
                   <InteractButton
                     text={`Submit Signature to ${
-                      txnConfirmed ? "revoke" : "confirm"
+                      userConfirmed ? "revoke" : "confirm"
                     }`}
-                    method={getSignature}
+                    method={handleSubmitSignature}
                     loading={loading || multiSigLoading}
                   />
                 </>

@@ -1,5 +1,6 @@
-import { ethers } from "ethers";
 import { useState } from "react";
+import { ethers } from "ethers";
+import { sequence } from "0xsequence";
 
 import useDispatchErrors from "./useDispatchErrors";
 
@@ -8,47 +9,14 @@ const MultiSigWalletJson = require("../abis/MultiSigWallet.json");
 const NEXT_PUBLIC_MULTISIG_ADDRESS = process.env.NEXT_PUBLIC_MULTISIG_ADDRESS;
 
 const useMultiSigTransactions = () => {
-  const { sendTransactionError, sendTransactionErrorOnMetaMaskRequest } =
-    useDispatchErrors();
+  const { sendTransactionErrorOnMetaMaskRequest } = useDispatchErrors();
 
   const [isOwner, setIsOwner] = useState<Boolean>(false);
 
-  const runPreChecks = async () => {
-    const { ethereum } = window as any;
-
-    if (!window || !ethereum) {
-      sendTransactionError("No wallet installed");
-      return;
-    }
-
-    const provider = new ethers.providers.Web3Provider(ethereum, "any");
-
-    let walletAddress;
-
-    try {
-      const accounts = await ethereum.request({
-        method: "eth_requestAccounts",
-      });
-      walletAddress = accounts[0]; // first account in MetaMask
-    } catch (error: any) {
-      sendTransactionErrorOnMetaMaskRequest(error);
-      return;
-    }
-
-    const { chainId } = await provider.getNetwork();
-
-    if (chainId !== parseInt(process.env.NEXT_PUBLIC_NETWORK_CHAIN_ID || "")) {
-      sendTransactionError("Please switch to Mumbai network");
-      return;
-    }
-
-    const signer = provider.getSigner(walletAddress);
-
-    return { signer };
-  };
-
-  const checkIfMultiSigOwner = async (): Promise<boolean> => {
-    const { signer } = (await runPreChecks()) || {};
+  const checkIfMultiSigOwner = async (address: string): Promise<boolean> => {
+    // Get the wallet signer interface
+    const wallet = sequence.getWallet();
+    const signer = wallet.getSigner();
 
     if (!signer) return false;
 
@@ -61,7 +29,6 @@ const useMultiSigTransactions = () => {
     let result;
 
     try {
-      const address = await signer.getAddress();
       result = await multiSigContract.isOwner(address);
       setIsOwner(result);
     } catch (error: any) {
@@ -73,7 +40,9 @@ const useMultiSigTransactions = () => {
   };
 
   const getTransactionCount = async (): Promise<number> => {
-    const { signer } = (await runPreChecks()) || {};
+    // Get the wallet signer interface
+    const wallet = sequence.getWallet();
+    const signer = wallet.getSigner();
 
     if (!signer) return 0;
 
@@ -98,7 +67,9 @@ const useMultiSigTransactions = () => {
   const getTransactionDetails = async (
     txIndex: number
   ): Promise<Array<any>> => {
-    const { signer } = (await runPreChecks()) || {};
+    // Get the wallet signer interface
+    const wallet = sequence.getWallet();
+    const signer = wallet.getSigner();
 
     if (!signer) return [];
 
@@ -123,7 +94,8 @@ const useMultiSigTransactions = () => {
   const getOwnerConfirmationStatus = async (
     txIndex: number
   ): Promise<boolean> => {
-    const { signer } = (await runPreChecks()) || {};
+    const wallet = sequence.getWallet();
+    const signer = wallet.getSigner();
 
     if (!signer) return false;
 
@@ -133,7 +105,7 @@ const useMultiSigTransactions = () => {
       signer
     );
 
-    const address = await signer.getAddress();
+    const address = await wallet.getAddress();
 
     let result;
 
@@ -147,35 +119,9 @@ const useMultiSigTransactions = () => {
     return result;
   };
 
-  const getSignatureDetails = async (txIndex: number) => {
-    const { signer } = (await runPreChecks()) || {};
-
-    if (!signer) return;
-
-    const multiSigContract = new ethers.Contract(
-      NEXT_PUBLIC_MULTISIG_ADDRESS || "",
-      MultiSigWalletJson.abi,
-      signer
-    );
-
-    const address = await signer.getAddress();
-
-    try {
-      const nextNonce = await multiSigContract.getNextNonce();
-      const hash = await multiSigContract.getMessageHash(
-        Number(nextNonce),
-        txIndex,
-        address
-      );
-
-      return { hash, txIndex, address, nonce: Number(nextNonce) };
-    } catch (error: any) {
-      sendTransactionErrorOnMetaMaskRequest(error);
-    }
-  };
-
   const getTxnSignature = async (txIndex: number) => {
-    const { signer } = (await runPreChecks()) || {};
+    const wallet = sequence.getWallet();
+    const signer = wallet.getSigner();
 
     if (!signer) return;
 
@@ -185,7 +131,7 @@ const useMultiSigTransactions = () => {
       signer
     );
 
-    const address = await signer.getAddress();
+    const address = await wallet.getAddress();
 
     try {
       const nextNonce = await multiSigContract.getNextNonce();
@@ -196,14 +142,25 @@ const useMultiSigTransactions = () => {
       );
       const signature = await signer.signMessage(ethers.utils.arrayify(hash));
 
+      const provider = wallet.getProvider();
+
+      if (provider) {
+        const isValid = await sequence.utils.isValidMessageSignature(
+          address,
+          hash,
+          signature,
+          provider
+        );
+
+        if (!isValid) throw new Error("signature is invalid");
+      }
+
       const result = await multiSigContract.verify(
         nextNonce,
         txIndex,
         address,
         signature
       );
-
-      return signature;
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
     }
@@ -215,7 +172,6 @@ const useMultiSigTransactions = () => {
     getTransactionCount,
     getTransactionDetails,
     getOwnerConfirmationStatus,
-    getSignatureDetails,
     getTxnSignature,
   };
 };

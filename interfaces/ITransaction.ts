@@ -2,8 +2,12 @@ export interface ITransaction {
   to: string;
   value: number;
   data: string;
-  executed: number;
-  confirations: number;
+  executed: boolean;
+  confirmations: number;
+}
+
+export interface IUserTransaction extends ITransaction {
+  userConfirmed: boolean;
 }
 
 export interface ISignatureDetails {

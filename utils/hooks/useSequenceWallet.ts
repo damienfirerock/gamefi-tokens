@@ -5,7 +5,7 @@ import { sequence } from "0xsequence";
 import { OpenWalletIntent, Settings } from "@0xsequence/provider";
 
 import useDispatchErrors from "./useDispatchErrors";
-import useMultiSigTransactions from "./useMultiSigTransactions";
+import useMultiSigTransactions from "./useMultiSigTransactionsSequence";
 
 const NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS =
   process.env.NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS;
