@@ -90,20 +90,24 @@ const MainPage: React.FunctionComponent = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const setUpDetails = async () => {
-    const nextTxnCount = await getTransactionCount();
-    setTxnCount(nextTxnCount);
-    const nextTxn = await getTransactionDetails(nextTxnCount - 1);
-    setTxn(nextTxn);
-    setTxIndex(nextTxnCount - 1);
-    await checkIfMultiSigOwner();
+    const isOwner = await checkIfMultiSigOwner();
 
-    if (nextTxn.length === 5 && !nextTxn[3].executed) {
-      const userConfirmation = await getOwnerConfirmationStatus(
-        nextTxnCount - 1
-      );
-      setTxnConfirmed(userConfirmation);
-      const details = await getSignatureDetails(nextTxnCount - 1);
-      if (details) setSigDetails(details);
+    if (isOwner) {
+      // to clear
+      const nextTxnCount = await getTransactionCount();
+      setTxnCount(nextTxnCount);
+      const nextTxn = await getTransactionDetails(nextTxnCount - 1);
+      setTxn(nextTxn);
+      setTxIndex(nextTxnCount - 1);
+
+      if (nextTxn.length === 5 && !nextTxn[3].executed) {
+        const userConfirmation = await getOwnerConfirmationStatus(
+          nextTxnCount - 1
+        );
+        setTxnConfirmed(userConfirmation);
+        const details = await getSignatureDetails(nextTxnCount - 1);
+        if (details) setSigDetails(details);
+      }
     }
   };
 
