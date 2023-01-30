@@ -19,9 +19,29 @@ const generateArray = (numberOfButtons: number, initialPage: number) => {
 const numberOfButtons = 9;
 const sideButtonNumber = Math.floor(numberOfButtons / 2);
 
-const ContractsBox = styled(Box)<BoxProps>(({ theme }) => ({
+const SectionBox = styled(Box)<BoxProps>(({ theme }) => ({
   textAlign: "center",
+  margin: theme.spacing(2, 0),
+}));
+
+const TxDetailsContainer = styled(Box)<BoxProps>(({ theme }) => ({
+  display: "inline-flex",
   margin: theme.spacing(4, 0, 0),
+}));
+
+const TxDetailsBox = styled(Box)<BoxProps>(() => ({
+  display: "flex",
+  maxWidth: 650,
+}));
+
+const TxDetailsHeaderBox = styled(Box)<BoxProps>(() => ({
+  width: 150,
+  textAlign: "left",
+}));
+
+const TxDetailsInfoBox = styled(Box)<BoxProps>(() => ({
+  maxWidth: 500,
+  textAlign: "left",
 }));
 
 const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
@@ -180,67 +200,116 @@ const TransactionDetails: React.FunctionComponent = () => {
   }, [account]);
 
   return (
-    <ContractsBox>
-      <Typography variant="h4">
-        Transaction - {txIndex} {txIndex === txCount - 1 && "(Latest)"}
-      </Typography>
+    <>
+      <SectionBox>
+        <Typography variant="h4">
+          Transaction - {txIndex} {txIndex === txCount - 1 && "(Latest)"}
+        </Typography>
+      </SectionBox>
 
       {/* Pagination */}
-      {txNumbers.map((number) => (
-        <PageButton
-          key={number}
-          text={number.toString()}
-          method={() => getTransaction(number)}
-          disabled={number === txIndex}
-          loading={loading}
-        />
-      ))}
+      <SectionBox>
+        {txNumbers.map((number) => (
+          <PageButton
+            key={number}
+            text={number.toString()}
+            method={() => getTransaction(number)}
+            disabled={number === txIndex}
+            loading={loading}
+          />
+        ))}
 
-      {shouldShowLatestButton && (
-        <PageButton
-          text="latest"
-          method={() => getTransaction(txCount - 1)}
-          loading={loading}
-        />
-      )}
+        {shouldShowLatestButton && (
+          <PageButton
+            text="latest"
+            method={() => getTransaction(txCount - 1)}
+            loading={loading}
+          />
+        )}
+      </SectionBox>
 
       {/* Details */}
       {!!txnDetails && (
-        <>
-          <Typography variant="h5">
-            To: {to}
-            {ADDRESS_NAMES[to!] && `(${ADDRESS_NAMES[to!]})`}
-          </Typography>
-          <Typography variant="h5">Value: {value}</Typography>
-          <Typography variant="h5">Data: {data}</Typography>
-          <Typography variant="h5">Executed: {executed!.toString()}</Typography>
-          <Typography variant="h5">Confirmations: {confirmations}</Typography>
-        </>
-      )}
-      {executed && (
-        <Typography variant="h4">Transaction has been executed</Typography>
+        <SectionBox>
+          <TxDetailsContainer>
+            <Box>
+              <TxDetailsBox>
+                <TxDetailsHeaderBox>
+                  <Typography variant="h5">To:</Typography>
+                </TxDetailsHeaderBox>
+                <TxDetailsInfoBox>
+                  <Typography variant="h5">{to}</Typography>
+                  {ADDRESS_NAMES[to!] && (
+                    <Typography variant="h5">({ADDRESS_NAMES[to!]})</Typography>
+                  )}
+                </TxDetailsInfoBox>
+              </TxDetailsBox>
+              <TxDetailsBox>
+                <TxDetailsHeaderBox>
+                  <Typography variant="h5">Value:</Typography>
+                </TxDetailsHeaderBox>
+                <TxDetailsInfoBox>
+                  <Typography variant="h5">{value}</Typography>
+                </TxDetailsInfoBox>
+              </TxDetailsBox>
+              <TxDetailsBox>
+                <TxDetailsHeaderBox>
+                  <Typography variant="h5">Data:</Typography>
+                </TxDetailsHeaderBox>
+                <TxDetailsInfoBox>
+                  <Typography variant="h5" style={{ wordWrap: "break-word" }}>
+                    {data}
+                  </Typography>
+                </TxDetailsInfoBox>
+              </TxDetailsBox>
+              <TxDetailsBox>
+                <TxDetailsHeaderBox>
+                  <Typography variant="h5">Executed:</Typography>
+                </TxDetailsHeaderBox>
+                <TxDetailsInfoBox>
+                  <Typography variant="h5">{executed!.toString()}</Typography>
+                </TxDetailsInfoBox>
+              </TxDetailsBox>
+              <TxDetailsBox>
+                <TxDetailsHeaderBox>
+                  <Typography variant="h5">Confirmations:</Typography>
+                </TxDetailsHeaderBox>
+                <TxDetailsInfoBox>
+                  <Typography variant="h5">{confirmations}</Typography>
+                </TxDetailsInfoBox>
+              </TxDetailsBox>
+            </Box>
+          </TxDetailsContainer>
+        </SectionBox>
       )}
 
       {/* Signing */}
-      {!!txnDetails && !executed && (
-        <>
-          <Typography variant="h4">
-            You may still {userConfirmed ? "revoke" : "confirm"} the
-            transaction.
-          </Typography>
-          {sigDetails && (
-            <Typography variant="h6">
-              {`The signing message (${sigDetails.hash}) is a hash of the nonce (${sigDetails.nonce}), txIndex (${sigDetails.txIndex}), and your address (${sigDetails.address})`}
+      <SectionBox>
+        {executed && (
+          <Typography variant="h4">Transaction has been executed</Typography>
+        )}
+        {!!txnDetails && !executed && (
+          <>
+            <Typography variant="h4">
+              You may still {userConfirmed ? "revoke" : "confirm"} the
+              transaction.
             </Typography>
-          )}
-          <InteractButton
-            text={`Submit Signature to ${userConfirmed ? "revoke" : "confirm"}`}
-            method={handleSubmitSignature}
-            loading={loading || multiSigLoading}
-          />
-        </>
-      )}
-    </ContractsBox>
+            {sigDetails && (
+              <Typography variant="h6">
+                {`The signing message (${sigDetails.hash}) is a hash of the nonce (${sigDetails.nonce}), txIndex (${sigDetails.txIndex}), and your address (${sigDetails.address})`}
+              </Typography>
+            )}
+            <InteractButton
+              text={`Submit Signature to ${
+                userConfirmed ? "revoke" : "confirm"
+              }`}
+              method={handleSubmitSignature}
+              loading={loading || multiSigLoading}
+            />
+          </>
+        )}
+      </SectionBox>
+    </>
   );
 };
 

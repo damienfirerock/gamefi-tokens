@@ -28,12 +28,12 @@ const addresses = Object.values(CONTRACT_ADDRESSES);
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
   justifyContent: "center",
-  margin: theme.spacing(4, 0, 0),
+  margin: theme.spacing(2, 0),
 }));
 
 const ContractsBox = styled(Box)<BoxProps>(({ theme }) => ({
   textAlign: "center",
-  margin: theme.spacing(4, 0, 0),
+  margin: theme.spacing(2, 0),
 }));
 
 const InteractButton = (props: {
