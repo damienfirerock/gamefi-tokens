@@ -17,7 +17,7 @@ const useMultiSigTransactions = () => {
     useDispatchErrors();
 
   const [isOwner, setIsOwner] = useState<Boolean>(false);
-  const [txnCount, setTxnCount] = useState<number>(0);
+  const [txCount, setTxnCount] = useState<number>(0);
   const [txIndex, setTxnIndex] = useState<number>(0);
   const [txnDetails, setTxnDetails] = useState<IUserTransaction | null>(null);
   const [sigDetails, setSigDetails] = useState<ISignatureDetails | null>(null);
@@ -119,7 +119,7 @@ const useMultiSigTransactions = () => {
       MultiSigWalletJson.abi,
       signer
     );
-
+    console.log({ txIndex });
     try {
       const result = await multiSigContract.getTransaction(txIndex);
 
@@ -241,10 +241,11 @@ const useMultiSigTransactions = () => {
 
   return {
     isOwner,
-    txnCount,
+    txCount,
     txIndex,
     txnDetails,
     sigDetails,
+    setTxnIndex,
     checkIfMultiSigOwner,
     getTransactionCount,
     getTransactionDetails,

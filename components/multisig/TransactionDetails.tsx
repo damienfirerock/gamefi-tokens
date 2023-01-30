@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Box, BoxProps, Button, Typography } from "@mui/material";
+import React, { useEffect, useMemo, useState } from "react";
+import { Box, BoxProps, Button, ButtonProps, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -12,9 +12,20 @@ import { ADDRESS_NAMES } from "../../config";
 import { submitSignature } from "../../features/MultiSigSlice";
 import { MultiSigTxnType } from "../../pages/api/multisig";
 
+const generateArray = (numberOfButtons: number, initialPage: number) => {
+  return Array.from({ length: numberOfButtons }, (_, i) => i + initialPage);
+};
+
+const numberOfButtons = 9;
+const sideButtonNumber = Math.floor(numberOfButtons / 2);
+
 const ContractsBox = styled(Box)<BoxProps>(({ theme }) => ({
   textAlign: "center",
   margin: theme.spacing(4, 0, 0),
+}));
+
+const PageButton = styled(Button)<ButtonProps>(({ theme }) => ({
+  margin: theme.spacing(0, 0.5),
 }));
 
 const InteractButton = (props: {
@@ -34,13 +45,14 @@ const InteractButton = (props: {
 const TransactionDetails: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { account, requestConnect } = useConnectWallet();
+  const { account } = useConnectWallet();
 
   const {
-    isOwner,
     txIndex,
+    txCount,
     txnDetails,
     sigDetails,
+    setTxnIndex,
     getTransactionCount,
     getSignatureDetails,
     getTransactionDetails,
@@ -55,19 +67,39 @@ const TransactionDetails: React.FunctionComponent = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  const setupInitial = async () => {
-    setLoading(true);
+  const txNumbers = useMemo((): number[] => {
+    const lastNumber = txCount - 1;
 
-    const nextTxnCount = await getTransactionCount();
-    const latestTxnIndex = nextTxnCount - 1;
+    let array: number[] = [];
 
-    setupTxn(latestTxnIndex);
+    if (txCount < numberOfButtons) {
+      // less transactions than number of buttons to show
+      array = generateArray(txCount, 0);
+    } else if (
+      txIndex === lastNumber ||
+      txCount - txIndex <= sideButtonNumber
+    ) {
+      // when index is at last transaction, or near the end
+      const initialPage = txCount - numberOfButtons;
+      array = generateArray(numberOfButtons, initialPage);
+    } else if (
+      txIndex - sideButtonNumber >= 0 &&
+      txCount > txIndex + sideButtonNumber
+    ) {
+      // index is more than <sideButtonNumber> of buttons before the end
+      // there are also more transactions than can be shown
+      const initialPage = txIndex - sideButtonNumber;
+      array = generateArray(numberOfButtons, initialPage);
+    } else if (txIndex - sideButtonNumber < 0) {
+      // index is near the start
+      array = generateArray(numberOfButtons, 0);
+    }
 
-    setLoading(false);
-  };
+    return array;
+  }, [txIndex, txCount]);
 
-  const setupTxn = async (nextTxIndex?: number) => {
-    const nextIndex = nextTxIndex || txIndex;
+  const setupTxn = async (nextTxIndex: number) => {
+    const nextIndex = nextTxIndex;
 
     if (!nextIndex && nextIndex !== 0) return;
 
@@ -76,6 +108,24 @@ const TransactionDetails: React.FunctionComponent = () => {
     if (nextTxn && !nextTxn.executed) {
       await getSignatureDetails(nextIndex);
     }
+  };
+
+  const getTransaction = async (nextIndex: number) => {
+    setLoading(true);
+
+    await setupTxn(nextIndex);
+    setTxnIndex(nextIndex);
+
+    setLoading(false);
+  };
+
+  const setupInitial = async () => {
+    const nextTxnCount = await getTransactionCount();
+    const latestTxnIndex = nextTxnCount - 1;
+
+    setupTxn(latestTxnIndex);
+
+    setLoading(false);
   };
 
   const handleSubmitSignature = async () => {
@@ -96,7 +146,6 @@ const TransactionDetails: React.FunctionComponent = () => {
     }
     setLoading(false);
   };
-  console.log({ txnDetails });
 
   useEffect(() => {
     if (account) {
@@ -106,7 +155,25 @@ const TransactionDetails: React.FunctionComponent = () => {
 
   return (
     <ContractsBox>
-      <Typography variant="h4">Latest Transaction</Typography>
+      <Typography variant="h4">
+        Transaction - {txIndex} {txIndex === txCount - 1 && "(Latest)"}
+      </Typography>
+
+      {/* Pagination */}
+      {txNumbers.map((number) => (
+        <PageButton
+          variant="outlined"
+          key={number}
+          size="small"
+          onClick={() => getTransaction(number)}
+          disabled={loading || number === txIndex}
+        >
+          {number}
+          {loading && <StyledCircularProgress size={24} />}
+        </PageButton>
+      ))}
+
+      {/* Details */}
       {!!txnDetails && (
         <>
           <Typography variant="h5">
@@ -122,6 +189,8 @@ const TransactionDetails: React.FunctionComponent = () => {
       {executed && (
         <Typography variant="h4">Transaction has been executed</Typography>
       )}
+
+      {/* Signing */}
       {!!txnDetails && !executed && (
         <>
           <Typography variant="h4">
