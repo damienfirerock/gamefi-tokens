@@ -5,21 +5,6 @@ import { ITransaction, IPendingTransaction } from "../interfaces/ITransaction";
 const { NEXT_PUBLIC_BACKEND_URL } = process.env;
 const ENDPOINT = "/api/v1/transactions";
 
-const addPendingTransactionsForState = (
-  pendingTransactions: IPendingTransaction[],
-  payload: IPendingTransaction
-) => {
-  return [payload, ...pendingTransactions];
-};
-
-const removePendingTransactionsForState = (
-  pendingTransactions: IPendingTransaction[],
-  payload: IPendingTransaction
-) => {
-  return [...pendingTransactions].filter(
-    (element) => element.tokenId != payload.tokenId
-  );
-};
 export const fetchTransactions = createAsyncThunk(
   "get/fetchTransactions",
   async (address: string) => {
@@ -69,7 +54,7 @@ const initialState: SliceState = {
   pendingTransactions: [],
 };
 
-export const TransactionsSlice = createSlice({
+export const TransactionSlice = createSlice({
   name: "Transactions",
   initialState,
   reducers: {
@@ -78,31 +63,6 @@ export const TransactionsSlice = createSlice({
       state.error = null;
       state.loading = false;
     },
-    addPendingTransaction: (
-      state,
-      action: { payload: IPendingTransaction; type: string }
-    ) => {
-      state.loading = true;
-
-      const nextTransactions = addPendingTransactionsForState(
-        state.pendingTransactions,
-        action.payload
-      );
-      state.pendingTransactions = nextTransactions;
-    },
-    removePendingTransaction: (
-      state,
-      action: { payload: IPendingTransaction; type: string }
-    ) => {
-      const nextTransactions = removePendingTransactionsForState(
-        state.pendingTransactions,
-        action.payload
-      );
-      state.pendingTransactions = nextTransactions;
-
-      if (!nextTransactions.length) state.loading = false;
-    },
-
     setError: (state, action) => {
       state.error = action.payload;
     },
@@ -132,12 +92,7 @@ export const TransactionsSlice = createSlice({
   },
 });
 
-export const {
-  clearTransactions,
-  addPendingTransaction,
-  removePendingTransaction,
-  setError,
-  clearError,
-} = TransactionsSlice.actions;
+export const { clearTransactions, setError, clearError } =
+  TransactionSlice.actions;
 
-export default TransactionsSlice.reducer;
+export default TransactionSlice.reducer;

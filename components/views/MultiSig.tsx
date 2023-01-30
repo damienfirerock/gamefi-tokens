@@ -21,7 +21,7 @@ import useMultiSigTransactionsMetamask from "../../utils/hooks/useMultiSigTransa
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
 import { clearError, submitSignature } from "../../features/MultiSigSlice";
-import { clearError as clearTransactionError } from "../../features/TransactionsSlice";
+import { clearError as clearTransactionError } from "../../features/TransactionSlice";
 import { MultiSigTxnType } from "../../pages/api/multisig";
 
 // https://github.com/vercel/next.js/issues/19420
@@ -63,11 +63,9 @@ const MainPage: React.FunctionComponent = () => {
   const { account, requestConnect } = useConnectWallet();
 
   const multiSigSlice = useSelector((state: RootState) => state.multiSig);
-  const transactionsSlice = useSelector(
-    (state: RootState) => state.transactions
-  );
+  const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { error, loading: multiSigLoading } = multiSigSlice;
-  const { error: transactionError } = transactionsSlice;
+  const { error: transactionError } = transactionSlice;
 
   const {
     isOwner,

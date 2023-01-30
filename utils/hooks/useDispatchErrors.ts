@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 
 import { AppDispatch } from "../../store";
-import { setError } from "../../features/TransactionsSlice";
+import { setError } from "../../features/TransactionSlice";
 
 const useDispatchErrors = () => {
   const dispatch = useDispatch<AppDispatch>();
