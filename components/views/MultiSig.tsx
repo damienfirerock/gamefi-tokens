@@ -13,7 +13,7 @@ import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 
 import Layout from "../layout/Layout";
-import { StyledCircularProgress } from "../product/common/PokemonCard";
+import StyledCircularProgress from "../common/StyledCircularProgress";
 import AlertBar from "../common/AlertBar";
 
 import { AppDispatch, RootState } from "../../store";
