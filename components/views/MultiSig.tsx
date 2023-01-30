@@ -25,6 +25,7 @@ import {
   submitSignature,
   MultiSigTxnType,
 } from "../../features/MultiSigSlice";
+import { clearError as clearTransactionError } from "../../features/TransactionsSlice";
 
 // https://github.com/vercel/next.js/issues/19420
 
@@ -65,7 +66,11 @@ const MainPage: React.FunctionComponent = () => {
   const { account, requestConnect } = useConnectWallet();
 
   const multiSigSlice = useSelector((state: RootState) => state.multiSig);
+  const transactionsSlice = useSelector(
+    (state: RootState) => state.transactions
+  );
   const { error, loading: multiSigLoading } = multiSigSlice;
+  const { error: transactionError } = transactionsSlice;
 
   const {
     isOwner,
@@ -121,6 +126,14 @@ const MainPage: React.FunctionComponent = () => {
       }
     }
     setLoading(false);
+  };
+
+  const handleClearAlert = () => {
+    if (error) {
+      dispatch(clearError());
+    } else if (transactionError) {
+      dispatch(clearTransactionError());
+    }
   };
 
   useEffect(() => {
@@ -236,8 +249,8 @@ const MainPage: React.FunctionComponent = () => {
 
       <AlertBar
         severity="warning"
-        text={error}
-        handleClearAlertSource={() => dispatch(clearError())}
+        text={error || transactionError}
+        handleClearAlertSource={handleClearAlert}
       />
     </Layout>
   );
