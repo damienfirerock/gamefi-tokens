@@ -53,6 +53,7 @@ NEXT_PUBLIC_NETWORK_CHAIN_ID=80001
 
 - This is a very simple app with only one main page (MultiSig.tsx)
 
-## Backend (WIP)
+## Backend
 
-- Working on: https://nextjs.org/docs/api-routes/introduction (so that a separate BE repo will not be required)
+- This project uses its own API handler (https://nextjs.org/docs/api-routes/introduction)
+- As there is only one main backend API (to receive the signature and submit transaction via a hot wallet), there shouldn't be a need to have a complicated separate backend spun up
