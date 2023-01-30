@@ -7,7 +7,6 @@ import {
   ContainerProps,
   Link,
   Typography,
-  TextField,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,8 +19,11 @@ import { AppDispatch, RootState } from "../../store";
 import useMultiSigTransactions from "../../utils/hooks/useMultiSigTransactions";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
-import { clearError, submitSignature } from "../../features/MultiSigSlice";
-import { clearError as clearTransactionError } from "../../features/TransactionSlice";
+import {
+  clearError as clearMultiSigError,
+  submitSignature,
+} from "../../features/MultiSigSlice";
+import { clearError } from "../../features/TransactionSlice";
 import { MultiSigTxnType } from "../../pages/api/multisig";
 
 // https://github.com/vercel/next.js/issues/19420
@@ -31,12 +33,12 @@ const addresses = Object.values(CONTRACT_ADDRESSES);
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
   justifyContent: "center",
-  margin: theme.spacing(4, 0),
+  margin: theme.spacing(4, 0, 0),
 }));
 
 const ContractsBox = styled(Box)<BoxProps>(({ theme }) => ({
   textAlign: "center",
-  margin: theme.spacing(4, 0),
+  margin: theme.spacing(4, 0, 0),
 }));
 
 const InteractButton = (props: {
@@ -77,9 +79,10 @@ const MainPage: React.FunctionComponent = () => {
     txnDetails || {};
 
   const multiSigSlice = useSelector((state: RootState) => state.multiSig);
+  const { error: multiSigError, loading: multiSigLoading } = multiSigSlice;
+
   const transactionSlice = useSelector((state: RootState) => state.transaction);
-  const { error, loading: multiSigLoading } = multiSigSlice;
-  const { error: transactionError } = transactionSlice;
+  const { error } = transactionSlice;
 
   const [txIndex, setTxIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -91,10 +94,9 @@ const MainPage: React.FunctionComponent = () => {
 
     if (isOwner) {
       const nextTxnCount = await getTransactionCount();
-
       const latestTxnIndex = nextTxnCount - 1;
-      setTxIndex(latestTxnIndex);
 
+      setTxIndex(latestTxnIndex);
       setupTxn(latestTxnIndex);
     }
 
@@ -133,10 +135,10 @@ const MainPage: React.FunctionComponent = () => {
   };
 
   const handleClearAlert = () => {
-    if (error) {
+    if (multiSigError) {
+      dispatch(clearMultiSigError());
+    } else if (error) {
       dispatch(clearError());
-    } else if (transactionError) {
-      dispatch(clearTransactionError());
     }
   };
 
@@ -151,31 +153,20 @@ const MainPage: React.FunctionComponent = () => {
       {/* Header */}
       <StyledContainer>
         <StyledBox>
-          <Typography variant="h4">
-            * This is on the Polygon Mumbai Testnet Faucet:{" "}
-            <Link
-              href={"https://faucet.polygon.technology/"}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              https://faucet.polygon.technology/
-            </Link>
-          </Typography>
-        </StyledBox>
-        <StyledBox>
           <Typography variant="h2">
             {txnCount || ""} MultiSig Transactions
           </Typography>
         </StyledBox>
-        <StyledBox>
-          {!account && (
+
+        {!account && (
+          <StyledBox>
             <InteractButton
               text="Connect"
               method={requestConnect}
               loading={loading}
             />
-          )}
-        </StyledBox>
+          </StyledBox>
+        )}
 
         {account && !isOwner && (
           <StyledBox>
@@ -229,6 +220,7 @@ const MainPage: React.FunctionComponent = () => {
                 </>
               )}
             </ContractsBox>
+
             <ContractsBox>
               <Typography variant="h3">Addresses</Typography>
               {addresses.map((address) => {
@@ -253,7 +245,7 @@ const MainPage: React.FunctionComponent = () => {
 
       <AlertBar
         severity="warning"
-        text={error || transactionError}
+        text={error || multiSigError}
         handleClearAlertSource={handleClearAlert}
       />
     </Layout>
