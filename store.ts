@@ -1,23 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import depositsReducer from "./features/DepositsSlice";
-import productsReducer from "./features/ProductsSlice";
 import transactionsReducer from "./features/TransactionsSlice";
-import luckyDrawEntrantsReducer from "./features/LuckyDrawEntrantsSlice";
-import listingsReducer from "./features/ListingsSlice";
-import marketPlaceProductsReducer from "./features/MarketPlaceProductsSlice";
-import arenaReducer from "./features/ArenaSlice";
 import multiSigReducer from "./features/MultiSigSlice";
 
 const store = configureStore({
   reducer: {
-    deposits: depositsReducer,
-    products: productsReducer,
     transactions: transactionsReducer,
-    luckyDrawEntrants: luckyDrawEntrantsReducer,
-    listings: listingsReducer,
-    marketPlaceProducts: marketPlaceProductsReducer,
-    arena: arenaReducer,
     multiSig: multiSigReducer,
   },
 });
