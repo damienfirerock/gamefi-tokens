@@ -8,6 +8,10 @@ export enum MultiSigTxnType {
   EXECUTE = "Execute",
 }
 
+const timeout = (ms: number) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
 export const submitSignature = createAsyncThunk(
   "get/submitSignature",
   async (props: {
@@ -33,6 +37,11 @@ export const submitSignature = createAsyncThunk(
     // unless there's a network error.
     // In other words, the Promise isn't rejected even when the response has an HTTP 400 or 500 status code.
     if (response.error) return Promise.reject(response.error);
+
+    // Wait 15 seconds for the changes to be reflected in the network
+    // See hotfix mentioned in api/multisig
+    console.log("waiting");
+    await timeout(15000);
 
     return { success: response.success };
   }

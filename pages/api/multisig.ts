@@ -124,9 +124,12 @@ export default async function handler(
         const approveTxSigned = await signer.signTransaction(
           unsignedTransaction
         );
-        console.log("WAITING");
+
         const submittedTx = await provider.sendTransaction(approveTxSigned);
-        const approveReceipt = await submittedTx.wait(10);
+        // The free plan on Vercel has a 10 second time-out
+        // As such, waiting for 10 blocks would cause a false positive error
+        // HOTFIX: Wait for 1 block to be mined, and wait 15 seconds on client-side (~3 seconds per block)
+        const approveReceipt = await submittedTx.wait(1);
 
         if (approveReceipt.status === 0) {
           res.status(500).json({
