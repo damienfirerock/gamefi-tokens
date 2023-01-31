@@ -1,6 +1,6 @@
 // Ref: https://github.com/dethcrypto/dethtools
 
-import { Fragment, Interface } from "@ethersproject/abi";
+import { Fragment, Interface, ParamType } from "@ethersproject/abi";
 import { z } from "zod";
 import assert from "assert";
 
@@ -276,10 +276,17 @@ export function sigHashFromCalldata(calldata: string): string | undefined {
   }
 }
 
+export interface DecodedData {
+  fnName: string;
+  fnType: string;
+  decoded: Decoded;
+  inputs: ParamType[];
+}
+
 // MAIN FUNCTION
 export async function handleDecodeCalldataWith4Bytes(
   encodedCalldata: string
-): Promise<any> {
+): Promise<DecodedData[] | undefined> {
   try {
     const signatureHash = sigHashFromCalldata(encodedCalldata);
     const decodeResults = await decodeWithCalldata(

@@ -8,7 +8,10 @@ import {
   ISignatureDetails,
 } from "../../interfaces/ITransaction";
 import { MultiSigTxnType } from "../../pages/api/multisig";
-import { handleDecodeCalldataWith4Bytes } from "../callDataDecoder";
+import {
+  DecodedData,
+  handleDecodeCalldataWith4Bytes,
+} from "../callDataDecoder";
 
 const MultiSigWalletJson = require("../abis/MultiSigWallet.json");
 
@@ -23,6 +26,7 @@ const useMultiSigTransactions = () => {
   const [txIndex, setTxnIndex] = useState<number>(0);
   const [confirmationsRequired, setConfirmationsRequired] = useState<number>(0);
   const [txnDetails, setTxnDetails] = useState<IUserTransaction | null>(null);
+  const [decodedData, setDecodedData] = useState<DecodedData | null>(null);
   const [sigDetails, setSigDetails] = useState<ISignatureDetails | null>(null);
 
   // Note: Important to run pre-checks before every transaction
@@ -173,7 +177,9 @@ const useMultiSigTransactions = () => {
         const data = await handleDecodeCalldataWith4Bytes(
           transactionDetails.data
         );
-        console.log({ data });
+        if (!!data?.[0]) {
+          setDecodedData(data[0]);
+        }
 
         return transactionDetails;
       }
@@ -301,6 +307,7 @@ const useMultiSigTransactions = () => {
     txCount,
     txIndex,
     txnDetails,
+    decodedData,
     confirmationsRequired,
     sigDetails,
     setTxnIndex,

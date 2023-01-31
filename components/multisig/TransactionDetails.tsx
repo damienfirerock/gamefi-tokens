@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { ethers } from "ethers";
 import {
   Box,
   BoxProps,
@@ -23,12 +24,27 @@ import { ADDRESS_NAMES } from "../../config";
 import { submitSignature } from "../../features/MultiSigSlice";
 import { MultiSigTxnType } from "../../pages/api/multisig";
 
+const numberOfButtons = 9;
+const sideButtonNumber = Math.floor(numberOfButtons / 2);
+
 const generateArray = (numberOfButtons: number, initialPage: number) => {
   return Array.from({ length: numberOfButtons }, (_, i) => i + initialPage);
 };
 
-const numberOfButtons = 9;
-const sideButtonNumber = Math.floor(numberOfButtons / 2);
+const nextParamValue = (param: { type: string; value: any }) => {
+  const { type, value } = param;
+  switch (type) {
+    case "address":
+      return value;
+    case "uint256":
+      const numberValue = Number(value);
+      const stringValue = numberValue.toString();
+      const parsedValue = ethers.utils.formatUnits(stringValue, 18);
+      return Number(parsedValue);
+    default:
+      return JSON.stringify(value);
+  }
+};
 
 const SectionBox = styled(Box)<BoxProps>(({ theme }) => ({
   textAlign: "center",
@@ -129,6 +145,7 @@ const TransactionDetails: React.FunctionComponent = () => {
     txIndex,
     txCount,
     txnDetails,
+    decodedData,
     sigDetails,
     confirmationsRequired,
     setTxnIndex,
@@ -142,11 +159,21 @@ const TransactionDetails: React.FunctionComponent = () => {
 
   const { to, value, data, executed, confirmations, userConfirmed } =
     txnDetails || {};
+  const { fnName, fnType, decoded, inputs } = decodedData || {};
 
   const multiSigSlice = useSelector((state: RootState) => state.multiSig);
   const { loading: multiSigLoading } = multiSigSlice;
 
   const [loading, setLoading] = useState<boolean>(false);
+
+  const decodedDataString = JSON.stringify(decodedData);
+  const decodedDataParams = useMemo((): any[] | undefined => {
+    if (decodedData === null || !Object.keys(decodedData).length) return [];
+    return decoded?.map((value, index) => ({
+      value,
+      type: inputs![index]!.type,
+    }));
+  }, [decodedDataString]);
 
   const txNumbers = useMemo((): number[] => {
     const lastNumber = txCount - 1;
@@ -338,6 +365,33 @@ const TransactionDetails: React.FunctionComponent = () => {
                     {data}
                   </Typography>
                 </TxDetailsInfoBox>
+              </TxDetailsBox>
+              <TxDetailsBox>
+                <TxDetailsHeaderBox>
+                  <Typography variant="h5">Decoded Data:</Typography>
+                </TxDetailsHeaderBox>
+                <BottomTxDetailsBox>
+                  <TxDetailsInfoBox>
+                    <Typography variant="h5" style={{ display: "inline" }}>
+                      {fnType}{" "}
+                    </Typography>
+                    <Badge
+                      variant="h5"
+                      sx={{ background: theme.palette.primary.main }}
+                    >
+                      {fnName}
+                    </Badge>
+                    {decodedDataParams?.map((param) => (
+                      <Typography
+                        variant="h5"
+                        key={param.value}
+                        style={{ wordWrap: "break-word" }}
+                      >
+                        {param.type}: {nextParamValue(param)}
+                      </Typography>
+                    ))}
+                  </TxDetailsInfoBox>
+                </BottomTxDetailsBox>
               </TxDetailsBox>
               <TxDetailsBox>
                 <TxDetailsHeaderBox>
