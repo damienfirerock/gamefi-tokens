@@ -227,6 +227,23 @@ const TransactionDetails: React.FunctionComponent = () => {
     setLoading(false);
   };
 
+  const handleSubmitSignatureForExecution = async () => {
+    setLoading(true);
+    if (typeof txIndex === "number") {
+      const signature = await getTxnSignature(txIndex);
+
+      if (signature) {
+        const { hash, ...details } = sigDetails!;
+
+        const type = MultiSigTxnType.EXECUTE;
+
+        await dispatch(submitSignature({ signature, type, ...details }));
+        await setupTxn(txIndex);
+      }
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     if (account) {
       setupInitial();
@@ -345,7 +362,6 @@ const TransactionDetails: React.FunctionComponent = () => {
       )}
       {!!txnDetails && !executed && (
         <>
-          {" "}
           <SectionBox>
             <Typography variant="h4">
               You may still {userConfirmed ? "revoke" : "confirm"} the
@@ -358,6 +374,19 @@ const TransactionDetails: React.FunctionComponent = () => {
               loading={loading || multiSigLoading}
             />
           </SectionBox>
+          {!!confirmations && confirmations >= confirmationsRequired && (
+            <SectionBox>
+              <Typography variant="h4">
+                You may execute the transaction.
+              </Typography>
+
+              <InteractButton
+                text="Execute via Signature"
+                method={handleSubmitSignatureForExecution}
+                loading={loading || multiSigLoading}
+              />
+            </SectionBox>
+          )}
           <SectionBox>
             {sigDetails && (
               <Typography variant="h6">

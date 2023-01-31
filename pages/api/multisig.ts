@@ -93,7 +93,7 @@ export default async function handler(
               address,
               signature
             );
-        } else {
+        } else if (type === MultiSigTxnType.REVOKE) {
           estimatedGasLimit =
             await multiSigContract.estimateGas.revokeConfirmationOnBehalf(
               nonce,
@@ -104,6 +104,22 @@ export default async function handler(
 
           unsignedTransaction =
             await multiSigContract.populateTransaction.revokeConfirmationOnBehalf(
+              nonce,
+              txIndex,
+              address,
+              signature
+            );
+        } else if (type === MultiSigTxnType.EXECUTE) {
+          estimatedGasLimit =
+            await multiSigContract.estimateGas.executeTransactionOnBehalf(
+              nonce,
+              txIndex,
+              address,
+              signature
+            );
+
+          unsignedTransaction =
+            await multiSigContract.populateTransaction.executeTransactionOnBehalf(
               nonce,
               txIndex,
               address,
