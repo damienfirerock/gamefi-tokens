@@ -94,14 +94,19 @@ const TransactionDetails: React.FunctionComponent = () => {
 
   const { account } = useConnectWallet();
 
+  // Note: May need to move hook state to redux
+  // in the event that app becomes more complex,
+  // but this is unlikely unless the app deals with more than the multisig
   const {
     txIndex,
     txCount,
     txnDetails,
     sigDetails,
+    confirmationsRequired,
     setTxnIndex,
     getTransactionCount,
     getSignatureDetails,
+    getNumOfConfirmationsRequired,
     getTransactionDetails,
     getTxnSignature,
   } = useMultiSigTransactions();
@@ -176,7 +181,8 @@ const TransactionDetails: React.FunctionComponent = () => {
     const nextTxnCount = await getTransactionCount();
     const latestTxnIndex = nextTxnCount - 1;
 
-    setupTxn(latestTxnIndex);
+    await getNumOfConfirmationsRequired();
+    await setupTxn(latestTxnIndex);
 
     setLoading(false);
   };
@@ -291,7 +297,9 @@ const TransactionDetails: React.FunctionComponent = () => {
                       <Typography variant="h5">Confirmations:</Typography>
                     </TxDetailsHeaderBox>
                     <TxDetailsInfoBox>
-                      <Typography variant="h5">{confirmations}</Typography>
+                      <Typography variant="h5">
+                        {confirmations}/{confirmationsRequired}
+                      </Typography>
                     </TxDetailsInfoBox>
                   </TxDetailsBox>
                 </Box>

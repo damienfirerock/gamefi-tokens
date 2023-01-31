@@ -19,9 +19,13 @@ const useMultiSigTransactions = () => {
   const [isOwner, setIsOwner] = useState<Boolean>(false);
   const [txCount, setTxnCount] = useState<number>(0);
   const [txIndex, setTxnIndex] = useState<number>(0);
+  const [confirmationsRequired, setConfirmationsRequired] = useState<number>(0);
   const [txnDetails, setTxnDetails] = useState<IUserTransaction | null>(null);
   const [sigDetails, setSigDetails] = useState<ISignatureDetails | null>(null);
 
+  // Note: Important to run pre-checks before every transaction
+  // But may be a bit excessive during initial setup in transaction details
+  // Unfortunately, will still require the checking of connection in subsequent transactions
   const runPreChecks = async () => {
     const { ethereum } = window as any;
 
@@ -107,6 +111,31 @@ const useMultiSigTransactions = () => {
     return Number(result);
   };
 
+  const getNumOfConfirmationsRequired = async (): Promise<number> => {
+    const { signer } = (await runPreChecks()) || {};
+
+    if (!signer) return 0;
+
+    const multiSigContract = new ethers.Contract(
+      NEXT_PUBLIC_MULTISIG_ADDRESS || "",
+      MultiSigWalletJson.abi,
+      signer
+    );
+
+    let result;
+
+    try {
+      result = await multiSigContract.numConfirmationsRequired();
+      const nextNum = Number(result);
+      setConfirmationsRequired(nextNum);
+    } catch (error: any) {
+      sendTransactionErrorOnMetaMaskRequest(error);
+      return 0;
+    }
+
+    return Number(result);
+  };
+
   const getTransactionDetails = async (
     txIndex: number
   ): Promise<IUserTransaction | null> => {
@@ -119,7 +148,7 @@ const useMultiSigTransactions = () => {
       MultiSigWalletJson.abi,
       signer
     );
-    console.log({ txIndex });
+
     try {
       const result = await multiSigContract.getTransaction(txIndex);
 
@@ -226,13 +255,6 @@ const useMultiSigTransactions = () => {
       );
       const signature = await signer.signMessage(ethers.utils.arrayify(hash));
 
-      const result = await multiSigContract.verify(
-        nextNonce,
-        txIndex,
-        address,
-        signature
-      );
-
       return signature;
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
@@ -244,11 +266,13 @@ const useMultiSigTransactions = () => {
     txCount,
     txIndex,
     txnDetails,
+    confirmationsRequired,
     sigDetails,
     setTxnIndex,
     checkIfMultiSigOwner,
     getTransactionCount,
     getTransactionDetails,
+    getNumOfConfirmationsRequired,
     getOwnerConfirmationStatus,
     getSignatureDetails,
     getTxnSignature,
