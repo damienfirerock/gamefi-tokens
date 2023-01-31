@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import DoneIcon from "@mui/icons-material/Done";
 import { useDispatch, useSelector } from "react-redux";
 
 import StyledCircularProgress from "../common/StyledCircularProgress";
@@ -32,13 +33,15 @@ const SectionBox = styled(Box)<BoxProps>(({ theme }) => ({
   margin: theme.spacing(2, 0),
 }));
 
-const TxDetailsContainer = styled(Box)<BoxProps>(({ theme }) => ({
+const TxDetailsContainer = styled(Box)<BoxProps>(() => ({
   display: "inline-flex",
 }));
 
-const TxDetailsBox = styled(Box)<BoxProps>(() => ({
+const TxDetailsBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
-  maxWidth: 650,
+  minWidth: 650,
+  border: "0.5px solid #D3D3D3",
+  padding: theme.spacing(1),
 }));
 
 const TxDetailsHeaderBox = styled(Box)<BoxProps>(() => ({
@@ -245,66 +248,62 @@ const TransactionDetails: React.FunctionComponent = () => {
       {!!txnDetails && (
         <SectionBox>
           <TxDetailsContainer>
-            <Card variant="outlined">
-              <CardContent>
-                <Box>
-                  <TxDetailsBox>
-                    <TxDetailsHeaderBox>
-                      <Typography variant="h5">To:</Typography>
-                    </TxDetailsHeaderBox>
-                    <TxDetailsInfoBox>
-                      <Typography variant="h5">{to}</Typography>
-                      {ADDRESS_NAMES[to!] && (
-                        <Typography variant="h5">
-                          ({ADDRESS_NAMES[to!]})
-                        </Typography>
+            <Box>
+              <TxDetailsBox>
+                <TxDetailsHeaderBox>
+                  <Typography variant="h5">To:</Typography>
+                </TxDetailsHeaderBox>
+                <TxDetailsInfoBox>
+                  <Typography variant="h5">{to}</Typography>
+                  {ADDRESS_NAMES[to!] && (
+                    <Typography variant="h5">({ADDRESS_NAMES[to!]})</Typography>
+                  )}
+                </TxDetailsInfoBox>
+              </TxDetailsBox>
+              <TxDetailsBox>
+                <TxDetailsHeaderBox>
+                  <Typography variant="h5">Value:</Typography>
+                </TxDetailsHeaderBox>
+                <TxDetailsInfoBox>
+                  <Typography variant="h5">{value}</Typography>
+                </TxDetailsInfoBox>
+              </TxDetailsBox>
+              <TxDetailsBox>
+                <TxDetailsHeaderBox>
+                  <Typography variant="h5">Data:</Typography>
+                </TxDetailsHeaderBox>
+                <TxDetailsInfoBox>
+                  <Typography variant="h5" style={{ wordWrap: "break-word" }}>
+                    {data}
+                  </Typography>
+                </TxDetailsInfoBox>
+              </TxDetailsBox>
+              <TxDetailsBox>
+                <TxDetailsHeaderBox>
+                  <Typography variant="h5">Executed:</Typography>
+                </TxDetailsHeaderBox>
+                <TxDetailsInfoBox>
+                  <Typography variant="h5">{executed!.toString()}</Typography>
+                </TxDetailsInfoBox>
+              </TxDetailsBox>
+              <TxDetailsBox>
+                <TxDetailsHeaderBox>
+                  <Typography variant="h5">Confirmations:</Typography>
+                </TxDetailsHeaderBox>
+                <TxDetailsInfoBox>
+                  <Typography
+                    variant="h5"
+                    sx={{ display: "flex", alignItems: "center" }}
+                  >
+                    {confirmations}/{confirmationsRequired}{" "}
+                    {!!confirmations &&
+                      confirmations >= confirmationsRequired && (
+                        <DoneIcon color="success" />
                       )}
-                    </TxDetailsInfoBox>
-                  </TxDetailsBox>
-                  <TxDetailsBox>
-                    <TxDetailsHeaderBox>
-                      <Typography variant="h5">Value:</Typography>
-                    </TxDetailsHeaderBox>
-                    <TxDetailsInfoBox>
-                      <Typography variant="h5">{value}</Typography>
-                    </TxDetailsInfoBox>
-                  </TxDetailsBox>
-                  <TxDetailsBox>
-                    <TxDetailsHeaderBox>
-                      <Typography variant="h5">Data:</Typography>
-                    </TxDetailsHeaderBox>
-                    <TxDetailsInfoBox>
-                      <Typography
-                        variant="h5"
-                        style={{ wordWrap: "break-word" }}
-                      >
-                        {data}
-                      </Typography>
-                    </TxDetailsInfoBox>
-                  </TxDetailsBox>
-                  <TxDetailsBox>
-                    <TxDetailsHeaderBox>
-                      <Typography variant="h5">Executed:</Typography>
-                    </TxDetailsHeaderBox>
-                    <TxDetailsInfoBox>
-                      <Typography variant="h5">
-                        {executed!.toString()}
-                      </Typography>
-                    </TxDetailsInfoBox>
-                  </TxDetailsBox>
-                  <TxDetailsBox>
-                    <TxDetailsHeaderBox>
-                      <Typography variant="h5">Confirmations:</Typography>
-                    </TxDetailsHeaderBox>
-                    <TxDetailsInfoBox>
-                      <Typography variant="h5">
-                        {confirmations}/{confirmationsRequired}
-                      </Typography>
-                    </TxDetailsInfoBox>
-                  </TxDetailsBox>
-                </Box>
-              </CardContent>
-            </Card>
+                  </Typography>
+                </TxDetailsInfoBox>
+              </TxDetailsBox>
+            </Box>
           </TxDetailsContainer>
         </SectionBox>
       )}
