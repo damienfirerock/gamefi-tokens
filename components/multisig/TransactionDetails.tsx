@@ -19,7 +19,6 @@ import StyledCircularProgress from "../common/StyledCircularProgress";
 import { AppDispatch, RootState } from "../../store";
 import useMultiSigTransactions from "../../utils/hooks/useMultiSigTransactions";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
-import { capitaliseString } from "../../utils/common";
 import { ADDRESS_NAMES } from "../../config";
 import { submitSignature } from "../../features/MultiSigSlice";
 import { MultiSigTxnType } from "../../pages/api/multisig";
@@ -296,7 +295,7 @@ const TransactionDetails: React.FunctionComponent = () => {
           />
         )}
 
-        <IconButton color="primary" onClick={setupInitial}>
+        <IconButton color="primary" onClick={setupInitial} disabled={loading}>
           <RefreshIcon />
         </IconButton>
       </SectionBox>
@@ -349,7 +348,7 @@ const TransactionDetails: React.FunctionComponent = () => {
                     variant="h5"
                     sx={{ background: executed ? green[900] : red[900] }}
                   >
-                    {capitaliseString(executed!.toString())}
+                    {executed ? "Yes" : "No"}
                   </Badge>
                 </TxDetailsInfoBox>
               </TxDetailsBox>
