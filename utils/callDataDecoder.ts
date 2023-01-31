@@ -299,6 +299,6 @@ export async function handleDecodeCalldataWith4Bytes(
       return mappedResults;
     }
   } catch (error) {
-    throw new Error("Invalid Operation", error);
+    throw new Error("Invalid Operation");
   }
 }

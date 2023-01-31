@@ -8,6 +8,7 @@ import {
   ISignatureDetails,
 } from "../../interfaces/ITransaction";
 import { MultiSigTxnType } from "../../pages/api/multisig";
+import { handleDecodeCalldataWith4Bytes } from "../callDataDecoder";
 
 const MultiSigWalletJson = require("../abis/MultiSigWallet.json");
 
@@ -168,6 +169,11 @@ const useMultiSigTransactions = () => {
         };
 
         setTxnDetails(transactionDetails);
+
+        const data = await handleDecodeCalldataWith4Bytes(
+          transactionDetails.data
+        );
+        console.log({ data });
 
         return transactionDetails;
       }
