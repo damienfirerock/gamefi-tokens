@@ -4,12 +4,14 @@ import {
   BoxProps,
   Button,
   ButtonProps,
+  IconButton,
   Typography,
   TypographyProps,
 } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import { red, green } from "@mui/material/colors/";
 import DoneIcon from "@mui/icons-material/Done";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import { useDispatch, useSelector } from "react-redux";
 
 import StyledCircularProgress from "../common/StyledCircularProgress";
@@ -293,6 +295,10 @@ const TransactionDetails: React.FunctionComponent = () => {
             loading={loading}
           />
         )}
+
+        <IconButton color="primary" onClick={setupInitial}>
+          <RefreshIcon />
+        </IconButton>
       </SectionBox>
 
       {/* Details */}
