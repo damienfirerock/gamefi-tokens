@@ -364,8 +364,10 @@ const TransactionDetails: React.FunctionComponent = () => {
         <>
           <SectionBox>
             <Typography variant="h4">
-              You may still {userConfirmed ? "revoke" : "confirm"} the
-              transaction.
+              You may still{" "}
+              {userConfirmed
+                ? "revoke your confirmation"
+                : "confirm the transaction"}
             </Typography>
 
             <InteractButton
