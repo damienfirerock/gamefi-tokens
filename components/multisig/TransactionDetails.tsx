@@ -38,10 +38,19 @@ const TxDetailsContainer = styled(Box)<BoxProps>(() => ({
   display: "inline-flex",
 }));
 
+// Note: Probably a DRY method for not having borders clash between BottomTxDetailsBoxes in TransactionDetails
 const TxDetailsBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
   minWidth: 650,
-  border: "0.5px solid #D3D3D3",
+  border: "1px solid #D3D3D3",
+  borderBottom: 0,
+  padding: theme.spacing(1),
+}));
+
+const BottomTxDetailsBox = styled(Box)<BoxProps>(({ theme }) => ({
+  display: "flex",
+  minWidth: 650,
+  border: "1px solid #D3D3D3",
   padding: theme.spacing(1),
 }));
 
@@ -93,7 +102,7 @@ const InteractButton = (props: {
 }) => {
   const { text, method, loading } = props;
   return (
-    <Button variant="outlined" onClick={method} disabled={loading}>
+    <Button variant="contained" onClick={method} disabled={loading}>
       {text}
       {loading && <StyledCircularProgress size={24} />}
     </Button>
@@ -305,7 +314,7 @@ const TransactionDetails: React.FunctionComponent = () => {
                   </Badge>
                 </TxDetailsInfoBox>
               </TxDetailsBox>
-              <TxDetailsBox>
+              <BottomTxDetailsBox>
                 <TxDetailsHeaderBox>
                   <Typography variant="h5">Confirmations:</Typography>
                 </TxDetailsHeaderBox>
@@ -321,38 +330,43 @@ const TransactionDetails: React.FunctionComponent = () => {
                       )}
                   </Typography>
                 </TxDetailsInfoBox>
-              </TxDetailsBox>
+              </BottomTxDetailsBox>
             </Box>
           </TxDetailsContainer>
         </SectionBox>
       )}
 
       {/* Signing */}
-      <SectionBox>
-        {executed && (
+
+      {executed && (
+        <SectionBox>
           <Typography variant="h4">Transaction has been executed</Typography>
-        )}
-        {!!txnDetails && !executed && (
-          <>
+        </SectionBox>
+      )}
+      {!!txnDetails && !executed && (
+        <>
+          {" "}
+          <SectionBox>
             <Typography variant="h4">
               You may still {userConfirmed ? "revoke" : "confirm"} the
               transaction.
             </Typography>
+
+            <InteractButton
+              text={`${userConfirmed ? "revoke" : "confirm"} via Signature`}
+              method={handleSubmitSignature}
+              loading={loading || multiSigLoading}
+            />
+          </SectionBox>
+          <SectionBox>
             {sigDetails && (
               <Typography variant="h6">
                 {`The signing message (${sigDetails.hash}) is a hash of the nonce (${sigDetails.nonce}), txIndex (${sigDetails.txIndex}), and your address (${sigDetails.address})`}
               </Typography>
             )}
-            <InteractButton
-              text={`Submit Signature to ${
-                userConfirmed ? "revoke" : "confirm"
-              }`}
-              method={handleSubmitSignature}
-              loading={loading || multiSigLoading}
-            />
-          </>
-        )}
-      </SectionBox>
+          </SectionBox>
+        </>
+      )}
     </>
   );
 };
