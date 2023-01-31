@@ -4,11 +4,11 @@ import {
   BoxProps,
   Button,
   ButtonProps,
-  Card,
-  CardContent,
   Typography,
+  TypographyProps,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
+import { red, green } from "@mui/material/colors/";
 import DoneIcon from "@mui/icons-material/Done";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -17,6 +17,7 @@ import StyledCircularProgress from "../common/StyledCircularProgress";
 import { AppDispatch, RootState } from "../../store";
 import useMultiSigTransactions from "../../utils/hooks/useMultiSigTransactions";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
+import { capitaliseString } from "../../utils/common";
 import { ADDRESS_NAMES } from "../../config";
 import { submitSignature } from "../../features/MultiSigSlice";
 import { MultiSigTxnType } from "../../pages/api/multisig";
@@ -58,6 +59,13 @@ const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
   margin: theme.spacing(0.25),
 }));
 
+const Badge = styled(Typography)<TypographyProps>(({ theme }) => ({
+  display: "inline",
+  color: "white",
+  padding: theme.spacing(0.25, 0.75),
+  borderRadius: 5,
+}));
+
 const PageButton = (props: {
   text: string;
   method: () => void;
@@ -94,6 +102,7 @@ const InteractButton = (props: {
 
 const TransactionDetails: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const theme = useTheme();
 
   const { account } = useConnectWallet();
 
@@ -256,7 +265,12 @@ const TransactionDetails: React.FunctionComponent = () => {
                 <TxDetailsInfoBox>
                   <Typography variant="h5">{to}</Typography>
                   {ADDRESS_NAMES[to!] && (
-                    <Typography variant="h5">({ADDRESS_NAMES[to!]})</Typography>
+                    <Badge
+                      variant="h5"
+                      sx={{ background: theme.palette.primary.main }}
+                    >
+                      {ADDRESS_NAMES[to!]}
+                    </Badge>
                   )}
                 </TxDetailsInfoBox>
               </TxDetailsBox>
@@ -283,7 +297,12 @@ const TransactionDetails: React.FunctionComponent = () => {
                   <Typography variant="h5">Executed:</Typography>
                 </TxDetailsHeaderBox>
                 <TxDetailsInfoBox>
-                  <Typography variant="h5">{executed!.toString()}</Typography>
+                  <Badge
+                    variant="h5"
+                    sx={{ background: executed ? green[900] : red[900] }}
+                  >
+                    {capitaliseString(executed!.toString())}
+                  </Badge>
                 </TxDetailsInfoBox>
               </TxDetailsBox>
               <TxDetailsBox>
