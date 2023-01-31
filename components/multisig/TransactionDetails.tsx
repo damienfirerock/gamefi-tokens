@@ -99,10 +99,16 @@ const InteractButton = (props: {
   text: string;
   method: () => void;
   loading: boolean;
+  variant?: "text" | "outlined" | "contained";
 }) => {
-  const { text, method, loading } = props;
+  const { text, method, loading, variant = "contained" } = props;
   return (
-    <Button variant="contained" onClick={method} disabled={loading}>
+    <Button
+      variant={variant}
+      onClick={method}
+      disabled={loading}
+      sx={{ marginX: 0.5 }}
+    >
       {text}
       {loading && <StyledCircularProgress size={24} />}
     </Button>
@@ -130,6 +136,7 @@ const TransactionDetails: React.FunctionComponent = () => {
     getNumOfConfirmationsRequired,
     getTransactionDetails,
     getTxnSignature,
+    runTransaction,
   } = useMultiSigTransactions();
 
   const { to, value, data, executed, confirmations, userConfirmed } =
@@ -240,6 +247,15 @@ const TransactionDetails: React.FunctionComponent = () => {
         await dispatch(submitSignature({ signature, type, ...details }));
         await setupTxn(txIndex);
       }
+    }
+    setLoading(false);
+  };
+
+  const handleRunTransaction = async (type: MultiSigTxnType) => {
+    setLoading(true);
+    if (typeof txIndex === "number") {
+      await runTransaction(txIndex, type);
+      await setupTxn(txIndex);
     }
     setLoading(false);
   };
@@ -371,6 +387,18 @@ const TransactionDetails: React.FunctionComponent = () => {
             </Typography>
 
             <InteractButton
+              text={`${userConfirmed ? "revoke" : "confirm"} Directly`}
+              method={() =>
+                handleRunTransaction(
+                  userConfirmed
+                    ? MultiSigTxnType.REVOKE
+                    : MultiSigTxnType.CONFIRM
+                )
+              }
+              loading={loading || multiSigLoading}
+              variant="outlined"
+            />
+            <InteractButton
               text={`${userConfirmed ? "revoke" : "confirm"} via Signature`}
               method={handleSubmitSignature}
               loading={loading || multiSigLoading}
@@ -382,6 +410,12 @@ const TransactionDetails: React.FunctionComponent = () => {
                 You may execute the transaction.
               </Typography>
 
+              <InteractButton
+                text="Execute Directly"
+                method={() => handleRunTransaction(MultiSigTxnType.EXECUTE)}
+                loading={loading || multiSigLoading}
+                variant="outlined"
+              />
               <InteractButton
                 text="Execute via Signature"
                 method={handleSubmitSignatureForExecution}

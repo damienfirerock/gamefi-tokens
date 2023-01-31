@@ -7,6 +7,7 @@ import {
   IUserTransaction,
   ISignatureDetails,
 } from "../../interfaces/ITransaction";
+import { MultiSigTxnType } from "../../pages/api/multisig";
 
 const MultiSigWalletJson = require("../abis/MultiSigWallet.json");
 
@@ -261,6 +262,34 @@ const useMultiSigTransactions = () => {
     }
   };
 
+  const runTransaction = async (txIndex: number, type: MultiSigTxnType) => {
+    const { signer } = (await runPreChecks()) || {};
+
+    if (!signer) return;
+
+    const multiSigContract = new ethers.Contract(
+      NEXT_PUBLIC_MULTISIG_ADDRESS || "",
+      MultiSigWalletJson.abi,
+      signer
+    );
+
+    let transaction;
+
+    try {
+      if (type === MultiSigTxnType.CONFIRM) {
+        transaction = await multiSigContract.confirmTransaction(txIndex);
+      } else if (type === MultiSigTxnType.REVOKE) {
+        transaction = await multiSigContract.revokeConfirmation(txIndex);
+      } else if (type === MultiSigTxnType.EXECUTE) {
+        transaction = await multiSigContract.executeTransaction(txIndex);
+      }
+      await transaction.wait(10);
+    } catch (error: any) {
+      sendTransactionErrorOnMetaMaskRequest(error);
+      return;
+    }
+  };
+
   return {
     isOwner,
     txCount,
@@ -276,6 +305,7 @@ const useMultiSigTransactions = () => {
     getOwnerConfirmationStatus,
     getSignatureDetails,
     getTxnSignature,
+    runTransaction,
   };
 };
 
