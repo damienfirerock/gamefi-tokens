@@ -54,7 +54,7 @@ const StyledContainer = styled(Container)<ContainerProps>(({ theme }) => ({
   marginTop: theme.spacing(1),
 }));
 
-const MainPage: React.FunctionComponent = () => {
+const MultiSig: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { account, requestConnect } = useConnectWallet();
@@ -149,4 +149,4 @@ const MainPage: React.FunctionComponent = () => {
   );
 };
 
-export default MainPage;
+export default MultiSig;
