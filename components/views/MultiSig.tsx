@@ -12,7 +12,7 @@ import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 
 import Layout from "../layout/Layout";
-import TransactionDetails from "../multisig/TransactionDetails";
+import Transactions from "../multisig/Transactions";
 import StyledCircularProgress from "../common/StyledCircularProgress";
 import AlertBar from "../common/AlertBar";
 
@@ -116,7 +116,7 @@ const MultiSig: React.FunctionComponent = () => {
 
         {account && isOwner && (
           <>
-            <TransactionDetails />
+            <Transactions />
 
             <ContractsBox>
               <Typography variant="h3">Addresses</Typography>
