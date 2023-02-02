@@ -58,6 +58,14 @@ const nextParamValue = (param: {
           {Number(parsedValue)}
         </Badge>
       );
+    case "bytes32":
+      // This is usually due to granting of roles
+      // roles are generated from keccak hashes
+      // Therefore, the only way to compare would be to check against all role hashes in contracts
+      // 1 way would be to request for all role data everytime the client is booted
+      // Other way would be to list the keccak hashes in a constants file
+      // Second way seems more do-able since smart contract roles are unable to change much
+      return value;
     default:
       return JSON.stringify(value);
   }
