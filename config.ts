@@ -1,5 +1,11 @@
 // https://www.gimtec.io/articles/process-is-not-defined/
 
+// Chain ID
+const NETWORK_CHAIN_ID = process.env.NEXT_PUBLIC_NETWORK_CHAIN_ID;
+// The following is in hexidecimal representation
+const HEXADECIMAL_CHAIN_ID =
+  "0x" + parseInt(NETWORK_CHAIN_ID!, 10).toString(16);
+
 // Contract Addresses
 const FIRE_ROCK_TOKEN = process.env.NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS;
 const MULTI_SIG_ADDRESS = process.env.NEXT_PUBLIC_MULTISIG_ADDRESS;
@@ -37,6 +43,8 @@ export const CONTRACT_ADDRESSES = {
 
 const CONFIG = {
   ...CONTRACT_ADDRESSES,
+  NETWORK_CHAIN_ID,
+  HEXADECIMAL_CHAIN_ID,
   POLYGONSCAN_URL,
   ALCHEMY_WEB_SOCKET_PROVIDER,
   DUMMY_KEY,

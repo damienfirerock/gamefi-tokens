@@ -3,6 +3,8 @@ import { ethers } from "ethers";
 
 import useDispatchErrors from "./useDispatchErrors";
 
+import CONFIG from "../../config";
+
 const useConnectWallet = () => {
   const { sendTransactionErrorOnMetaMaskRequest } = useDispatchErrors();
 
@@ -71,7 +73,7 @@ const useConnectWallet = () => {
         method: "wallet_switchEthereumChain",
         params: [
           {
-            chainId: "0x5",
+            chainId: CONFIG.HEXADECIMAL_CHAIN_ID,
           },
         ],
       })
