@@ -23,6 +23,7 @@ import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import { ADDRESS_NAMES } from "../../config";
 import { submitSignature } from "../../features/MultiSigSlice";
 import { MultiSigTxnType } from "../../pages/api/multisig";
+import { KECCAK_ROLES } from "../../constants";
 
 const numberOfButtons = 9;
 const sideButtonNumber = Math.floor(numberOfButtons / 2);
@@ -52,6 +53,7 @@ const nextParamValue = (param: {
     case "uint256":
       const numberValue = Number(value);
       const stringValue = numberValue.toString();
+      // FIXME: decimals for tokens may not necessarily be 18
       const parsedValue = ethers.utils.formatUnits(stringValue, 18);
       return (
         <Badge variant="h5" sx={{ background: color }}>
@@ -59,13 +61,16 @@ const nextParamValue = (param: {
         </Badge>
       );
     case "bytes32":
-      // This is usually due to granting of roles
-      // roles are generated from keccak hashes
-      // Therefore, the only way to compare would be to check against all role hashes in contracts
-      // 1 way would be to request for all role data everytime the client is booted
-      // Other way would be to list the keccak hashes in a constants file
-      // Second way seems more do-able since smart contract roles are unable to change much
-      return value;
+      return (
+        <>
+          {KECCAK_ROLES[value] && (
+            <Badge variant="h5" sx={{ background: color }}>
+              {KECCAK_ROLES[value]}
+            </Badge>
+          )}{" "}
+          {value}
+        </>
+      );
     default:
       return JSON.stringify(value);
   }
