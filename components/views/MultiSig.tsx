@@ -58,13 +58,13 @@ const MultiSig: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { account, requestConnect } = useConnectWallet();
-  const { isOwner, checkIfMultiSigOwner } = useMultiSigTransactions();
+  const { checkIfMultiSigOwner } = useMultiSigTransactions();
 
   const multiSigSlice = useSelector((state: RootState) => state.multiSig);
   const { error: multiSigError } = multiSigSlice;
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
-  const { error } = transactionSlice;
+  const { isOwner, error } = transactionSlice;
 
   const [loading, setLoading] = useState<boolean>(false);
 

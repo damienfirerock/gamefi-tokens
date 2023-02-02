@@ -1,33 +1,30 @@
 import { ethers } from "ethers";
-import { useState } from "react";
+import { useDispatch } from "react-redux";
 
+import { AppDispatch } from "../../store";
 import useDispatchErrors from "./useDispatchErrors";
 
-import {
-  IUserTransaction,
-  ISignatureDetails,
-} from "../../interfaces/ITransaction";
+import { IUserTransaction } from "../../interfaces/ITransaction";
 import { MultiSigTxnType } from "../../pages/api/multisig";
+import { handleDecodeCalldataWith4Bytes } from "../callDataDecoder";
 import {
-  DecodedData,
-  handleDecodeCalldataWith4Bytes,
-} from "../callDataDecoder";
+  setIsOwner,
+  setTxnCount,
+  setTxnIndex,
+  setConfirmationsRequired,
+  setDecodedData,
+  setTxnDetails,
+  setSigDetails,
+} from "../../features/TransactionSlice";
 
 const MultiSigWalletJson = require("../abis/MultiSigWallet.json");
 
 const NEXT_PUBLIC_MULTISIG_ADDRESS = process.env.NEXT_PUBLIC_MULTISIG_ADDRESS;
 
 const useMultiSigTransactions = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const { sendTransactionError, sendTransactionErrorOnMetaMaskRequest } =
     useDispatchErrors();
-
-  const [isOwner, setIsOwner] = useState<Boolean>(false);
-  const [txCount, setTxnCount] = useState<number>(0);
-  const [txIndex, setTxnIndex] = useState<number>(0);
-  const [confirmationsRequired, setConfirmationsRequired] = useState<number>(0);
-  const [txnDetails, setTxnDetails] = useState<IUserTransaction | null>(null);
-  const [decodedData, setDecodedData] = useState<DecodedData | null>(null);
-  const [sigDetails, setSigDetails] = useState<ISignatureDetails | null>(null);
 
   // Note: Important to run pre-checks before every transaction
   // But may be a bit excessive during initial setup in transaction details
@@ -82,7 +79,7 @@ const useMultiSigTransactions = () => {
     try {
       const address = await signer.getAddress();
       result = await multiSigContract.isOwner(address);
-      setIsOwner(result);
+      dispatch(setIsOwner(result));
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
       return false;
@@ -107,8 +104,8 @@ const useMultiSigTransactions = () => {
     try {
       result = await multiSigContract.getTransactionCount();
       const nextCount = Number(result);
-      setTxnCount(nextCount);
-      setTxnIndex(nextCount - 1);
+      dispatch(setTxnCount(nextCount));
+      dispatch(setTxnIndex(nextCount - 1));
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
       return 0;
@@ -133,7 +130,7 @@ const useMultiSigTransactions = () => {
     try {
       result = await multiSigContract.numConfirmationsRequired();
       const nextNum = Number(result);
-      setConfirmationsRequired(nextNum);
+      dispatch(setConfirmationsRequired(nextNum));
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
       return 0;
@@ -172,13 +169,13 @@ const useMultiSigTransactions = () => {
           userConfirmed: userConfirmation,
         };
 
-        setTxnDetails(transactionDetails);
+        dispatch(setTxnDetails(transactionDetails));
 
         const data = await handleDecodeCalldataWith4Bytes(
           transactionDetails.data
         );
         if (!!data?.[0]) {
-          setDecodedData(data[0]);
+          dispatch(setDecodedData(data[0]));
         }
 
         return transactionDetails;
@@ -238,7 +235,7 @@ const useMultiSigTransactions = () => {
         address
       );
       const nextDetails = { hash, txIndex, address, nonce: Number(nextNonce) };
-      setSigDetails(nextDetails);
+      dispatch(setSigDetails(nextDetails));
 
       return nextDetails;
     } catch (error: any) {
@@ -303,14 +300,6 @@ const useMultiSigTransactions = () => {
   };
 
   return {
-    isOwner,
-    txCount,
-    txIndex,
-    txnDetails,
-    decodedData,
-    confirmationsRequired,
-    sigDetails,
-    setTxnIndex,
     checkIfMultiSigOwner,
     getTransactionCount,
     getTransactionDetails,
