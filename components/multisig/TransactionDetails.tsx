@@ -31,16 +31,33 @@ const generateArray = (numberOfButtons: number, initialPage: number) => {
   return Array.from({ length: numberOfButtons }, (_, i) => i + initialPage);
 };
 
-const nextParamValue = (param: { type: string; value: any }) => {
-  const { type, value } = param;
+const nextParamValue = (param: {
+  type: string;
+  value: any;
+  color?: string;
+}) => {
+  const { type, value, color } = param;
   switch (type) {
     case "address":
-      return value;
+      return (
+        <>
+          {ADDRESS_NAMES[value!] && (
+            <Badge variant="h5" sx={{ background: color }}>
+              {ADDRESS_NAMES[value!]}
+            </Badge>
+          )}{" "}
+          {value}
+        </>
+      );
     case "uint256":
       const numberValue = Number(value);
       const stringValue = numberValue.toString();
       const parsedValue = ethers.utils.formatUnits(stringValue, 18);
-      return Number(parsedValue);
+      return (
+        <Badge variant="h5" sx={{ background: color }}>
+          {Number(parsedValue)}
+        </Badge>
+      );
     default:
       return JSON.stringify(value);
   }
@@ -77,6 +94,21 @@ const TxDetailsHeaderBox = styled(Box)<BoxProps>(() => ({
 }));
 
 const TxDetailsInfoBox = styled(Box)<BoxProps>(() => ({
+  maxWidth: 500,
+  textAlign: "left",
+}));
+
+const DecodedBox = styled(Box)<BoxProps>(({ theme }) => ({
+  display: "flex",
+  minWidth: 650,
+}));
+
+const DecodedHeaderBox = styled(Box)<BoxProps>(() => ({
+  width: 90,
+  textAlign: "left",
+}));
+
+const DecodedInfoBox = styled(Box)<BoxProps>(() => ({
   maxWidth: 500,
   textAlign: "left",
 }));
@@ -337,7 +369,6 @@ const TransactionDetails: React.FunctionComponent = () => {
                   <Typography variant="h5">To:</Typography>
                 </TxDetailsHeaderBox>
                 <TxDetailsInfoBox>
-                  <Typography variant="h5">{to}</Typography>
                   {ADDRESS_NAMES[to!] && (
                     <Badge
                       variant="h5"
@@ -345,7 +376,8 @@ const TransactionDetails: React.FunctionComponent = () => {
                     >
                       {ADDRESS_NAMES[to!]}
                     </Badge>
-                  )}
+                  )}{" "}
+                  <Typography variant="h5">{to}</Typography>
                 </TxDetailsInfoBox>
               </TxDetailsBox>
               <TxDetailsBox>
@@ -372,23 +404,41 @@ const TransactionDetails: React.FunctionComponent = () => {
                 </TxDetailsHeaderBox>
                 <BottomTxDetailsBox>
                   <TxDetailsInfoBox>
-                    <Typography variant="h5" style={{ display: "inline" }}>
-                      {fnType}{" "}
-                    </Typography>
-                    <Badge
+                    <DecodedBox>
+                      <DecodedHeaderBox>
+                        <Typography variant="h5"> {fnType}</Typography>
+                      </DecodedHeaderBox>
+                      <DecodedInfoBox>
+                        <Badge
+                          variant="h5"
+                          sx={{ background: theme.palette.primary.main }}
+                        >
+                          {fnName}
+                        </Badge>
+                      </DecodedInfoBox>
+                    </DecodedBox>
+                    <Typography
                       variant="h5"
-                      sx={{ background: theme.palette.primary.main }}
-                    >
-                      {fnName}
-                    </Badge>
+                      style={{ display: "inline" }}
+                    ></Typography>
+
                     {decodedDataParams?.map((param) => (
-                      <Typography
-                        variant="h5"
-                        key={param.value}
-                        style={{ wordWrap: "break-word" }}
-                      >
-                        {param.type}: {nextParamValue(param)}
-                      </Typography>
+                      <DecodedBox key={param.value}>
+                        <DecodedHeaderBox>
+                          <Typography variant="h5">{param.type}:</Typography>
+                        </DecodedHeaderBox>{" "}
+                        <DecodedInfoBox>
+                          <Typography
+                            variant="h5"
+                            style={{ wordWrap: "break-word" }}
+                          >
+                            {nextParamValue({
+                              ...param,
+                              color: theme.palette.primary.main,
+                            })}
+                          </Typography>
+                        </DecodedInfoBox>
+                      </DecodedBox>
                     ))}
                   </TxDetailsInfoBox>
                 </BottomTxDetailsBox>
