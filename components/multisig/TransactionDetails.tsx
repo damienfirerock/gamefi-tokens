@@ -353,7 +353,7 @@ const TransactionDetails: React.FunctionComponent = () => {
                   <Typography variant="h5">Value:</Typography>
                 </TxDetailsHeaderBox>
                 <TxDetailsInfoBox>
-                  <Typography variant="h5">{value}</Typography>
+                  <Typography variant="h5">{value} MATIC</Typography>
                 </TxDetailsInfoBox>
               </TxDetailsBox>
               <TxDetailsBox>
