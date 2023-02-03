@@ -65,10 +65,7 @@ export const MultiSigSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Claim Experience Points
     builder.addCase(submitSignature.pending, (state, action) => {
-      // No need to set to null, since this will cause 'flashing' as transactions
-      // state.data = null;
       state.loading = true;
       state.error = null;
     });

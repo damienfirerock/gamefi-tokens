@@ -6,13 +6,11 @@ import useDispatchErrors from "./useDispatchErrors";
 
 import { IUserTransaction } from "../../interfaces/ITransaction";
 import { MultiSigTxnType } from "../../pages/api/multisig";
-import { handleDecodeCalldataWith4Bytes } from "../callDataDecoder";
 import {
   setIsOwner,
   setTxnCount,
   setTxnIndex,
   setConfirmationsRequired,
-  setDecodedData,
   setTxnDetails,
   setSigDetails,
 } from "../../features/TransactionSlice";
@@ -170,15 +168,6 @@ const useMultiSigTransactions = () => {
         };
 
         dispatch(setTxnDetails(transactionDetails));
-
-        const data = await handleDecodeCalldataWith4Bytes(
-          transactionDetails.data
-        );
-        if (!!data?.[0]) {
-          dispatch(setDecodedData(data[0]));
-        } else {
-          dispatch(setDecodedData(null));
-        }
 
         return transactionDetails;
       }

@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { DecodedData } from "../utils/callDataDecoder";
 import {
   IUserTransaction,
   ISignatureDetails,
@@ -11,7 +10,6 @@ type SliceState = {
   txCount: number;
   txIndex: number;
   confirmationsRequired: number;
-  decodedData: DecodedData | null;
   sigDetails: ISignatureDetails | null;
   txnDetails: IUserTransaction | null;
   error?: null | string;
@@ -24,7 +22,6 @@ const initialState: SliceState = {
   txCount: 0,
   txIndex: 0,
   confirmationsRequired: 0,
-  decodedData: null,
   sigDetails: null,
   txnDetails: null,
   error: null,
@@ -56,9 +53,6 @@ export const TransactionSlice = createSlice({
     setConfirmationsRequired: (state, action) => {
       state.confirmationsRequired = action.payload;
     },
-    setDecodedData: (state, action) => {
-      state.decodedData = action.payload;
-    },
     setTxnDetails: (state, action) => {
       state.txnDetails = action.payload;
     },
@@ -77,7 +71,6 @@ export const {
   setTxnCount,
   setTxnIndex,
   setConfirmationsRequired,
-  setDecodedData,
   setTxnDetails,
   setSigDetails,
 } = TransactionSlice.actions;
