@@ -176,6 +176,8 @@ const useMultiSigTransactions = () => {
         );
         if (!!data?.[0]) {
           dispatch(setDecodedData(data[0]));
+        } else {
+          dispatch(setDecodedData(null));
         }
 
         return transactionDetails;

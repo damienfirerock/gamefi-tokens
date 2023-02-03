@@ -120,9 +120,11 @@ const TransactionDetails: React.FunctionComponent = () => {
   const { to, value, data, executed, confirmations } = txnDetails || {};
   const { fnName, fnType, decoded, inputs } = decodedData || {};
 
+  const isDataDecoded = !!decodedData && !!Object.keys(decodedData).length;
+
   const decodedDataString = JSON.stringify(decodedData);
   const decodedDataParams = useMemo((): any[] | undefined => {
-    if (decodedData === null || !Object.keys(decodedData).length) return [];
+    if (decodedData === null || !isDataDecoded) return [];
     return decoded?.map((value, index) => ({
       value,
       type: inputs![index]!.type,
@@ -175,44 +177,53 @@ const TransactionDetails: React.FunctionComponent = () => {
                   <Typography variant="h5">Decoded Data:</Typography>
                 </TxDetailsHeaderBox>
                 <BottomTxDetailsBox>
-                  <TxDetailsInfoBox>
-                    <DecodedBox>
-                      <DecodedHeaderBox>
-                        <Typography variant="h5"> {fnType}</Typography>
-                      </DecodedHeaderBox>
-                      <DecodedInfoBox>
-                        <Badge
-                          variant="h5"
-                          sx={{ background: theme.palette.primary.main }}
-                        >
-                          {fnName}
-                        </Badge>
-                      </DecodedInfoBox>
-                    </DecodedBox>
-                    <Typography
-                      variant="h5"
-                      style={{ display: "inline" }}
-                    ></Typography>
-
-                    {decodedDataParams?.map((param) => (
-                      <DecodedBox key={param.value}>
+                  {isDataDecoded ? (
+                    <TxDetailsInfoBox>
+                      <DecodedBox>
                         <DecodedHeaderBox>
-                          <Typography variant="h5">{param.type}:</Typography>
-                        </DecodedHeaderBox>{" "}
+                          <Typography variant="h5"> {fnType}</Typography>
+                        </DecodedHeaderBox>
                         <DecodedInfoBox>
-                          <Typography
+                          <Badge
                             variant="h5"
-                            style={{ wordWrap: "break-word" }}
+                            sx={{ background: theme.palette.primary.main }}
                           >
-                            {nextParamValue({
-                              ...param,
-                              color: theme.palette.primary.main,
-                            })}
-                          </Typography>
+                            {fnName}
+                          </Badge>
                         </DecodedInfoBox>
                       </DecodedBox>
-                    ))}
-                  </TxDetailsInfoBox>
+                      <Typography
+                        variant="h5"
+                        style={{ display: "inline" }}
+                      ></Typography>
+
+                      {decodedDataParams?.map((param) => (
+                        <DecodedBox key={param.value}>
+                          <DecodedHeaderBox>
+                            <Typography variant="h5">{param.type}:</Typography>
+                          </DecodedHeaderBox>{" "}
+                          <DecodedInfoBox>
+                            <Typography
+                              variant="h5"
+                              style={{ wordWrap: "break-word" }}
+                            >
+                              {nextParamValue({
+                                ...param,
+                                color: theme.palette.primary.main,
+                              })}
+                            </Typography>
+                          </DecodedInfoBox>
+                        </DecodedBox>
+                      ))}
+                    </TxDetailsInfoBox>
+                  ) : (
+                    <Badge
+                      variant="h5"
+                      sx={{ background: theme.palette.primary.main }}
+                    >
+                      Unable to Decode Data
+                    </Badge>
+                  )}
                 </BottomTxDetailsBox>
               </TxDetailsBox>
               <TxDetailsBox>
