@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import { useDispatch, useSelector } from "react-redux";
 
 import Layout from "../layout/Layout";
@@ -25,6 +26,11 @@ import { clearError, setLoading } from "../../features/TransactionSlice";
 
 const addresses = Object.values(CONTRACT_ADDRESSES);
 
+const StyledContainer = styled(Container)<ContainerProps>(({ theme }) => ({
+  marginTop: theme.spacing(1),
+  textAlign: "center",
+}));
+
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
   justifyContent: "center",
@@ -32,7 +38,6 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
 }));
 
 const ContractsBox = styled(Box)<BoxProps>(({ theme }) => ({
-  textAlign: "center",
   margin: theme.spacing(2, 0),
 }));
 
@@ -50,10 +55,6 @@ const InteractButton = (props: {
   );
 };
 
-const StyledContainer = styled(Container)<ContainerProps>(({ theme }) => ({
-  marginTop: theme.spacing(1),
-}));
-
 const MultiSig: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -61,10 +62,10 @@ const MultiSig: React.FunctionComponent = () => {
   const { checkIfMultiSigOwner } = useMultiSigTransactions();
 
   const multiSigSlice = useSelector((state: RootState) => state.multiSig);
-  const { error: multiSigError } = multiSigSlice;
+  const { isOwner, owners, error: multiSigError } = multiSigSlice;
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
-  const { isOwner, error, loading } = transactionSlice;
+  const { error, loading } = transactionSlice;
 
   const setupInitial = async () => {
     dispatch(setLoading(true));
@@ -121,8 +122,15 @@ const MultiSig: React.FunctionComponent = () => {
               {addresses.map((address) => {
                 if (!address) return;
                 return (
-                  <Typography variant="h4" key={address}>
-                    {ADDRESS_NAMES[address]}:{" "}
+                  <Typography
+                    variant="h4"
+                    key={address}
+                    sx={{ display: "inline-flex", alignItems: "center" }}
+                  >
+                    {ADDRESS_NAMES[address]}:
+                    {owners?.includes(address) && (
+                      <AssignmentIndIcon color="success" />
+                    )}
                     <Link
                       href={`${CONFIG.POLYGONSCAN_URL}${address}`}
                       target="_blank"

@@ -161,6 +161,8 @@ const useMultiSigTransactions = () => {
         address,
         signature
       );
+
+      return result;
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
     }

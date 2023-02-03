@@ -7,13 +7,13 @@ import useDispatchErrors from "./useDispatchErrors";
 import { IUserTransaction } from "../../interfaces/ITransaction";
 import { MultiSigTxnType } from "../../pages/api/multisig";
 import {
-  setIsOwner,
   setTxnCount,
   setTxnIndex,
   setConfirmationsRequired,
   setTxnDetails,
   setSigDetails,
 } from "../../features/TransactionSlice";
+import { setIsOwner, setOwners } from "../../features/MultiSigSlice";
 
 const MultiSigWalletJson = require("../abis/MultiSigWallet.json");
 
@@ -290,8 +290,29 @@ const useMultiSigTransactions = () => {
     }
   };
 
+  const getMultiSigOwners = async () => {
+    const { signer } = (await runPreChecks()) || {};
+
+    if (!signer) return;
+
+    const multiSigContract = new ethers.Contract(
+      NEXT_PUBLIC_MULTISIG_ADDRESS || "",
+      MultiSigWalletJson.abi,
+      signer
+    );
+
+    try {
+      const result = await multiSigContract.getOwners();
+      dispatch(setOwners(result));
+    } catch (error: any) {
+      sendTransactionErrorOnMetaMaskRequest(error);
+      return false;
+    }
+  };
+
   return {
     checkIfMultiSigOwner,
+    getMultiSigOwners,
     getTransactionCount,
     getTransactionDetails,
     getNumOfConfirmationsRequired,

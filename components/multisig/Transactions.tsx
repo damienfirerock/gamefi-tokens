@@ -89,6 +89,7 @@ const Transactions: React.FunctionComponent = () => {
     getTransactionDetails,
     getTxnSignature,
     runTransaction,
+    getMultiSigOwners,
   } = useMultiSigTransactions();
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
@@ -170,6 +171,7 @@ const Transactions: React.FunctionComponent = () => {
 
     await getNumOfConfirmationsRequired();
     await setupTxn(latestTxnIndex);
+    await getMultiSigOwners();
 
     dispatch(setLoading(false));
   };

@@ -44,6 +44,8 @@ export const submitSignature = createAsyncThunk(
 );
 
 type SliceState = {
+  isOwner: boolean;
+  owners: string[] | null;
   error?: null | string;
   loading: boolean;
   data: { outcome: boolean } | null;
@@ -51,6 +53,8 @@ type SliceState = {
 
 // First approach: define the initial state using that type
 const initialState: SliceState = {
+  owners: null,
+  isOwner: false,
   error: null,
   loading: false,
   data: null,
@@ -62,6 +66,12 @@ export const MultiSigSlice = createSlice({
   reducers: {
     clearError: (state) => {
       state.error = null;
+    },
+    setIsOwner: (state, action) => {
+      state.isOwner = action.payload;
+    },
+    setOwners: (state, action) => {
+      state.owners = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -82,6 +92,6 @@ export const MultiSigSlice = createSlice({
   },
 });
 
-export const { clearError } = MultiSigSlice.actions;
+export const { clearError, setIsOwner, setOwners } = MultiSigSlice.actions;
 
 export default MultiSigSlice.reducer;

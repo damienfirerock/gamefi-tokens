@@ -6,7 +6,6 @@ import {
 } from "../interfaces/ITransaction";
 
 type SliceState = {
-  isOwner: boolean;
   txCount: number;
   txIndex: number;
   confirmationsRequired: number;
@@ -18,7 +17,6 @@ type SliceState = {
 
 // First approach: define the initial state using that type
 const initialState: SliceState = {
-  isOwner: false,
   txCount: 0,
   txIndex: 0,
   confirmationsRequired: 0,
@@ -40,9 +38,6 @@ export const TransactionSlice = createSlice({
     },
     clearError: (state) => {
       state.error = null;
-    },
-    setIsOwner: (state, action) => {
-      state.isOwner = action.payload;
     },
     setTxnCount: (state, action) => {
       state.txCount = action.payload;
@@ -67,7 +62,6 @@ export const {
   setLoading,
   setError,
   clearError,
-  setIsOwner,
   setTxnCount,
   setTxnIndex,
   setConfirmationsRequired,

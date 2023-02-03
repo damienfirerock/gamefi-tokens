@@ -5,7 +5,6 @@ import { styled, useTheme } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 
 import Badge from "../common/Badge";
-import StyledCircularProgress from "../common/StyledCircularProgress";
 
 import { AppDispatch, RootState } from "../../store";
 import { ADDRESS_NAMES } from "../../config";
