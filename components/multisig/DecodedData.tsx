@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo } from "react";
 import { ethers } from "ethers";
-import { Box, BoxProps, Typography } from "@mui/material";
+import { Box, BoxProps, CircularProgress, Typography } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 
 import Badge from "../common/Badge";
+import StyledCircularProgress from "../common/StyledCircularProgress";
 
 import { AppDispatch, RootState } from "../../store";
 import { ADDRESS_NAMES } from "../../config";
@@ -108,7 +109,7 @@ const DecodedData: React.FunctionComponent = () => {
     }
   }, [data]);
 
-  if (loading) return <p>loading</p>;
+  if (loading) return <CircularProgress size={12} color="primary" />;
 
   return (
     <>
