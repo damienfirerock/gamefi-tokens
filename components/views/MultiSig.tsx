@@ -21,8 +21,9 @@ import { AppDispatch, RootState } from "../../store";
 import useMultiSigTransactions from "../../utils/hooks/useMultiSigTransactions";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
-import { clearError as clearMultiSigError } from "../../features/MultiSigSlice";
 import { clearError, setLoading } from "../../features/TransactionSlice";
+import { clearError as clearMultiSigError } from "../../features/MultiSigSlice";
+import { clearError as clearDecodedDataError } from "../../features/TransactionSlice";
 
 const addresses = Object.values(CONTRACT_ADDRESSES);
 
@@ -61,11 +62,14 @@ const MultiSig: React.FunctionComponent = () => {
   const { account, requestConnect } = useConnectWallet();
   const { checkIfMultiSigOwner } = useMultiSigTransactions();
 
+  const transactionSlice = useSelector((state: RootState) => state.transaction);
+  const { error, loading } = transactionSlice;
+
   const multiSigSlice = useSelector((state: RootState) => state.multiSig);
   const { isOwner, owners, error: multiSigError } = multiSigSlice;
 
-  const transactionSlice = useSelector((state: RootState) => state.transaction);
-  const { error, loading } = transactionSlice;
+  const decodedDataSlice = useSelector((state: RootState) => state.decodedData);
+  const { error: decodedDataError } = decodedDataSlice;
 
   const setupInitial = async () => {
     dispatch(setLoading(true));
@@ -78,6 +82,8 @@ const MultiSig: React.FunctionComponent = () => {
   const handleClearAlert = () => {
     if (multiSigError) {
       dispatch(clearMultiSigError());
+    } else if (decodedDataError) {
+      dispatch(clearDecodedDataError());
     } else if (error) {
       dispatch(clearError());
     }
@@ -148,7 +154,7 @@ const MultiSig: React.FunctionComponent = () => {
 
       <AlertBar
         severity="warning"
-        text={error || multiSigError}
+        text={error || multiSigError || decodedDataError}
         handleClearAlertSource={handleClearAlert}
       />
     </Layout>

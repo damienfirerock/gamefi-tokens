@@ -4,7 +4,7 @@ import { Fragment, Interface, ParamType } from "@ethersproject/abi";
 import { z } from "zod";
 import assert from "assert";
 
-const MAX_RETRY = 30;
+const MAX_RETRY = 10;
 
 // Site went down
 // May want to consider going to the source: https://github.com/ethereum-lists/4bytes
