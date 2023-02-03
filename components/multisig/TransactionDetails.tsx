@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, BoxProps, Typography, TypographyProps } from "@mui/material";
+import { Box, BoxProps, Typography } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import { red, green } from "@mui/material/colors/";
 import DoneIcon from "@mui/icons-material/Done";
@@ -99,7 +99,9 @@ const TransactionDetails: React.FunctionComponent = () => {
                   <Typography variant="h5">Decoded Data:</Typography>
                 </TxDetailsHeaderBox>
                 {/* Decoded Data */}
-                <DecodedData />
+                <BottomTxDetailsBox>
+                  <DecodedData />
+                </BottomTxDetailsBox>
               </TxDetailsBox>
               <TxDetailsBox>
                 <TxDetailsHeaderBox>

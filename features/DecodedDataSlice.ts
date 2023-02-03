@@ -8,12 +8,13 @@ import {
 export const decodeData = createAsyncThunk(
   "get/decodeData",
   async (data: string) => {
-    return await handleDecodeCalldataWith4Bytes(data);
+    const response = await handleDecodeCalldataWith4Bytes(data);
+    return response?.[0] || null;
   }
 );
 
 type SliceState = {
-  data?: DecodedData | null;
+  data: DecodedData | null;
   error?: null | string;
   loading: boolean;
 };
@@ -35,6 +36,7 @@ export const DecodedDataSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(decodeData.pending, (state, action) => {
+      state.data = null;
       state.loading = true;
       state.error = null;
     });

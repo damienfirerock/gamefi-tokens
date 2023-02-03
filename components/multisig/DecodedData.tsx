@@ -1,14 +1,15 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { ethers } from "ethers";
-import { Box, BoxProps, Typography, TypographyProps } from "@mui/material";
+import { Box, BoxProps, Typography } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Badge from "../common/Badge";
 
-import { RootState } from "../../store";
+import { AppDispatch, RootState } from "../../store";
 import { ADDRESS_NAMES } from "../../config";
 import { KECCAK_ROLES } from "../../constants";
+import { decodeData } from "../../features/DecodedDataSlice";
 
 const nextParamValue = (param: {
   type: string;
@@ -54,13 +55,6 @@ const nextParamValue = (param: {
   }
 };
 
-const DataDetailsBox = styled(Box)<BoxProps>(({ theme }) => ({
-  display: "flex",
-  minWidth: 650,
-  border: "1px solid #D3D3D3",
-  padding: theme.spacing(1),
-}));
-
 const TxDetailsInfoBox = styled(Box)<BoxProps>(() => ({
   maxWidth: 500,
   textAlign: "left",
@@ -81,8 +75,9 @@ const DecodedInfoBox = styled(Box)<BoxProps>(() => ({
   textAlign: "left",
 }));
 
-const TransactionDetails: React.FunctionComponent = () => {
+const DecodedData: React.FunctionComponent = () => {
   const theme = useTheme();
+  const dispatch = useDispatch<AppDispatch>();
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { txnDetails } = transactionSlice;
@@ -95,6 +90,7 @@ const TransactionDetails: React.FunctionComponent = () => {
   const isDataDecoded = !!decodedData && !!Object.keys(decodedData).length;
 
   const decodedDataString = JSON.stringify(decodedData);
+
   const decodedDataParams = useMemo((): any[] | undefined => {
     if (decodedData === null || !isDataDecoded) return [];
     return decoded?.map((value, index) => ({
@@ -103,8 +99,19 @@ const TransactionDetails: React.FunctionComponent = () => {
     }));
   }, [decodedDataString]);
 
+  // Setting data has unintended positive effect:
+  // Since data is a string which has not changed,
+  // there is no need to make a new request to decode the same string
+  useEffect(() => {
+    if (!!data) {
+      dispatch(decodeData(data));
+    }
+  }, [data]);
+
+  if (loading) return <p>loading</p>;
+
   return (
-    <DataDetailsBox>
+    <>
       {isDataDecoded ? (
         <TxDetailsInfoBox>
           <DecodedBox>
@@ -143,8 +150,8 @@ const TransactionDetails: React.FunctionComponent = () => {
           Unable to Decode Data
         </Badge>
       )}
-    </DataDetailsBox>
+    </>
   );
 };
 
-export default TransactionDetails;
+export default DecodedData;
