@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   BoxProps,
@@ -21,7 +21,7 @@ import useMultiSigTransactions from "../../utils/hooks/useMultiSigTransactions";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
 import { clearError as clearMultiSigError } from "../../features/MultiSigSlice";
-import { clearError } from "../../features/TransactionSlice";
+import { clearError, setLoading } from "../../features/TransactionSlice";
 
 const addresses = Object.values(CONTRACT_ADDRESSES);
 
@@ -64,16 +64,14 @@ const MultiSig: React.FunctionComponent = () => {
   const { error: multiSigError } = multiSigSlice;
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
-  const { isOwner, error } = transactionSlice;
-
-  const [loading, setLoading] = useState<boolean>(false);
+  const { isOwner, error, loading } = transactionSlice;
 
   const setupInitial = async () => {
-    setLoading(true);
+    dispatch(setLoading(true));
 
     await checkIfMultiSigOwner();
 
-    setLoading(false);
+    dispatch(setLoading(false));
   };
 
   const handleClearAlert = () => {
