@@ -13,7 +13,7 @@ export const decodeData = createAsyncThunk(
 );
 
 type SliceState = {
-  data?: DecodedData[] | null;
+  data?: DecodedData | null;
   error?: null | string;
   loading: boolean;
 };
