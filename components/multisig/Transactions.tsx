@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   Box,
   BoxProps,
@@ -6,7 +6,6 @@ import {
   ButtonProps,
   IconButton,
   Typography,
-  TypographyProps,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -20,7 +19,7 @@ import useMultiSigTransactions from "../../utils/hooks/useMultiSigTransactions";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import { submitSignature } from "../../features/MultiSigSlice";
 import { MultiSigTxnType } from "../../pages/api/multisig";
-import { setTxnIndex } from "../../features/TransactionSlice";
+import { setTxnIndex, setLoading } from "../../features/TransactionSlice";
 
 const numberOfButtons = 9;
 const sideButtonNumber = Math.floor(numberOfButtons / 2);
@@ -36,13 +35,6 @@ const SectionBox = styled(Box)<BoxProps>(({ theme }) => ({
 
 const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
   margin: theme.spacing(0.25),
-}));
-
-const Badge = styled(Typography)<TypographyProps>(({ theme }) => ({
-  display: "inline",
-  color: "white",
-  padding: theme.spacing(0.25, 0.75),
-  borderRadius: 5,
 }));
 
 const PageButton = (props: {
@@ -90,9 +82,6 @@ const Transactions: React.FunctionComponent = () => {
 
   const { account } = useConnectWallet();
 
-  // Note: May need to move hook state to redux
-  // in the event that app becomes more complex,
-  // but this is unlikely unless the app deals with more than the multisig
   const {
     getTransactionCount,
     getSignatureDetails,
@@ -103,15 +92,18 @@ const Transactions: React.FunctionComponent = () => {
   } = useMultiSigTransactions();
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
-  const { txCount, txIndex, txnDetails, confirmationsRequired, sigDetails } =
-    transactionSlice;
-
+  const {
+    txCount,
+    txIndex,
+    txnDetails,
+    confirmationsRequired,
+    sigDetails,
+    loading: transactionLoading,
+  } = transactionSlice;
   const { executed, confirmations, userConfirmed } = txnDetails || {};
 
   const multiSigSlice = useSelector((state: RootState) => state.multiSig);
   const { loading: multiSigLoading } = multiSigSlice;
-
-  const [loading, setLoading] = useState<boolean>(false);
 
   const txNumbers = useMemo((): number[] => {
     const lastNumber = txCount - 1;
@@ -163,26 +155,27 @@ const Transactions: React.FunctionComponent = () => {
   };
 
   const getTransaction = async (nextIndex: number) => {
-    setLoading(true);
+    dispatch(setLoading(true));
 
     await setupTxn(nextIndex);
-    setTxnIndex(nextIndex);
+    await dispatch(setTxnIndex(nextIndex));
 
-    setLoading(false);
+    dispatch(setLoading(false));
   };
 
   const setupInitial = async () => {
+    dispatch(setLoading(true));
     const nextTxnCount = await getTransactionCount();
     const latestTxnIndex = nextTxnCount - 1;
 
     await getNumOfConfirmationsRequired();
     await setupTxn(latestTxnIndex);
 
-    setLoading(false);
+    dispatch(setLoading(false));
   };
 
   const handleSubmitSignature = async () => {
-    setLoading(true);
+    dispatch(setLoading(true));
     if (typeof txIndex === "number") {
       const signature = await getTxnSignature(txIndex);
 
@@ -197,11 +190,11 @@ const Transactions: React.FunctionComponent = () => {
         await setupTxn(txIndex);
       }
     }
-    setLoading(false);
+    dispatch(setLoading(false));
   };
 
   const handleSubmitSignatureForExecution = async () => {
-    setLoading(true);
+    dispatch(setLoading(true));
     if (typeof txIndex === "number") {
       const signature = await getTxnSignature(txIndex);
 
@@ -214,17 +207,19 @@ const Transactions: React.FunctionComponent = () => {
         await setupTxn(txIndex);
       }
     }
-    setLoading(false);
+    dispatch(setLoading(false));
   };
 
   const handleRunTransaction = async (type: MultiSigTxnType) => {
-    setLoading(true);
+    dispatch(setLoading(true));
     if (typeof txIndex === "number") {
       await runTransaction(txIndex, type);
       await setupTxn(txIndex);
     }
-    setLoading(false);
+    dispatch(setLoading(false));
   };
+
+  const loading = transactionLoading || multiSigLoading;
 
   useEffect(() => {
     if (account) {
@@ -294,13 +289,13 @@ const Transactions: React.FunctionComponent = () => {
                     : MultiSigTxnType.CONFIRM
                 )
               }
-              loading={loading || multiSigLoading}
+              loading={loading}
               variant="outlined"
             />
             <InteractButton
               text={`${userConfirmed ? "revoke" : "confirm"} via Signature`}
               method={handleSubmitSignature}
-              loading={loading || multiSigLoading}
+              loading={loading}
             />
           </SectionBox>
           {!!confirmations && confirmations >= confirmationsRequired && (
@@ -312,13 +307,13 @@ const Transactions: React.FunctionComponent = () => {
               <InteractButton
                 text="Execute Directly"
                 method={() => handleRunTransaction(MultiSigTxnType.EXECUTE)}
-                loading={loading || multiSigLoading}
+                loading={loading}
                 variant="outlined"
               />
               <InteractButton
                 text="Execute via Signature"
                 method={handleSubmitSignatureForExecution}
-                loading={loading || multiSigLoading}
+                loading={loading}
               />
             </SectionBox>
           )}

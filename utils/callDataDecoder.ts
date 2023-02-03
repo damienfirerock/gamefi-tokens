@@ -6,6 +6,8 @@ import assert from "assert";
 
 const MAX_RETRY = 30;
 
+// Site went down
+// May want to consider going to the source: https://github.com/ethereum-lists/4bytes
 // @internal
 function urlTo(hexSigType: HexSigType): string {
   return `https://www.4byte.directory/api/v1/${hexSigType}/?hex_signature=`;
@@ -306,6 +308,6 @@ export async function handleDecodeCalldataWith4Bytes(
       return mappedResults;
     }
   } catch (error) {
-    throw new Error("Invalid Operation");
+    throw new Error("Unable to Decode Calldata");
   }
 }
