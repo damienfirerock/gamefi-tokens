@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
     "@emotion/react": "^11.10.4",
@@ -15,6 +16,7 @@
     "@ethersproject/abi": "^5.7.0",
     "@mui/icons-material": "^5.10.9",
     "@mui/material": "^5.10.9",
+    "@next/bundle-analyzer": "^13.1.6",
     "@reduxjs/toolkit": "^1.8.6",
     "0xsequence": "^0.43.7",
     "ethers": "^5.7.1",
