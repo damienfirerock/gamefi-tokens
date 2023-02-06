@@ -99,7 +99,7 @@ const DecodedData: React.FunctionComponent = () => {
     }));
   }, [decodedDataString]);
 
-  // Setting data has unintended positive effect:
+  // Setting data as a dependency has unintended positive effect:
   // Since data is a string which has not changed,
   // there is no need to make a new request to decode the same string
   useEffect(() => {
