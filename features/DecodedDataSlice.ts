@@ -15,6 +15,7 @@ export const decodeData = createAsyncThunk(
 
 type SliceState = {
   data: DecodedData | null;
+  decimals: number | null;
   error?: null | string;
   loading: boolean;
 };
@@ -22,6 +23,7 @@ type SliceState = {
 // First approach: define the initial state using that type
 const initialState: SliceState = {
   data: null,
+  decimals: null,
   error: null,
   loading: false,
 };
@@ -32,6 +34,12 @@ export const DecodedDataSlice = createSlice({
   reducers: {
     clearError: (state) => {
       state.error = null;
+    },
+    setDecimals: (state, action) => {
+      state.decimals = action.payload;
+    },
+    clearDecimals: (state) => {
+      state.decimals = null;
     },
   },
   extraReducers: (builder) => {
@@ -54,6 +62,7 @@ export const DecodedDataSlice = createSlice({
   },
 });
 
-export const { clearError } = DecodedDataSlice.actions;
+export const { clearError, setDecimals, clearDecimals } =
+  DecodedDataSlice.actions;
 
 export default DecodedDataSlice.reducer;

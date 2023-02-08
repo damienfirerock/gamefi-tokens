@@ -5,19 +5,20 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Badge from "../common/Badge";
 
+import useWeb3Transactions from "../../utils/hooks/useWeb3Transactions";
 import { AppDispatch, RootState } from "../../store";
 import { ADDRESS_NAMES } from "../../config";
-import { KECCAK_ROLES } from "../../constants";
-import { decodeData } from "../../features/DecodedDataSlice";
-import { DEFAULT_DECIMALS } from "../../constants";
+import { DEFAULT_DECIMALS, KECCAK_ROLES } from "../../constants";
+import { clearDecimals, decodeData } from "../../features/DecodedDataSlice";
 import { formatTokenValue } from "../../utils/common";
 
 const nextParamValue = (param: {
   type: string;
   value: any;
   color?: string;
+  tokenDecimals: number | null;
 }) => {
-  const { type, value, color } = param;
+  const { type, value, color, tokenDecimals } = param;
   switch (type) {
     case "address":
       return (
@@ -31,16 +32,19 @@ const nextParamValue = (param: {
         </>
       );
     case "uint256":
+      // Note: This assumes that all uint256 details deal with token transfers/mint
+      // Currently, this would be the case
       const numberValue = Number(value);
       const stringValue = numberValue.toString();
-      // FIXME: decimals for tokens may not necessarily be DEFAULT_DECIMALS
-      const parsedValue = formatTokenValue(stringValue, DEFAULT_DECIMALS);
+      const nextDecimals =
+        (tokenDecimals !== 0 && tokenDecimals) || DEFAULT_DECIMALS;
+      const parsedValue = formatTokenValue(stringValue, nextDecimals);
       return (
         <>
           <Badge variant="h5" sx={{ background: color }}>
             {Number(parsedValue)}
           </Badge>{" "}
-          {Number(value)} ({DEFAULT_DECIMALS} Decimals)
+          {Number(value)} ({nextDecimals} Decimals)
         </>
       );
     case "bytes32":
@@ -82,18 +86,20 @@ const DecodedInfoBox = styled(Box)<BoxProps>(() => ({
 const DecodedData: React.FunctionComponent = () => {
   const theme = useTheme();
   const dispatch = useDispatch<AppDispatch>();
+  const { getTokenDecimals } = useWeb3Transactions();
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { txnDetails } = transactionSlice;
-  const { data } = txnDetails || {};
+  const { to, data } = txnDetails || {};
 
   const decodedDataSlice = useSelector((state: RootState) => state.decodedData);
-  const { data: decodedData, loading } = decodedDataSlice;
+  const { data: decodedData, decimals, loading } = decodedDataSlice;
   const { fnName, fnType, decoded, inputs } = decodedData || {};
 
   const isDataDecoded = !!decodedData && !!Object.keys(decodedData).length;
 
   const decodedDataString = JSON.stringify(decodedData);
+  const inputString = JSON.stringify(inputs);
 
   const decodedDataParams = useMemo((): any[] | undefined => {
     if (decodedData === null || !isDataDecoded) return [];
@@ -103,14 +109,37 @@ const DecodedData: React.FunctionComponent = () => {
     }));
   }, [decodedDataString]);
 
+  const isTokenTransfer = useMemo((): boolean => {
+    if (!inputs || !inputs.length || !to) return false;
+
+    // If there is a value sent to an address,
+    // this is highly likely to be a token transfer
+    if (
+      inputs.find(({ type }) => type === "address") &&
+      inputs.find(({ type }) => type === "uint256")
+    ) {
+      return true;
+    }
+
+    return false;
+  }, [inputString]);
+
   // Setting data as a dependency has unintended positive effect:
   // Since data is a string which has not changed,
   // there is no need to make a new request to decode the same string
   useEffect(() => {
     if (!!data) {
       dispatch(decodeData(data));
+      dispatch(clearDecimals());
     }
   }, [data]);
+
+  useEffect(() => {
+    if (!isTokenTransfer) return;
+
+    // to is confirmed because isTokenTransfer will return false if !to
+    getTokenDecimals(to!);
+  }, [isTokenTransfer]);
 
   if (loading) return <CircularProgress size={12} color="primary" />;
 
@@ -143,6 +172,7 @@ const DecodedData: React.FunctionComponent = () => {
                   {nextParamValue({
                     ...param,
                     color: theme.palette.primary.main,
+                    tokenDecimals: decimals,
                   })}
                 </Typography>
               </DecodedInfoBox>
