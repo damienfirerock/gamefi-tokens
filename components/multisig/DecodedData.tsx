@@ -35,9 +35,12 @@ const nextParamValue = (param: {
       // FIXME: decimals for tokens may not necessarily be 18
       const parsedValue = ethers.utils.formatUnits(stringValue, 18);
       return (
-        <Badge variant="h5" sx={{ background: color }}>
-          {Number(parsedValue)}
-        </Badge>
+        <>
+          <Badge variant="h5" sx={{ background: color }}>
+            {Number(parsedValue)}
+          </Badge>{" "}
+          {Number(value)} (18 Decimals)
+        </>
       );
     case "bytes32":
       return (
