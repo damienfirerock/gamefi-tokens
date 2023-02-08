@@ -5,9 +5,13 @@ import {
   handleDecodeCalldataWith4Bytes,
 } from "../utils/callDataDecoder";
 
+import { EMPTY_CALLDATA } from "../constants";
+
 export const decodeData = createAsyncThunk(
   "get/decodeData",
   async (data: string) => {
+    if (data === EMPTY_CALLDATA) return null;
+
     const response = await handleDecodeCalldataWith4Bytes(data);
     return response?.[0] || null;
   }

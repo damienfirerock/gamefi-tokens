@@ -8,7 +8,11 @@ import Badge from "../common/Badge";
 import useWeb3Transactions from "../../utils/hooks/useWeb3Transactions";
 import { AppDispatch, RootState } from "../../store";
 import { ADDRESS_NAMES } from "../../config";
-import { DEFAULT_DECIMALS, KECCAK_ROLES } from "../../constants";
+import {
+  DEFAULT_DECIMALS,
+  EMPTY_CALLDATA,
+  KECCAK_ROLES,
+} from "../../constants";
 import { clearDecimals, decodeData } from "../../features/DecodedDataSlice";
 import { formatTokenValue } from "../../utils/common";
 
@@ -74,7 +78,7 @@ const DecodedBox = styled(Box)<BoxProps>(({ theme }) => ({
 }));
 
 const DecodedHeaderBox = styled(Box)<BoxProps>(() => ({
-  width: 90,
+  width: 120,
   textAlign: "left",
 }));
 
@@ -90,7 +94,7 @@ const DecodedData: React.FunctionComponent = () => {
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { txnDetails } = transactionSlice;
-  const { to, data } = txnDetails || {};
+  const { to, data, value } = txnDetails || {};
 
   const decodedDataSlice = useSelector((state: RootState) => state.decodedData);
   const { data: decodedData, decimals, loading } = decodedDataSlice;
@@ -142,6 +146,23 @@ const DecodedData: React.FunctionComponent = () => {
   }, [isTokenTransfer]);
 
   if (loading) return <CircularProgress size={12} color="primary" />;
+
+  if (data === EMPTY_CALLDATA)
+    return (
+      <Typography
+        variant="h5"
+        sx={{ display: "inline", wordWrap: "break-word", textAlign: "left" }}
+      >
+        This is a{" "}
+        <Badge variant="h5" sx={{ background: theme.palette.primary.main }}>
+          transfer
+        </Badge>{" "}
+        of{" "}
+        <Badge variant="h5" sx={{ background: theme.palette.primary.main }}>
+          {value} MATIC
+        </Badge>
+      </Typography>
+    );
 
   return (
     <>

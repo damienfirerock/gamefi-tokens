@@ -25,7 +25,7 @@ const TxDetailsContainer = styled(Box)<BoxProps>(() => ({
 // Note: Probably a DRY method for not having borders clash between BottomTxDetailsBoxes in TransactionDetails
 const TxDetailsBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
-  minWidth: 650,
+  minWidth: 450,
   border: "1px solid #D3D3D3",
   borderBottom: 0,
   padding: theme.spacing(1),
@@ -33,7 +33,7 @@ const TxDetailsBox = styled(Box)<BoxProps>(({ theme }) => ({
 
 const BottomTxDetailsBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
-  minWidth: 650,
+  minWidth: 450,
   border: "1px solid #D3D3D3",
   padding: theme.spacing(1),
 }));

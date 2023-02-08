@@ -13,3 +13,5 @@ export const KECCAK_ROLES: Record<string, string> = {
 };
 
 export const DEFAULT_DECIMALS = 18;
+
+export const EMPTY_CALLDATA = "0x";

@@ -12,10 +12,10 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-import Layout from "../layout/Layout";
-import StyledCircularProgress from "../common/StyledCircularProgress";
+import Layout from "../../../components/layout/Layout";
+import StyledCircularProgress from "../../../components/common/StyledCircularProgress";
 
-import useSequenceWallet from "../../utils/hooks/deprecated/useSequenceWallet";
+import useSequenceWallet from "./useSequenceWallet";
 
 // https://github.com/vercel/next.js/issues/19420
 const NEXT_PUBLIC_POLYGONSCAN_URL = process.env.NEXT_PUBLIC_POLYGONSCAN_URL;
