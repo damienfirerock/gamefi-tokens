@@ -74,16 +74,14 @@ const TxDetailsInfoBox = styled(Box)<BoxProps>(() => ({
 
 const DecodedBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
-  minWidth: 650,
 }));
 
-const DecodedHeaderBox = styled(Box)<BoxProps>(() => ({
-  width: 120,
-  textAlign: "left",
+const DecodedHeaderBox = styled(Box)<BoxProps>(({ theme }) => ({
+  marginRight: theme.spacing(0.5),
 }));
 
 const DecodedInfoBox = styled(Box)<BoxProps>(() => ({
-  maxWidth: 500,
+  maxWidth: 420,
   textAlign: "left",
 }));
 
@@ -159,7 +157,11 @@ const DecodedData: React.FunctionComponent = () => {
         </Badge>{" "}
         of{" "}
         <Badge variant="h5" sx={{ background: theme.palette.primary.main }}>
-          {value} MATIC
+          {formatTokenValue(value!.toString(), DEFAULT_DECIMALS)} MATIC
+        </Badge>{" "}
+        to:{" "}
+        <Badge variant="h5" sx={{ background: theme.palette.primary.main }}>
+          {ADDRESS_NAMES[to!] || to}
         </Badge>
       </Typography>
     );
