@@ -253,6 +253,7 @@ export async function decodeWithCalldata(
   calldata: string
 ): Promise<DecodeResult[] | undefined> {
   const response = await fetch4BytesBy.Signatures(sigHash);
+
   if (response) {
     const ifaces = parse4BytesResToIfaces(response);
     const decodedByCalldata = decodeByCalldata(ifaces, calldata);

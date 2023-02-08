@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo } from "react";
-import { ethers } from "ethers";
 import { Box, BoxProps, CircularProgress, Typography } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +9,8 @@ import { AppDispatch, RootState } from "../../store";
 import { ADDRESS_NAMES } from "../../config";
 import { KECCAK_ROLES } from "../../constants";
 import { decodeData } from "../../features/DecodedDataSlice";
+import { DEFAULT_DECIMALS } from "../../constants";
+import { formatTokenValue } from "../../utils/common";
 
 const nextParamValue = (param: {
   type: string;
@@ -32,14 +33,14 @@ const nextParamValue = (param: {
     case "uint256":
       const numberValue = Number(value);
       const stringValue = numberValue.toString();
-      // FIXME: decimals for tokens may not necessarily be 18
-      const parsedValue = ethers.utils.formatUnits(stringValue, 18);
+      // FIXME: decimals for tokens may not necessarily be DEFAULT_DECIMALS
+      const parsedValue = formatTokenValue(stringValue, DEFAULT_DECIMALS);
       return (
         <>
           <Badge variant="h5" sx={{ background: color }}>
             {Number(parsedValue)}
           </Badge>{" "}
-          {Number(value)} (18 Decimals)
+          {Number(value)} ({DEFAULT_DECIMALS} Decimals)
         </>
       );
     case "bytes32":

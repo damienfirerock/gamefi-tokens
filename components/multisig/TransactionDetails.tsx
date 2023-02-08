@@ -10,6 +10,8 @@ import Badge from "../common/Badge";
 
 import { RootState } from "../../store";
 import { ADDRESS_NAMES } from "../../config";
+import { DEFAULT_DECIMALS } from "../../constants";
+import { formatTokenValue } from "../../utils/common";
 
 const SectionBox = styled(Box)<BoxProps>(({ theme }) => ({
   textAlign: "center",
@@ -81,7 +83,11 @@ const TransactionDetails: React.FunctionComponent = () => {
                   <Typography variant="h5">Value:</Typography>
                 </TxDetailsHeaderBox>
                 <TxDetailsInfoBox>
-                  <Typography variant="h5">{value} MATIC</Typography>
+                  <Typography variant="h5">
+                    {value &&
+                      formatTokenValue(value.toString(), DEFAULT_DECIMALS)}{" "}
+                    MATIC
+                  </Typography>
                 </TxDetailsInfoBox>
               </TxDetailsBox>
               <TxDetailsBox>

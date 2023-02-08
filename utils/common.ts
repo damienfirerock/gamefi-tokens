@@ -1,3 +1,5 @@
+import { ethers } from "ethers";
+
 export const truncateString = (address: string, show = 4) => {
   if (address.length <= show * 2) return address;
 
@@ -12,4 +14,8 @@ export const capitaliseString = (string: string) =>
 
 export const handleOpenWindow = (url: string) => {
   window.open(url, "_blank", "noopener");
+};
+
+export const formatTokenValue = (value: string, decimals: number) => {
+  return ethers.utils.formatUnits(value, decimals);
 };

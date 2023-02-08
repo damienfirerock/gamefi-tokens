@@ -77,17 +77,17 @@ const MultiSigInformation: React.FunctionComponent = () => {
           />
         </StyledBox>
       )}
-
+      {/* Temporary un-do owner requirement for team viewing deployment */}
       {/* Do not show info if account is not a multisig owner */}
-      {account && !isOwner && (
+      {/* {account && !isOwner && (
         <StyledBox>
           <Typography variant="h3">Not Authorised</Typography>
         </StyledBox>
-      )}
-
+      )} */}
       {/* If connected as multisig owner,
       Show transaction data and relevant address links */}
-      {account && isOwner && (
+      {account && (
+        // && isOwner
         <>
           <Transactions />
 
