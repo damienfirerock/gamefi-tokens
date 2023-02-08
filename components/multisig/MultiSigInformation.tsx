@@ -10,8 +10,8 @@ import StyledCircularProgress from "../common/StyledCircularProgress";
 import { AppDispatch, RootState } from "../../store";
 import useMultiSigTransactions from "../../utils/hooks/useMultiSigTransactions";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
-import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
 import { setLoading } from "../../features/TransactionSlice";
+import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
 
 const addresses = Object.values(CONTRACT_ADDRESSES);
 

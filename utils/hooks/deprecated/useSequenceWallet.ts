@@ -4,7 +4,7 @@ import { ETHAuth, Proof } from "@0xsequence/ethauth";
 import { sequence } from "0xsequence";
 import { OpenWalletIntent, Settings } from "@0xsequence/provider";
 
-import useDispatchErrors from "./useDispatchErrors";
+import useDispatchErrors from "../useDispatchErrors";
 import useMultiSigTransactions from "./useMultiSigTransactionsSequence";
 
 const NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS =

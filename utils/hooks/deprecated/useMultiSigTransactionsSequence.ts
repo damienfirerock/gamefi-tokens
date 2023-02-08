@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ethers } from "ethers";
 import { sequence } from "0xsequence";
 
-import useDispatchErrors from "./useDispatchErrors";
+import useDispatchErrors from "../useDispatchErrors";
 
 const MultiSigWalletJson = require("../abis/MultiSigWallet.json");
 

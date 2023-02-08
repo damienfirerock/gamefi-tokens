@@ -16,6 +16,7 @@ const useWeb3Transactions = () => {
   // Note: Important to run pre-checks before every transaction
   // But may be a bit excessive during initial setup in transaction details
   // Unfortunately, will still require the checking of connection in subsequent transactions
+  // TODO: DRY for runPreChecks
   const runPreChecks = async () => {
     const { ethereum } = window as any;
 

@@ -18,8 +18,8 @@ import { AppDispatch, RootState } from "../../store";
 import useMultiSigTransactions from "../../utils/hooks/useMultiSigTransactions";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import { submitSignature } from "../../features/MultiSigSlice";
-import { MultiSigTxnType } from "../../pages/api/multisig";
 import { setTxnIndex, setLoading } from "../../features/TransactionSlice";
+import { MultiSigTxnType } from "../../pages/api/multisig";
 
 const numberOfButtons = 9;
 const sideButtonNumber = Math.floor(numberOfButtons / 2);
