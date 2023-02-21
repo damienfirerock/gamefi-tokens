@@ -8,7 +8,7 @@ import Transactions from "../multisig/Transactions";
 import StyledCircularProgress from "../common/StyledCircularProgress";
 
 import { AppDispatch, RootState } from "../../store";
-import useMultiSigTransactions from "../../utils/hooks/useMultiSigTransactions";
+import useMultiSigTransactions from "../../utils/hooks/useAirdropTransactions";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import { setLoading } from "../../features/TransactionSlice";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";

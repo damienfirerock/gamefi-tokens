@@ -15,7 +15,7 @@ import StyledCircularProgress from "../common/StyledCircularProgress";
 import TransactionDetails from "./TransactionDetails";
 
 import { AppDispatch, RootState } from "../../store";
-import useMultiSigTransactions from "../../utils/hooks/useMultiSigTransactions";
+import useMultiSigTransactions from "../../utils/hooks/useAirdropTransactions";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import { submitSignature } from "../../features/MultiSigSlice";
 import { setTxnIndex, setLoading } from "../../features/TransactionSlice";

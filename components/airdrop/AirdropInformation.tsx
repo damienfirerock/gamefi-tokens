@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
 import { Box, BoxProps, Button, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import { useDispatch, useSelector } from "react-redux";
 
 import StyledCircularProgress from "../common/StyledCircularProgress";
 
 import { AppDispatch, RootState } from "../../store";
-// import useAirdropTransactions from "../../utils/hooks/useAirdropTransactions";
+import useAirdropTransactions from "../../utils/hooks/useAirdropTransactions";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import { setLoading } from "../../features/TransactionSlice";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
@@ -43,27 +42,27 @@ const AirdropInformation: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { account, requestConnect } = useConnectWallet();
-  // const { checkIfAirdropOwner } = useAirdropTransactions();
+  const { checkIfClaimed } = useAirdropTransactions();
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { loading } = transactionSlice;
 
-  // const multiSigSlice = useSelector((state: RootState) => state.multiSig);
-  // const { isOwner, owners } = multiSigSlice;
+  const airdropSlice = useSelector((state: RootState) => state.airdrop);
+  const { hasClaimed } = airdropSlice;
 
-  // const setupInitial = async () => {
-  //   dispatch(setLoading(true));
+  const setupInitial = async () => {
+    dispatch(setLoading(true));
 
-  //   await checkIfAirdropOwner();
+    await checkIfClaimed();
 
-  //   dispatch(setLoading(false));
-  // };
+    dispatch(setLoading(false));
+  };
 
-  // useEffect(() => {
-  //   if (account) {
-  //     setupInitial();
-  //   }
-  // }, [account]);
+  useEffect(() => {
+    if (account) {
+      setupInitial();
+    }
+  }, [account]);
 
   return (
     <>
@@ -77,15 +76,7 @@ const AirdropInformation: React.FunctionComponent = () => {
           />
         </StyledBox>
       )}
-      {/* Temporary un-do owner requirement for team viewing deployment */}
-      {/* Do not show info if account is not a multisig owner */}
-      {/* {account && !isOwner && (
-        <StyledBox>
-          <Typography variant="h3">Not Authorised</Typography>
-        </StyledBox>
-      )} */}
-      {/* If connected as multisig owner,
-      Show transaction data and relevant address links */}
+
       {account && (
         // && isOwner
         <>
@@ -93,6 +84,7 @@ const AirdropInformation: React.FunctionComponent = () => {
           {/* Show JSON file for the airdrop details */}
           <pre>{JSON.stringify(AIRDROP_DETAILS, null, 4)}</pre>
 
+          <Typography variant="h3">Claimed: {hasClaimed.toString()}</Typography>
           {/* Show address of airdrop contract */}
           {/* Show address of FR contract */}
 

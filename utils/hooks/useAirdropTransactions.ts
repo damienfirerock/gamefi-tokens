@@ -5,7 +5,6 @@ import { AppDispatch } from "../../store";
 import useDispatchErrors from "./useDispatchErrors";
 
 import { IUserTransaction } from "../../interfaces/ITransaction";
-import { MultiSigTxnType } from "../../pages/api/multisig";
 import {
   setTxnCount,
   setTxnIndex,
@@ -13,13 +12,14 @@ import {
   setTxnDetails,
   setSigDetails,
 } from "../../features/TransactionSlice";
-import { setIsOwner, setOwners } from "../../features/MultiSigSlice";
+import { setHasClaimed } from "../../features/AirdropSlice";
 
-const MultiSigWalletJson = require("../abis/MultiSigWallet.json");
+const AirdropWalletJson = require("../abis/SingleUseMerkleAirdrop.json");
 
-const NEXT_PUBLIC_MULTISIG_ADDRESS = process.env.NEXT_PUBLIC_MULTISIG_ADDRESS;
+const NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS =
+  process.env.NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS;
 
-const useMultiSigTransactions = () => {
+const useAirdropTransactions = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { sendTransactionError, sendTransactionErrorOnMetaMaskRequest } =
     useDispatchErrors();
@@ -61,14 +61,14 @@ const useMultiSigTransactions = () => {
     return { signer };
   };
 
-  const checkIfMultiSigOwner = async (): Promise<boolean> => {
+  const checkIfClaimed = async (): Promise<boolean> => {
     const { signer } = (await runPreChecks()) || {};
 
     if (!signer) return false;
 
-    const multiSigContract = new ethers.Contract(
-      NEXT_PUBLIC_MULTISIG_ADDRESS || "",
-      MultiSigWalletJson.abi,
+    const airdropContract = new ethers.Contract(
+      NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS || "",
+      AirdropWalletJson.abi,
       signer
     );
 
@@ -76,8 +76,9 @@ const useMultiSigTransactions = () => {
 
     try {
       const address = await signer.getAddress();
-      result = await multiSigContract.isOwner(address);
-      dispatch(setIsOwner(result));
+      result = await airdropContract.hasClaimed(address);
+
+      dispatch(setHasClaimed(result));
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
       return false;
@@ -91,16 +92,16 @@ const useMultiSigTransactions = () => {
 
     if (!signer) return 0;
 
-    const multiSigContract = new ethers.Contract(
-      NEXT_PUBLIC_MULTISIG_ADDRESS || "",
-      MultiSigWalletJson.abi,
+    const airdropContract = new ethers.Contract(
+      NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS || "",
+      AirdropWalletJson.abi,
       signer
     );
 
     let result;
 
     try {
-      result = await multiSigContract.getTransactionCount();
+      result = await airdropContract.getTransactionCount();
       const nextCount = Number(result);
       dispatch(setTxnCount(nextCount));
       dispatch(setTxnIndex(nextCount - 1));
@@ -117,16 +118,16 @@ const useMultiSigTransactions = () => {
 
     if (!signer) return 0;
 
-    const multiSigContract = new ethers.Contract(
-      NEXT_PUBLIC_MULTISIG_ADDRESS || "",
-      MultiSigWalletJson.abi,
+    const airdropContract = new ethers.Contract(
+      NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS || "",
+      AirdropWalletJson.abi,
       signer
     );
 
     let result;
 
     try {
-      result = await multiSigContract.numConfirmationsRequired();
+      result = await airdropContract.numConfirmationsRequired();
       const nextNum = Number(result);
       dispatch(setConfirmationsRequired(nextNum));
     } catch (error: any) {
@@ -144,14 +145,14 @@ const useMultiSigTransactions = () => {
 
     if (!signer) return null;
 
-    const multiSigContract = new ethers.Contract(
-      NEXT_PUBLIC_MULTISIG_ADDRESS || "",
-      MultiSigWalletJson.abi,
+    const airdropContract = new ethers.Contract(
+      NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS || "",
+      AirdropWalletJson.abi,
       signer
     );
 
     try {
-      const result = await multiSigContract.getTransaction(txIndex);
+      const result = await airdropContract.getTransaction(txIndex);
 
       let transactionDetails: IUserTransaction | null = null;
 
@@ -185,9 +186,9 @@ const useMultiSigTransactions = () => {
 
     if (!signer) return false;
 
-    const multiSigContract = new ethers.Contract(
-      NEXT_PUBLIC_MULTISIG_ADDRESS || "",
-      MultiSigWalletJson.abi,
+    const airdropContract = new ethers.Contract(
+      NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS || "",
+      AirdropWalletJson.abi,
       signer
     );
 
@@ -196,7 +197,7 @@ const useMultiSigTransactions = () => {
     let result;
 
     try {
-      result = await multiSigContract.isConfirmed(txIndex, address);
+      result = await airdropContract.isConfirmed(txIndex, address);
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
       return false;
@@ -210,17 +211,17 @@ const useMultiSigTransactions = () => {
 
     if (!signer) return;
 
-    const multiSigContract = new ethers.Contract(
-      NEXT_PUBLIC_MULTISIG_ADDRESS || "",
-      MultiSigWalletJson.abi,
+    const airdropContract = new ethers.Contract(
+      NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS || "",
+      AirdropWalletJson.abi,
       signer
     );
 
     const address = await signer.getAddress();
 
     try {
-      const nextNonce = await multiSigContract.getNextNonce();
-      const hash = await multiSigContract.getMessageHash(
+      const nextNonce = await airdropContract.getNextNonce();
+      const hash = await airdropContract.getMessageHash(
         Number(nextNonce),
         txIndex,
         address
@@ -239,17 +240,17 @@ const useMultiSigTransactions = () => {
 
     if (!signer) return;
 
-    const multiSigContract = new ethers.Contract(
-      NEXT_PUBLIC_MULTISIG_ADDRESS || "",
-      MultiSigWalletJson.abi,
+    const airdropContract = new ethers.Contract(
+      NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS || "",
+      AirdropWalletJson.abi,
       signer
     );
 
     const address = await signer.getAddress();
 
     try {
-      const nextNonce = await multiSigContract.getNextNonce();
-      const hash = await multiSigContract.getMessageHash(
+      const nextNonce = await airdropContract.getNextNonce();
+      const hash = await airdropContract.getMessageHash(
         Number(nextNonce),
         txIndex,
         address
@@ -262,65 +263,39 @@ const useMultiSigTransactions = () => {
     }
   };
 
-  const runTransaction = async (txIndex: number, type: MultiSigTxnType) => {
+  const runTransaction = async () => {
     const { signer } = (await runPreChecks()) || {};
 
     if (!signer) return;
 
-    const multiSigContract = new ethers.Contract(
-      NEXT_PUBLIC_MULTISIG_ADDRESS || "",
-      MultiSigWalletJson.abi,
+    const airdropContract = new ethers.Contract(
+      NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS || "",
+      AirdropWalletJson.abi,
       signer
     );
 
-    let transaction;
+    // let transaction;
 
-    try {
-      if (type === MultiSigTxnType.CONFIRM) {
-        transaction = await multiSigContract.confirmTransaction(txIndex);
-      } else if (type === MultiSigTxnType.REVOKE) {
-        transaction = await multiSigContract.revokeConfirmation(txIndex);
-      } else if (type === MultiSigTxnType.EXECUTE) {
-        transaction = await multiSigContract.executeTransaction(txIndex);
-      }
-      await transaction.wait(10);
-    } catch (error: any) {
-      sendTransactionErrorOnMetaMaskRequest(error);
-      return;
-    }
-  };
-
-  const getMultiSigOwners = async () => {
-    const { signer } = (await runPreChecks()) || {};
-
-    if (!signer) return;
-
-    const multiSigContract = new ethers.Contract(
-      NEXT_PUBLIC_MULTISIG_ADDRESS || "",
-      MultiSigWalletJson.abi,
-      signer
-    );
-
-    try {
-      const result = await multiSigContract.getOwners();
-      dispatch(setOwners(result));
-    } catch (error: any) {
-      sendTransactionErrorOnMetaMaskRequest(error);
-      return false;
-    }
+    // try {
+    //   if (type === AirdropTxnType.CONFIRM) {
+    //     transaction = await airdropContract.confirmTransaction(txIndex);
+    //   } else if (type === AirdropTxnType.REVOKE) {
+    //     transaction = await airdropContract.revokeConfirmation(txIndex);
+    //   } else if (type === AirdropTxnType.EXECUTE) {
+    //     transaction = await airdropContract.executeTransaction(txIndex);
+    //   }
+    //   await transaction.wait(10);
+    // } catch (error: any) {
+    //   sendTransactionErrorOnMetaMaskRequest(error);
+    //   return;
+    // }
   };
 
   return {
-    checkIfMultiSigOwner,
-    getMultiSigOwners,
-    getTransactionCount,
-    getTransactionDetails,
-    getNumOfConfirmationsRequired,
-    getOwnerConfirmationStatus,
-    getSignatureDetails,
-    getTxnSignature,
+    checkIfClaimed,
+
     runTransaction,
   };
 };
 
-export default useMultiSigTransactions;
+export default useAirdropTransactions;
