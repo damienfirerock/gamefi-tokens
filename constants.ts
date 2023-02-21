@@ -17,10 +17,10 @@ export const AIRDROP_DETAILS: IAirDropDetails = {
   airdrop: {
     [TEST_ADDRESSES[1]]: 100,
     [TEST_ADDRESSES[2]]: 200,
-    [TEST_ADDRESSES[2]]: 300,
-    [TEST_ADDRESSES[2]]: 400,
-    [TEST_ADDRESSES[2]]: 500,
-    [TEST_ADDRESSES[2]]: 600,
-    [TEST_ADDRESSES[2]]: 700,
+    [TEST_ADDRESSES[3]]: 300,
+    [TEST_ADDRESSES[4]]: 400,
+    [TEST_ADDRESSES[5]]: 500,
+    [TEST_ADDRESSES[6]]: 600,
+    [TEST_ADDRESSES[7]]: 700,
   },
 };

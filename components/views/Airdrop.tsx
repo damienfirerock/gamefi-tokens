@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Layout from "../layout/Layout";
 import StyledCircularProgress from "../common/StyledCircularProgress";
 import AlertBar from "../common/AlertBar";
+import AirdropInformation from "../airdrop/AirdropInformation";
 
 import { AppDispatch, RootState } from "../../store";
 import { clearError } from "../../features/TransactionSlice";
@@ -54,16 +55,9 @@ const Airdrop: React.FunctionComponent = () => {
         <StyledBox>
           <Typography variant="h2">Airdrop</Typography>
         </StyledBox>
+
+        <AirdropInformation />
       </StyledContainer>
-
-      {/* Show JSON file for the airdrop details */}
-
-      {/* Show address of airdrop contract */}
-      {/* Show address of FR contract */}
-
-      {/* Check claim status for each participant */}
-      {/* Actually claim the airdrop */}
-      {/* Update the claim status */}
 
       <AlertBar
         severity="warning"
