@@ -1,17 +1,26 @@
-export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
-
-// roles are generated from keccak hashes
-// Therefore, the only way to compare would be to check against all role hashes in contracts
-// 1 way would be to request for all role data from the relevant address when the transaction is requested
-// Other way would be to list the keccak hashes in a constants file
-// Second way seems more do-able since smart contract roles are unlikely to change much
-export const KECCAK_ROLES: Record<string, string> = {
-  "0x0000000000000000000000000000000000000000000000000000000000000000":
-    "Default Admin",
-  "0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6":
-    "Minter",
-};
+import { IAirDropDetails } from "./interfaces/IAirdrop";
 
 export const DEFAULT_DECIMALS = 18;
 
-export const EMPTY_CALLDATA = "0x";
+export const TEST_ADDRESSES = {
+  1: "0x2F8C6C5D12391F8D6AcE02A63a579f391F04b40f",
+  2: "0xF9ee7f3e841B98Eb6895a2905564F50bcfA39DfB",
+  3: "0xe2A2C2bB5014Ed1922F0c93f30CAd1e3af0ed60B",
+  4: "0x9fCCaf1654B0fA5DBBf2A40617a3CAF952Db166D",
+  5: "0x6F5744B20A60A3A6aCF73bfBee6C2BaCE4Ed1140",
+  6: "0x75B59c086D31B4c8BbbD26DA29B1100c2928410A",
+  7: "0xDEcaEFb18B535cAEEd79B36EE5D4F6ba06F5756B",
+};
+
+export const AIRDROP_DETAILS: IAirDropDetails = {
+  decimals: 18,
+  airdrop: {
+    [TEST_ADDRESSES[1]]: 100,
+    [TEST_ADDRESSES[2]]: 200,
+    [TEST_ADDRESSES[2]]: 300,
+    [TEST_ADDRESSES[2]]: 400,
+    [TEST_ADDRESSES[2]]: 500,
+    [TEST_ADDRESSES[2]]: 600,
+    [TEST_ADDRESSES[2]]: 700,
+  },
+};
