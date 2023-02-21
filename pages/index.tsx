@@ -1,3 +1,3 @@
-import MultiSigPage from "../components/views/MultiSig";
+import AirdropPage from "../components/views/Airdrop";
 
-export default MultiSigPage;
+export default AirdropPage;

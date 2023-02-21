@@ -38,7 +38,7 @@ const nextParamValue = (param: {
     case "uint256":
       // Note: This assumes that all uint256 details deal with token transfers/mint
       // Currently, this would be the case
-      const numberValue = Number(value);
+      const numberValue = BigInt(value);
       const stringValue = numberValue.toString();
       const nextDecimals =
         (tokenDecimals !== 0 && tokenDecimals) || DEFAULT_DECIMALS;
@@ -48,7 +48,7 @@ const nextParamValue = (param: {
           <Badge variant="h5" sx={{ background: color }}>
             {Number(parsedValue)}
           </Badge>{" "}
-          {Number(value)} ({nextDecimals} Decimals)
+          {BigInt(value).toString()} ({nextDecimals} Decimals)
         </>
       );
     case "bytes32":

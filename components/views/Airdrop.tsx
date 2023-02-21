@@ -16,13 +16,8 @@ import AlertBar from "../common/AlertBar";
 
 import { AppDispatch, RootState } from "../../store";
 import { clearError } from "../../features/TransactionSlice";
-import { clearError as clearMultiSigError } from "../../features/MultiSigSlice";
+import { clearError as clearAirdropError } from "../../features/AirdropSlice";
 import { clearError as clearDecodedDataError } from "../../features/TransactionSlice";
-
-// Dynamic Import currently decreases First Load from 324kb to 270kb
-const DynamicMultiSigInformation = dynamic(
-  () => import("../multisig/MultiSigInformation")
-);
 
 const StyledContainer = styled(Container)<ContainerProps>(({ theme }) => ({
   marginTop: theme.spacing(1),
@@ -35,23 +30,18 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   margin: theme.spacing(2, 0),
 }));
 
-const MultiSig: React.FunctionComponent = () => {
+const Airdrop: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { error } = transactionSlice;
 
-  const multiSigSlice = useSelector((state: RootState) => state.multiSig);
-  const { error: multiSigError } = multiSigSlice;
-
-  const decodedDataSlice = useSelector((state: RootState) => state.decodedData);
-  const { error: decodedDataError } = decodedDataSlice;
+  const airdropSlice = useSelector((state: RootState) => state.airdrop);
+  const { error: airdropError } = airdropSlice;
 
   const handleClearAlert = () => {
-    if (multiSigError) {
-      dispatch(clearMultiSigError());
-    } else if (decodedDataError) {
-      dispatch(clearDecodedDataError());
+    if (airdropError) {
+      dispatch(clearAirdropError());
     } else if (error) {
       dispatch(clearError());
     }
@@ -62,21 +52,26 @@ const MultiSig: React.FunctionComponent = () => {
       {/* Header */}
       <StyledContainer>
         <StyledBox>
-          <Typography variant="h2">MultiSig Transactions</Typography>
+          <Typography variant="h2">Airdrop</Typography>
         </StyledBox>
-
-        <Suspense fallback={<StyledCircularProgress />}>
-          <DynamicMultiSigInformation />
-        </Suspense>
       </StyledContainer>
+
+      {/* Show JSON file for the airdrop details */}
+
+      {/* Show address of airdrop contract */}
+      {/* Show address of FR contract */}
+
+      {/* Check claim status for each participant */}
+      {/* Actually claim the airdrop */}
+      {/* Update the claim status */}
 
       <AlertBar
         severity="warning"
-        text={error || multiSigError || decodedDataError}
+        text={error || airdropError}
         handleClearAlertSource={handleClearAlert}
       />
     </Layout>
   );
 };
 
-export default MultiSig;
+export default Airdrop;

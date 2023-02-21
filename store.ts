@@ -1,14 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import transactionReducer from "./features/TransactionSlice";
-import multiSigReducer from "./features/MultiSigSlice";
-import DecodedDataReducer from "./features/DecodedDataSlice";
+import airdropReducer from "./features/AirdropSlice";
 
 const store = configureStore({
   reducer: {
     transaction: transactionReducer,
-    multiSig: multiSigReducer,
-    decodedData: DecodedDataReducer,
+    airdrop: airdropReducer,
   },
 });
 
