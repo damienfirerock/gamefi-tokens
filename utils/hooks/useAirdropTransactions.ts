@@ -4,20 +4,20 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store";
 import useDispatchErrors from "./useDispatchErrors";
 
-import { IUserTransaction } from "../../interfaces/ITransaction";
 import {
-  setTxnCount,
-  setTxnIndex,
-  setConfirmationsRequired,
-  setTxnDetails,
-  setSigDetails,
-} from "../../features/TransactionSlice";
-import { setHasClaimed } from "../../features/AirdropSlice";
+  setHasClaimed,
+  setMerkleRoot,
+  setWalletBalance,
+} from "../../features/AirdropSlice";
+import { formatTokenValue } from "../../utils/common";
 
 const AirdropWalletJson = require("../abis/SingleUseMerkleAirdrop.json");
+const ERC20ABI = require("../abis/ERC20-ABI.json");
 
 const NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS =
   process.env.NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS;
+const NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS =
+  process.env.NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS;
 
 const useAirdropTransactions = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -87,101 +87,7 @@ const useAirdropTransactions = () => {
     return result;
   };
 
-  const getTransactionCount = async (): Promise<number> => {
-    const { signer } = (await runPreChecks()) || {};
-
-    if (!signer) return 0;
-
-    const airdropContract = new ethers.Contract(
-      NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS || "",
-      AirdropWalletJson.abi,
-      signer
-    );
-
-    let result;
-
-    try {
-      result = await airdropContract.getTransactionCount();
-      const nextCount = Number(result);
-      dispatch(setTxnCount(nextCount));
-      dispatch(setTxnIndex(nextCount - 1));
-    } catch (error: any) {
-      sendTransactionErrorOnMetaMaskRequest(error);
-      return 0;
-    }
-
-    return Number(result);
-  };
-
-  const getNumOfConfirmationsRequired = async (): Promise<number> => {
-    const { signer } = (await runPreChecks()) || {};
-
-    if (!signer) return 0;
-
-    const airdropContract = new ethers.Contract(
-      NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS || "",
-      AirdropWalletJson.abi,
-      signer
-    );
-
-    let result;
-
-    try {
-      result = await airdropContract.numConfirmationsRequired();
-      const nextNum = Number(result);
-      dispatch(setConfirmationsRequired(nextNum));
-    } catch (error: any) {
-      sendTransactionErrorOnMetaMaskRequest(error);
-      return 0;
-    }
-
-    return Number(result);
-  };
-
-  const getTransactionDetails = async (
-    txIndex: number
-  ): Promise<IUserTransaction | null> => {
-    const { signer } = (await runPreChecks()) || {};
-
-    if (!signer) return null;
-
-    const airdropContract = new ethers.Contract(
-      NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS || "",
-      AirdropWalletJson.abi,
-      signer
-    );
-
-    try {
-      const result = await airdropContract.getTransaction(txIndex);
-
-      let transactionDetails: IUserTransaction | null = null;
-
-      if (result.length === 5 && !result[3].executed) {
-        const userConfirmation = await getOwnerConfirmationStatus(txIndex);
-
-        transactionDetails = {
-          to: result[0],
-          value: Number(result[1]),
-          data: result[2],
-          executed: result[3],
-          confirmations: Number(result[4]),
-          userConfirmed: userConfirmation,
-        };
-
-        dispatch(setTxnDetails(transactionDetails));
-
-        return transactionDetails;
-      }
-    } catch (error: any) {
-      sendTransactionErrorOnMetaMaskRequest(error);
-    }
-
-    return null;
-  };
-
-  const getOwnerConfirmationStatus = async (
-    txIndex: number
-  ): Promise<boolean> => {
+  const checkMerkleRoot = async (): Promise<boolean> => {
     const { signer } = (await runPreChecks()) || {};
 
     if (!signer) return false;
@@ -192,12 +98,12 @@ const useAirdropTransactions = () => {
       signer
     );
 
-    const address = await signer.getAddress();
-
     let result;
 
     try {
-      result = await airdropContract.isConfirmed(txIndex, address);
+      result = await airdropContract.merkleRoot();
+
+      dispatch(setMerkleRoot(result));
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
       return false;
@@ -206,61 +112,32 @@ const useAirdropTransactions = () => {
     return result;
   };
 
-  const getSignatureDetails = async (txIndex: number) => {
+  const checkWalletBalance = async (): Promise<boolean> => {
     const { signer } = (await runPreChecks()) || {};
 
-    if (!signer) return;
+    if (!signer) return false;
 
-    const airdropContract = new ethers.Contract(
-      NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS || "",
-      AirdropWalletJson.abi,
+    const tokenContract = new ethers.Contract(
+      NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS || "",
+      ERC20ABI,
       signer
     );
 
-    const address = await signer.getAddress();
+    let result;
 
     try {
-      const nextNonce = await airdropContract.getNextNonce();
-      const hash = await airdropContract.getMessageHash(
-        Number(nextNonce),
-        txIndex,
-        address
-      );
-      const nextDetails = { hash, txIndex, address, nonce: Number(nextNonce) };
-      dispatch(setSigDetails(nextDetails));
+      result = await tokenContract.balanceOf(signer._address);
 
-      return nextDetails;
+      const nextResult = BigInt(result).toString();
+      const nextValue = formatTokenValue(nextResult, 18);
+
+      dispatch(setWalletBalance(Number(nextValue)));
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
+      return false;
     }
-  };
 
-  const getTxnSignature = async (txIndex: number) => {
-    const { signer } = (await runPreChecks()) || {};
-
-    if (!signer) return;
-
-    const airdropContract = new ethers.Contract(
-      NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS || "",
-      AirdropWalletJson.abi,
-      signer
-    );
-
-    const address = await signer.getAddress();
-
-    try {
-      const nextNonce = await airdropContract.getNextNonce();
-      const hash = await airdropContract.getMessageHash(
-        Number(nextNonce),
-        txIndex,
-        address
-      );
-      const signature = await signer.signMessage(ethers.utils.arrayify(hash));
-
-      return signature;
-    } catch (error: any) {
-      sendTransactionErrorOnMetaMaskRequest(error);
-    }
+    return result;
   };
 
   const runTransaction = async () => {
@@ -293,7 +170,8 @@ const useAirdropTransactions = () => {
 
   return {
     checkIfClaimed,
-
+    checkMerkleRoot,
+    checkWalletBalance,
     runTransaction,
   };
 };

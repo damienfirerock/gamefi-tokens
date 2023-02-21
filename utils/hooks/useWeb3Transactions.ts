@@ -4,8 +4,6 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store";
 import useDispatchErrors from "./useDispatchErrors";
 
-import { setDecimals } from "../../features/DecodedDataSlice";
-
 const ERC20ABI = require("../abis/ERC20-ABI.json");
 
 const useWeb3Transactions = () => {
@@ -49,30 +47,6 @@ const useWeb3Transactions = () => {
     const signer = provider.getSigner(walletAddress);
 
     return { signer };
-  };
-
-  const getTokenDecimals = async (address: string): Promise<number> => {
-    const { signer } = (await runPreChecks()) || {};
-
-    if (!signer) return 0;
-
-    const ERC20Contract = new ethers.Contract(address, ERC20ABI, signer);
-
-    let result;
-
-    try {
-      result = await ERC20Contract.decimals();
-      dispatch(setDecimals(result));
-    } catch (error: any) {
-      sendTransactionErrorOnMetaMaskRequest(error);
-      return 0;
-    }
-
-    return Number(result);
-  };
-
-  return {
-    getTokenDecimals,
   };
 };
 

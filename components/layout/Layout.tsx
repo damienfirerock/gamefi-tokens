@@ -15,8 +15,8 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   return (
     <>
       <Head>
-        <title>MultiSig</title>
-        <meta property="og:title" content="MultiSig" key="title" />
+        <title>Airdrop</title>
+        <meta property="og:title" content="Airdrop" key="title" />
       </Head>
       <NavBar />
       <Container maxWidth="lg" sx={{ paddingTop: 8 }}>

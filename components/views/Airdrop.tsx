@@ -53,7 +53,7 @@ const Airdrop: React.FunctionComponent = () => {
       {/* Header */}
       <StyledContainer>
         <StyledBox>
-          <Typography variant="h2">Airdrop</Typography>
+          <Typography variant="h2">Details</Typography>
         </StyledBox>
 
         <AirdropInformation />

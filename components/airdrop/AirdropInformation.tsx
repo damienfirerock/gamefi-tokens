@@ -42,18 +42,21 @@ const AirdropInformation: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { account, requestConnect } = useConnectWallet();
-  const { checkIfClaimed } = useAirdropTransactions();
+  const { checkIfClaimed, checkMerkleRoot, checkWalletBalance } =
+    useAirdropTransactions();
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { loading } = transactionSlice;
 
   const airdropSlice = useSelector((state: RootState) => state.airdrop);
-  const { hasClaimed } = airdropSlice;
+  const { hasClaimed, merkleRoot, walletBalance } = airdropSlice;
 
   const setupInitial = async () => {
     dispatch(setLoading(true));
 
     await checkIfClaimed();
+    await checkMerkleRoot();
+    await checkWalletBalance();
 
     dispatch(setLoading(false));
   };
@@ -78,20 +81,26 @@ const AirdropInformation: React.FunctionComponent = () => {
       )}
 
       {account && (
-        // && isOwner
         <>
-          {/* <Transactions /> */}
           {/* Show JSON file for the airdrop details */}
-          <pre>{JSON.stringify(AIRDROP_DETAILS, null, 4)}</pre>
+          <Typography
+            variant="h6"
+            sx={{ display: "inline-block", textAlign: "left" }}
+          >
+            {" "}
+            <pre>{JSON.stringify(AIRDROP_DETAILS, null, 4)}</pre>
+          </Typography>
+          {/* Show the merkle root */}
+          <Typography variant="h5">Merkle Root: {merkleRoot}</Typography>
+          {/* Show current balance */}
+          <Typography variant="h5">Wallet Balance: {walletBalance}</Typography>
 
           <Typography variant="h3">Claimed: {hasClaimed.toString()}</Typography>
           {/* Show address of airdrop contract */}
           {/* Show address of FR contract */}
-
           {/* Check claim status for each participant */}
           {/* Actually claim the airdrop */}
           {/* Update the claim status */}
-
           <ContractsBox>
             <Typography variant="h3">Addresses</Typography>
             {addresses.map((address) => {
