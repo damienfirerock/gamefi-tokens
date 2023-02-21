@@ -1,9 +1,4 @@
-This is a small repo to make interactions with a multisig wallet more user-friendly.
-It should allow users to:
-
-- Confirm/Revoke/Execute transactions via Metamask
-- Send Confirm/Revoke/Execute signatures to the backend for a wallet to execute the transactions on behalf of the user
-- Show relevant details of current/past transactions
+This is a small repo to demonstrate how to claim from a Merkle Airdrop Smart Contract from the frontend.
 
 ## Getting Started
 
@@ -22,7 +17,6 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ```
 # Mumbai
 NEXT_PUBLIC_POLYGONSCAN_URL='https://mumbai.polygonscan.com/address/'
-NEXT_PUBLIC_MULTISIG_ADDRESS = '0x5d3d329083c6E7aef59bDF49D4630D2B46048Bb9'
 NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS='0xb3170835AfebF0F69dfEE0c70Bf0207E269C0ffe'
 NEXT_PUBLIC_OWNER_ADDRESS_1='0x2F8C6C5D12391F8D6AcE02A63a579f391F04b40f'
 NEXT_PUBLIC_OWNER_ADDRESS_2='0xF9ee7f3e841B98Eb6895a2905564F50bcfA39DfB'
@@ -52,14 +46,8 @@ NEXT_PUBLIC_ALCHEMY_WEB_SOCKET_PROVIDER=<From Alchemy Account>
 
 ## Global State Management
 
-- Transactions Slice: This is mainly for showing errors from Metamask (i.e. 'User rejects signing')
-- Multisig Slice: This is for managing requests wherein signatures are sent to the backend for the hot wallet to run the transaction
+- Airdrop Slice
 
 ## Frontend
 
-- This is a very simple app with only one main page (MultiSig.tsx)
-
-## Backend
-
-- This project uses its own API handler (https://nextjs.org/docs/api-routes/introduction)
-- As there is only one main backend API (to receive the signature and submit transaction via a hot wallet), there shouldn't be a need to have a complicated separate backend spun up
+- This is a very simple app with only one main page (Airdrop.tsx)
