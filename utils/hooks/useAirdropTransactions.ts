@@ -87,7 +87,7 @@ const useAirdropTransactions = () => {
     return result;
   };
 
-  const checkMerkleRoot = async (): Promise<boolean> => {
+  const getMerkleRoot = async (): Promise<boolean> => {
     const { signer } = (await runPreChecks()) || {};
 
     if (!signer) return false;
@@ -170,7 +170,7 @@ const useAirdropTransactions = () => {
 
   return {
     checkIfClaimed,
-    checkMerkleRoot,
+    getMerkleRoot,
     checkWalletBalance,
     runTransaction,
   };
