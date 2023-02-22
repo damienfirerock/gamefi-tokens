@@ -9,6 +9,8 @@ import { AppDispatch, RootState } from "../../store";
 import useAirdropTransactions from "../../utils/hooks/useAirdropTransactions";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import { setLoading } from "../../features/TransactionSlice";
+import { getMerkleProof } from "../../utils/merkleAirdrop";
+import { parseTokenValue } from "../../utils/common";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
 import { AIRDROP_DETAILS } from "../../constants";
 
@@ -28,10 +30,11 @@ const InteractButton = (props: {
   text: string;
   method: () => void;
   loading: boolean;
+  disabled?: boolean;
 }) => {
-  const { text, method, loading } = props;
+  const { text, method, loading, disabled = false } = props;
   return (
-    <Button variant="outlined" onClick={method} disabled={loading}>
+    <Button variant="outlined" onClick={method} disabled={loading || disabled}>
       {text}
       {loading && <StyledCircularProgress size={24} />}
     </Button>
@@ -42,7 +45,7 @@ const AirdropInformation: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { account, requestConnect } = useConnectWallet();
-  const { checkIfClaimed, getMerkleRoot, checkWalletBalance } =
+  const { checkIfClaimed, getMerkleRoot, checkWalletBalance, submitClaim } =
     useAirdropTransactions();
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
@@ -56,6 +59,28 @@ const AirdropInformation: React.FunctionComponent = () => {
 
     await checkIfClaimed();
     await getMerkleRoot();
+    await checkWalletBalance();
+
+    dispatch(setLoading(false));
+  };
+
+  const handleClaim = async () => {
+    if (!account) return;
+
+    dispatch(setLoading(true));
+
+    const amount = parseTokenValue(
+      AIRDROP_DETAILS.airdrop[account].toString(),
+      18
+    );
+    const proof = getMerkleProof(
+      account,
+      AIRDROP_DETAILS.airdrop[account],
+      AIRDROP_DETAILS
+    );
+
+    await submitClaim(BigInt(Number(amount)), proof);
+    await checkIfClaimed();
     await checkWalletBalance();
 
     dispatch(setLoading(false));
@@ -76,6 +101,7 @@ const AirdropInformation: React.FunctionComponent = () => {
             text="Connect"
             method={requestConnect}
             loading={loading}
+            disabled={hasClaimed}
           />
         </StyledBox>
       )}
@@ -105,11 +131,14 @@ const AirdropInformation: React.FunctionComponent = () => {
           {/* Show the merkle root */}
           <Typography variant="h5">Merkle Root: {merkleRoot}</Typography>
           {/* Show current balance */}
-          <Typography variant="h5">Wallet Balance: {walletBalance}</Typography>
+          <Typography variant="h5">$FRG Balance: {walletBalance}</Typography>
+          <InteractButton
+            text="Claim"
+            method={handleClaim}
+            loading={loading}
+            disabled={hasClaimed}
+          />
 
-          {/* Check claim status for each participant? */}
-          {/* Actually claim the airdrop */}
-          {/* Update the claim status */}
           <ContractsBox>
             <Typography variant="h3">Addresses</Typography>
             {addresses.map((address) => {
@@ -121,9 +150,6 @@ const AirdropInformation: React.FunctionComponent = () => {
                   sx={{ display: "inline-flex", alignItems: "center" }}
                 >
                   {ADDRESS_NAMES[address]}:
-                  {/* {owners?.includes(address) && (
-                    <AssignmentIndIcon color="success" />
-                  )} */}
                   <Link
                     href={`${CONFIG.POLYGONSCAN_URL}${address}`}
                     target="_blank"
