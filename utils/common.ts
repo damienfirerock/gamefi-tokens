@@ -19,3 +19,7 @@ export const handleOpenWindow = (url: string) => {
 export const formatTokenValue = (value: string, decimals: number) => {
   return ethers.utils.formatUnits(value, decimals);
 };
+
+export const parseTokenValue = (value: string, decimals: number) => {
+  return ethers.utils.parseUnits(value, decimals);
+};
