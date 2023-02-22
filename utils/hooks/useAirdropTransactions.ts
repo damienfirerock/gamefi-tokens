@@ -140,7 +140,7 @@ const useAirdropTransactions = () => {
     return result;
   };
 
-  const runTransaction = async () => {
+  const submitClaim = async (amount: BigInt, proof: string[]) => {
     const { signer } = (await runPreChecks()) || {};
 
     if (!signer) return;
@@ -151,28 +151,25 @@ const useAirdropTransactions = () => {
       signer
     );
 
-    // let transaction;
-
-    // try {
-    //   if (type === AirdropTxnType.CONFIRM) {
-    //     transaction = await airdropContract.confirmTransaction(txIndex);
-    //   } else if (type === AirdropTxnType.REVOKE) {
-    //     transaction = await airdropContract.revokeConfirmation(txIndex);
-    //   } else if (type === AirdropTxnType.EXECUTE) {
-    //     transaction = await airdropContract.executeTransaction(txIndex);
-    //   }
-    //   await transaction.wait(10);
-    // } catch (error: any) {
-    //   sendTransactionErrorOnMetaMaskRequest(error);
-    //   return;
-    // }
+    try {
+      const transaction = await airdropContract.claim(
+        signer._address,
+        amount,
+        proof
+      );
+      await transaction.wait(10);
+    } catch (error: any) {
+      console.log({ error });
+      sendTransactionErrorOnMetaMaskRequest(error);
+      return;
+    }
   };
 
   return {
     checkIfClaimed,
     getMerkleRoot,
     checkWalletBalance,
-    runTransaction,
+    submitClaim,
   };
 };
 
