@@ -159,7 +159,6 @@ const useAirdropTransactions = () => {
       );
       await transaction.wait(10);
     } catch (error: any) {
-      console.log({ error });
       sendTransactionErrorOnMetaMaskRequest(error);
       return;
     }
