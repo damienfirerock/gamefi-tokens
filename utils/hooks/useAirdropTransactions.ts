@@ -6,6 +6,7 @@ import useDispatchErrors from "./useDispatchErrors";
 
 import {
   setHasClaimed,
+  setPastClaimed,
   setMerkleRoot,
   setWalletBalance,
 } from "../../features/AirdropSlice";
@@ -23,6 +24,13 @@ const NEXT_PUBLIC_CUMULATIVE_MERKLE_AIRDROP_ADDRESS =
   process.env.NEXT_PUBLIC_CUMULATIVE_MERKLE_AIRDROP_ADDRESS;
 const NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS =
   process.env.NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS;
+
+const formatValue = (result: any) => {
+  const nextResult = BigInt(result).toString();
+  const nextValue = formatTokenValue(nextResult, 18);
+
+  return nextValue;
+};
 
 const useAirdropTransactions = (type: AirdropType) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -124,7 +132,7 @@ const useAirdropTransactions = (type: AirdropType) => {
       const address = await signer.getAddress();
       result = await airdropContract.cumulativeClaimed(address);
 
-      dispatch(setHasClaimed(result));
+      dispatch(setPastClaimed(formatValue(result)));
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
       return 0;
@@ -174,8 +182,7 @@ const useAirdropTransactions = (type: AirdropType) => {
     try {
       result = await tokenContract.balanceOf(signer._address);
 
-      const nextResult = BigInt(result).toString();
-      const nextValue = formatTokenValue(nextResult, 18);
+      const nextValue = formatValue(result);
 
       dispatch(setWalletBalance(Number(nextValue)));
     } catch (error: any) {
