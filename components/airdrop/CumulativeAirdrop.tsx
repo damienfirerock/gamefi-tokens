@@ -164,7 +164,7 @@ const CumulativeAirdrop: React.FunctionComponent = () => {
               {" "}
               <pre>{JSON.stringify(airdropDetails, null, 4)}</pre>
             </Typography>
-            <Box>
+            <Box sx={{ marginBottom: 2 }}>
               <InteractButton
                 text="Set New Merkle Root"
                 method={handleSetMerkleRoot}
