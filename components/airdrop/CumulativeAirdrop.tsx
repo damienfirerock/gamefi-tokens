@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, BoxProps, Button, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,10 +9,18 @@ import { AppDispatch, RootState } from "../../store";
 import useAirdropTransactions from "../../utils/hooks/useAirdropTransactions";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import { setLoading } from "../../features/TransactionSlice";
-import { getMerkleProof } from "../../utils/merkleAirdrop";
+import { getMerkleProof, generateMerkleTree } from "../../utils/merkleAirdrop";
 import { parseTokenValue } from "../../utils/common";
 import { AIRDROP_DETAILS } from "../../constants";
-import { AirdropType } from "../../interfaces/IAirdrop";
+import { AirdropType, IAirDropDetails } from "../../interfaces/IAirdrop";
+
+const nextAirdropDetails = (): IAirDropDetails => {
+  const nextAirdrop = JSON.parse(JSON.stringify(AIRDROP_DETAILS));
+  for (let key of Object.keys(nextAirdrop.airdrop)) {
+    nextAirdrop.airdrop[key] = nextAirdrop.airdrop[key] * 2;
+  }
+  return nextAirdrop;
+};
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
@@ -39,14 +47,22 @@ const CumulativeAirdrop: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { account, requestConnect } = useConnectWallet();
-  const { checkPastClaim, getMerkleRoot, checkWalletBalance, submitClaim } =
-    useAirdropTransactions(AirdropType.CUMULATIVE);
+  const {
+    checkPastClaim,
+    getMerkleRoot,
+    setNextMerkleRoot,
+    checkWalletBalance,
+    submitClaim,
+  } = useAirdropTransactions(AirdropType.CUMULATIVE);
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { loading } = transactionSlice;
 
   const airdropSlice = useSelector((state: RootState) => state.airdrop);
   const { pastClaimed, merkleRoot, walletBalance } = airdropSlice;
+
+  const [airdropDetails, setAirdropDetails] =
+    useState<IAirDropDetails>(AIRDROP_DETAILS);
 
   const setupInitial = async () => {
     dispatch(setLoading(true));
@@ -58,19 +74,49 @@ const CumulativeAirdrop: React.FunctionComponent = () => {
     dispatch(setLoading(false));
   };
 
+  const handleSetMerkleRoot = async () => {
+    if (!account) return;
+
+    dispatch(setLoading(true));
+
+    const nextTree = generateMerkleTree(airdropDetails);
+    const hash = nextTree.getHexRoot();
+
+    await setNextMerkleRoot(hash);
+
+    dispatch(setLoading(false));
+
+    setAirdropDetails(nextAirdropDetails);
+  };
+
+  const resetMerkleRoot = async () => {
+    if (!account) return;
+
+    dispatch(setLoading(true));
+
+    const nextTree = generateMerkleTree(AIRDROP_DETAILS);
+    const hash = nextTree.getHexRoot();
+
+    await setNextMerkleRoot(hash);
+
+    dispatch(setLoading(false));
+
+    setAirdropDetails(AIRDROP_DETAILS);
+  };
+
   const handleClaim = async () => {
     if (!account) return;
 
     dispatch(setLoading(true));
 
     const amount = parseTokenValue(
-      AIRDROP_DETAILS.airdrop[account].toString(),
+      airdropDetails.airdrop[account].toString(),
       18
     );
     const proof = getMerkleProof(
       account,
-      AIRDROP_DETAILS.airdrop[account],
-      AIRDROP_DETAILS
+      airdropDetails.airdrop[account],
+      airdropDetails
     );
 
     await submitClaim(BigInt(Number(amount)), proof);
@@ -116,8 +162,20 @@ const CumulativeAirdrop: React.FunctionComponent = () => {
               sx={{ display: "inline-block", textAlign: "left" }}
             >
               {" "}
-              <pre>{JSON.stringify(AIRDROP_DETAILS, null, 4)}</pre>
+              <pre>{JSON.stringify(airdropDetails, null, 4)}</pre>
             </Typography>
+            <Box>
+              <InteractButton
+                text="Set New Merkle Root"
+                method={handleSetMerkleRoot}
+                loading={loading}
+              />
+              <InteractButton
+                text="Reset Merkle Root"
+                method={resetMerkleRoot}
+                loading={loading}
+              />
+            </Box>
           </Box>
 
           <Typography variant="h3">Claimed: {pastClaimed}</Typography>

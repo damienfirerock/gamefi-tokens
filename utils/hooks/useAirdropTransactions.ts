@@ -166,6 +166,35 @@ const useAirdropTransactions = (type: AirdropType) => {
     return result;
   };
 
+  const setNextMerkleRoot = async (hash: string) => {
+    if (type === AirdropType.SINGLE_USE) {
+      sendTransactionError("Method is for Cumulative Airdrop");
+      return;
+    }
+
+    const { signer } = (await runPreChecks()) || {};
+
+    if (!signer) return false;
+
+    const airdropContract = new ethers.Contract(
+      address || "",
+      CumulativeAirdropWalletJson.abi,
+      signer
+    );
+
+    try {
+      const txn = await airdropContract.setMerkleRoot(hash);
+      await txn.wait(10);
+
+      const result = await airdropContract.merkleRoot();
+
+      dispatch(setMerkleRoot(result));
+    } catch (error: any) {
+      sendTransactionErrorOnMetaMaskRequest(error);
+      return;
+    }
+  };
+
   const checkWalletBalance = async (): Promise<boolean> => {
     const { signer } = (await runPreChecks()) || {};
 
@@ -221,6 +250,7 @@ const useAirdropTransactions = (type: AirdropType) => {
     checkIfClaimed,
     checkPastClaim,
     getMerkleRoot,
+    setNextMerkleRoot,
     checkWalletBalance,
     submitClaim,
   };
