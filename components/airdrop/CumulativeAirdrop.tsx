@@ -35,23 +35,23 @@ const InteractButton = (props: {
   );
 };
 
-const SingleUseAirdrop: React.FunctionComponent = () => {
+const CumulativeAirdrop: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { account, requestConnect } = useConnectWallet();
-  const { checkIfClaimed, getMerkleRoot, checkWalletBalance, submitClaim } =
-    useAirdropTransactions(AirdropType.SINGLE_USE);
+  const { checkPastClaim, getMerkleRoot, checkWalletBalance, submitClaim } =
+    useAirdropTransactions(AirdropType.CUMULATIVE);
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { loading } = transactionSlice;
 
   const airdropSlice = useSelector((state: RootState) => state.airdrop);
-  const { hasClaimed, merkleRoot, walletBalance } = airdropSlice;
+  const { pastClaimed, merkleRoot, walletBalance } = airdropSlice;
 
   const setupInitial = async () => {
     dispatch(setLoading(true));
 
-    await checkIfClaimed();
+    await checkPastClaim();
     await getMerkleRoot();
     await checkWalletBalance();
 
@@ -74,7 +74,7 @@ const SingleUseAirdrop: React.FunctionComponent = () => {
     );
 
     await submitClaim(BigInt(Number(amount)), proof);
-    await checkIfClaimed();
+    await checkPastClaim();
     await checkWalletBalance();
 
     dispatch(setLoading(false));
@@ -95,7 +95,6 @@ const SingleUseAirdrop: React.FunctionComponent = () => {
             text="Connect"
             method={requestConnect}
             loading={loading}
-            disabled={hasClaimed}
           />
         </StyledBox>
       )}
@@ -121,21 +120,16 @@ const SingleUseAirdrop: React.FunctionComponent = () => {
             </Typography>
           </Box>
 
-          <Typography variant="h3">Claimed: {hasClaimed.toString()}</Typography>
+          <Typography variant="h3">Claimed: {pastClaimed}</Typography>
           {/* Show the merkle root */}
           <Typography variant="h5">Merkle Root: {merkleRoot}</Typography>
           {/* Show current balance */}
           <Typography variant="h5">$FRG Balance: {walletBalance}</Typography>
-          <InteractButton
-            text="Claim"
-            method={handleClaim}
-            loading={loading}
-            disabled={hasClaimed}
-          />
+          <InteractButton text="Claim" method={handleClaim} loading={loading} />
         </>
       )}
     </>
   );
 };
 
-export default SingleUseAirdrop;
+export default CumulativeAirdrop;

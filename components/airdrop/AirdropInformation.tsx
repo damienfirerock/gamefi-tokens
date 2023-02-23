@@ -9,6 +9,8 @@ import SingleUseAirdrop from "./SingleUseAirdrop";
 import { RootState } from "../../store";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
+import { AirdropType } from "../../interfaces/IAirdrop";
+import CumulativeAirdrop from "./CumulativeAirdrop";
 
 const addresses = Object.values(CONTRACT_ADDRESSES);
 
@@ -43,6 +45,16 @@ const AirdropInformation: React.FunctionComponent = () => {
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { loading } = transactionSlice;
 
+  const [type, setType] = useState<AirdropType>(AirdropType.SINGLE_USE);
+
+  const toggleType = () => {
+    const nextType =
+      type === AirdropType.SINGLE_USE
+        ? AirdropType.CUMULATIVE
+        : AirdropType.SINGLE_USE;
+    setType(nextType);
+  };
+
   return (
     <>
       {/* Show button to connect if not connected */}
@@ -58,8 +70,34 @@ const AirdropInformation: React.FunctionComponent = () => {
 
       {account && (
         <>
+          <Box sx={{ marginTop: 5 }}>
+            <InteractButton
+              text="Single Use"
+              method={toggleType}
+              loading={false}
+              disabled={type === AirdropType.SINGLE_USE}
+            />
+            <InteractButton
+              text="Cumulative"
+              method={toggleType}
+              loading={false}
+              disabled={type === AirdropType.CUMULATIVE}
+            />
+          </Box>
+
+          <StyledBox>
+            <Typography variant="h2">
+              {type === AirdropType.SINGLE_USE ? "Single Use" : "Cumulative"}{" "}
+              Airdrop Details
+            </Typography>
+          </StyledBox>
+
           {/* Show JSON file for the airdrop details */}
-          <SingleUseAirdrop />
+          {type === AirdropType.SINGLE_USE ? (
+            <SingleUseAirdrop />
+          ) : (
+            <CumulativeAirdrop />
+          )}
 
           <ContractsBox>
             <Typography variant="h3">Addresses</Typography>

@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 type SliceState = {
   hasClaimed: boolean;
+  pastClaimed: number;
   merkleRoot: string | null;
   walletBalance: number | null;
   error?: null | string;
@@ -12,6 +13,7 @@ type SliceState = {
 // First approach: define the initial state using that type
 const initialState: SliceState = {
   hasClaimed: false,
+  pastClaimed: 0,
   merkleRoot: null,
   walletBalance: null,
   error: null,
@@ -29,6 +31,9 @@ export const AirdropSlice = createSlice({
     setHasClaimed: (state, action) => {
       state.hasClaimed = action.payload;
     },
+    setPastClaimed: (state, action) => {
+      state.pastClaimed = action.payload;
+    },
     setMerkleRoot: (state, action) => {
       state.merkleRoot = action.payload;
     },
@@ -39,7 +44,12 @@ export const AirdropSlice = createSlice({
   extraReducers: (builder) => {},
 });
 
-export const { clearError, setHasClaimed, setMerkleRoot, setWalletBalance } =
-  AirdropSlice.actions;
+export const {
+  clearError,
+  setHasClaimed,
+  setPastClaimed,
+  setMerkleRoot,
+  setWalletBalance,
+} = AirdropSlice.actions;
 
 export default AirdropSlice.reducer;

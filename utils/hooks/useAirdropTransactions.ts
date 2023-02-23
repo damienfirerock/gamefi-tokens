@@ -11,18 +11,28 @@ import {
 } from "../../features/AirdropSlice";
 import { formatTokenValue } from "../../utils/common";
 
-const AirdropWalletJson = require("../abis/SingleUseMerkleAirdrop.json");
+import { AirdropType } from "../../interfaces/IAirdrop";
+
+const SingleUseAirdropWalletJson = require("../abis/SingleUseMerkleAirdrop.json");
+const CumulativeAirdropWalletJson = require("../abis/CumulativeMerkleAirdrop.json");
 const ERC20ABI = require("../abis/ERC20-ABI.json");
 
 const NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS =
   process.env.NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS;
+const NEXT_PUBLIC_CUMULATIVE_MERKLE_AIRDROP_ADDRESS =
+  process.env.NEXT_PUBLIC_CUMULATIVE_MERKLE_AIRDROP_ADDRESS;
 const NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS =
   process.env.NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS;
 
-const useAirdropTransactions = () => {
+const useAirdropTransactions = (type: AirdropType) => {
   const dispatch = useDispatch<AppDispatch>();
   const { sendTransactionError, sendTransactionErrorOnMetaMaskRequest } =
     useDispatchErrors();
+
+  const address =
+    type === AirdropType.SINGLE_USE
+      ? NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS
+      : NEXT_PUBLIC_CUMULATIVE_MERKLE_AIRDROP_ADDRESS;
 
   // Note: Important to run pre-checks before every transaction
   // But may be a bit excessive during initial setup in transaction details
@@ -62,13 +72,18 @@ const useAirdropTransactions = () => {
   };
 
   const checkIfClaimed = async (): Promise<boolean> => {
+    if (type === AirdropType.CUMULATIVE) {
+      sendTransactionError("Method is for Single Use Airdrop");
+      return false;
+    }
+
     const { signer } = (await runPreChecks()) || {};
 
     if (!signer) return false;
 
     const airdropContract = new ethers.Contract(
-      NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS || "",
-      AirdropWalletJson.abi,
+      address || "",
+      SingleUseAirdropWalletJson.abi,
       signer
     );
 
@@ -87,14 +102,45 @@ const useAirdropTransactions = () => {
     return result;
   };
 
+  const checkPastClaim = async (): Promise<number> => {
+    if (type === AirdropType.SINGLE_USE) {
+      sendTransactionError("Method is for Cumulative Airdrop");
+      return 0;
+    }
+
+    const { signer } = (await runPreChecks()) || {};
+
+    if (!signer) return 0;
+
+    const airdropContract = new ethers.Contract(
+      address || "",
+      CumulativeAirdropWalletJson.abi,
+      signer
+    );
+
+    let result;
+
+    try {
+      const address = await signer.getAddress();
+      result = await airdropContract.cumulativeClaimed(address);
+
+      dispatch(setHasClaimed(result));
+    } catch (error: any) {
+      sendTransactionErrorOnMetaMaskRequest(error);
+      return 0;
+    }
+
+    return result;
+  };
+
   const getMerkleRoot = async (): Promise<boolean> => {
     const { signer } = (await runPreChecks()) || {};
 
     if (!signer) return false;
 
     const airdropContract = new ethers.Contract(
-      NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS || "",
-      AirdropWalletJson.abi,
+      address || "",
+      SingleUseAirdropWalletJson.abi,
       signer
     );
 
@@ -146,8 +192,8 @@ const useAirdropTransactions = () => {
     if (!signer) return;
 
     const airdropContract = new ethers.Contract(
-      NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS || "",
-      AirdropWalletJson.abi,
+      address || "",
+      SingleUseAirdropWalletJson.abi,
       signer
     );
 
@@ -166,6 +212,7 @@ const useAirdropTransactions = () => {
 
   return {
     checkIfClaimed,
+    checkPastClaim,
     getMerkleRoot,
     checkWalletBalance,
     submitClaim,
