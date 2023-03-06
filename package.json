@@ -10,6 +10,7 @@
     "analyze": "ANALYZE=true next build"
   },
   "dependencies": {
+    "@0xsequence/wagmi-connector": "^1.0.3",
     "@emotion/react": "^11.10.4",
     "@emotion/server": "^11.10.0",
     "@emotion/styled": "^11.10.4",
@@ -18,7 +19,7 @@
     "@mui/material": "^5.10.9",
     "@next/bundle-analyzer": "^13.1.6",
     "@reduxjs/toolkit": "^1.8.6",
-    "0xsequence": "^0.43.7",
+    "0xsequence": "^0.43.20",
     "ethers": "^5.7.1",
     "keccak256": "^1.0.6",
     "merkletreejs": "^0.3.9",
@@ -26,6 +27,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-redux": "^8.0.4",
+    "wagmi": "^0.12.0",
     "zod": "^3.20.2"
   },
   "devDependencies": {
@@ -34,6 +36,6 @@
     "@types/react-dom": "18.0.6",
     "eslint": "8.25.0",
     "eslint-config-next": "12.3.1",
-    "typescript": "4.8.4"
+    "typescript": "^4.9.5"
   }
 }
