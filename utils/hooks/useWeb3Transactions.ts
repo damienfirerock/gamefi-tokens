@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store";
 import useDispatchErrors from "./useDispatchErrors";
 
-const ERC20ABI = require("../abis/ERC20-ABI.json");
+const ERC20ABI = require("../../constants/abis/ERC20-ABI.json");
 
 const useWeb3Transactions = () => {
   const dispatch = useDispatch<AppDispatch>();

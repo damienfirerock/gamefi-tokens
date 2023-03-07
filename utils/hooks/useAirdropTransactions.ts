@@ -14,9 +14,9 @@ import { formatTokenValue } from "../../utils/common";
 
 import { AirdropType } from "../../interfaces/IAirdrop";
 
-const SingleUseAirdropWalletJson = require("../abis/SingleUseMerkleAirdrop.json");
-const CumulativeAirdropWalletJson = require("../abis/CumulativeMerkleAirdrop.json");
-const ERC20ABI = require("../abis/ERC20-ABI.json");
+const SingleUseAirdropWalletJson = require("../../constants/abis/SingleUseMerkleAirdrop.json");
+const CumulativeAirdropWalletJson = require("../../constants/abis/CumulativeMerkleAirdrop.json");
+const ERC20ABI = require("../../constants/abis/ERC20-ABI.json");
 
 const NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS =
   process.env.NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS;

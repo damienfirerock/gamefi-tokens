@@ -11,7 +11,7 @@ import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import { setLoading } from "../../features/TransactionSlice";
 import { getMerkleProof, generateMerkleTree } from "../../utils/merkleAirdrop";
 import { parseTokenValue } from "../../utils/common";
-import { AIRDROP_DETAILS } from "../../constants";
+import { AIRDROP_DETAILS } from "../../constants/common";
 import { AirdropType, IAirDropDetails } from "../../interfaces/IAirdrop";
 
 const nextAirdropDetails = (): IAirDropDetails => {

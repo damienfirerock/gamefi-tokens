@@ -4,7 +4,7 @@ import { sequence } from "0xsequence";
 
 import useDispatchErrors from "../useDispatchErrors";
 
-const MultiSigWalletJson = require("../abis/MultiSigWallet.json");
+const MultiSigWalletJson = require("../../constants/abis/MultiSigWallet.json");
 
 const NEXT_PUBLIC_MULTISIG_ADDRESS = process.env.NEXT_PUBLIC_MULTISIG_ADDRESS;
 

@@ -1,4 +1,4 @@
-import { IAirDropDetails } from "./interfaces/IAirdrop";
+import { IAirDropDetails } from "../interfaces/IAirdrop";
 
 export const DEFAULT_DECIMALS = 18;
 

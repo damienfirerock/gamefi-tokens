@@ -11,7 +11,7 @@ import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import { setLoading } from "../../features/TransactionSlice";
 import { getMerkleProof } from "../../utils/merkleAirdrop";
 import { parseTokenValue } from "../../utils/common";
-import { AIRDROP_DETAILS } from "../../constants";
+import { AIRDROP_DETAILS } from "../../constants/common";
 import { AirdropType } from "../../interfaces/IAirdrop";
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
