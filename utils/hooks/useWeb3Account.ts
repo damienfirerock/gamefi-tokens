@@ -1,111 +1,224 @@
-import { useEffect, useState } from "react";
+import { Web3Provider } from "@ethersproject/providers";
+// import { ChainId, ChainType, getChainType } from "@kyberswap/ks-sdk-core";
+// import { Wallet, useWallet } from "@solana/wallet-adapter-react";
+import { AbstractConnector } from "@web3-react/abstract-connector";
+import { useWeb3React as useWeb3ReactCore } from "@web3-react/core";
+import { Web3ReactContextInterface } from "@web3-react/core/dist/types";
+import { ethers } from "ethers";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { isMobile } from "react-device-detect";
+import { useSelector } from "react-redux";
 
-import { configureChains } from "wagmi";
-import { polygon, polygonMumbai } from "wagmi/chains";
-import { publicProvider } from "wagmi/providers/public";
+import { injected, walletconnect } from "../../constants/connectors";
+import { SUPPORTED_WALLET, SUPPORTED_WALLETS } from "../../constants/wallets";
+// import { AppState } from "state";
+import { detectInjectedType } from "../web3";
 
-import { useAccount, useConnect, useDisconnect } from "wagmi";
-import { MetaMaskConnector } from "wagmi/connectors/metaMask";
-import { WalletConnectConnector } from "@wagmi/core/connectors/walletConnect";
-import { WalletConnectLegacyConnector } from "wagmi/connectors/walletConnectLegacy";
+import { ChainId } from "../../constants/networks";
+import { chainId } from "../../constants/connectors";
+import {
+  NETWORKS_INFO_CONFIG,
+  NETWORKS,
+  NETWORK_INFO,
+} from "../../constants/networks";
 
-const { chains } = configureChains(
-  [polygon, polygonMumbai],
-  [publicProvider()]
-);
-
-const metamaskConnector = new MetaMaskConnector();
-
-// Note: Sequence Wallet Connector uses require
-// Cannot be imported for use straight,
-// unless converted to dynamic import
-// Error Msg: Instead change the require of index.js, to a dynamic import() which is available in all CommonJS modules
-// Unaware of any other solution other than asynchronous import
-// Relevant StackOverFlow Link: https://stackoverflow.com/questions/71804844/how-would-you-fix-an-err-require-esm-error
-const getSequenceConnector = () =>
-  import("@0xsequence/wagmi-connector").then(
-    ({ SequenceConnector }) =>
-      new SequenceConnector({
-        chains,
-        options: {
-          connect: {
-            app: "XY3",
-            networkId: 137,
-          },
-        },
-      })
+export const providers = NETWORKS.reduce((acc, val) => {
+  acc[val] = new ethers.providers.JsonRpcProvider(
+    NETWORKS_INFO_CONFIG[val].rpcUrl
   );
+  return acc;
+}, {} as Record<string, ethers.providers.JsonRpcProvider>);
 
-// Occasional Error: CustomElementRegistry.define: 'w3m-box-button' has already been defined as a custom element
-// https://github.com/WalletConnect/web3modal/issues/921
-// Not reproducible in this repo, which uses the connector,
-// But I do notice the issue if I try Web3Modal on a fresh project
-// Pending: Metamask update to be compatitble with WalletConnect V2
-// https://github.com/MetaMask/metamask-mobile/issues/3957
-// Currently stated as 18th June
-const walletConnectConnector = new WalletConnectConnector({
-  chains,
-  options: {
-    projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
-    metadata: {
-      name: "wagmi",
-      description: "my wagmi app",
-      url: "https://wagmi.sh",
-      icons: ["https://wagmi.sh/icon.png"],
-    },
-  },
-});
-
-// To be used until Metamask issue mentione dabove is solved
-const walletConnectLegacyConnector = new WalletConnectLegacyConnector({
-  chains,
-  options: {
-    qrcode: true,
-  },
-});
-
-// Hook to centralise all wagmi imports in one place
-// Especially due to certain workarounds (i.e. require issue for Sequence connector)
-const useWagmiLibrary = () => {
-  const [sequenceConnector, setSequenceConnector] = useState<any | null>(null);
-
-  const { address, isConnected } = useAccount();
-  const { disconnect } = useDisconnect();
-
-  const { connect: metamaskConnect } = useConnect({
-    connector: metamaskConnector,
-  });
-
-  const { connect: sequenceConnect } = useConnect({
-    connector: sequenceConnector,
-  });
-
-  const { connect: walletConnectConnect } = useConnect({
-    connector: walletConnectConnector,
-  });
-
-  const { connect: walletConnectLegacyConnect } = useConnect({
-    connector: walletConnectLegacyConnector,
-  });
-
-  const setupSequenceConnector = async () => {
-    const nextSequenceConntactor = await getSequenceConnector();
-    setSequenceConnector(nextSequenceConntactor);
+export function useActiveWeb3React(): {
+  // chainId: ChainId;
+  account?: string;
+  walletKey: SUPPORTED_WALLET | undefined;
+  walletEVM: {
+    isConnected: boolean;
+    walletKey?: string | number;
+    connector?: AbstractConnector;
+    chainId?: ChainId;
   };
+  // networkInfo: NetworkInfo;
+} {
+  // const chainIdState =
+  //   useSelector<AppState, ChainId>((state) => state.user.chainId) ||
+  //   ChainId.MATIC;
+  /**Hook for EVM infos */
+  const {
+    connector: connectedConnectorEVM,
+    active: isConnectedEVM,
+    account,
+    chainId: chainIdEVM,
+  } = useWeb3React();
 
-  useEffect(() => {
-    setupSequenceConnector();
-  }, []);
+  const addressEVM = account ?? undefined;
+
+  const walletKeyEVM = useMemo(() => {
+    if (!isConnectedEVM) return undefined;
+    // TODO: Detect sequence wallet
+    const detectedWallet = detectInjectedType();
+
+    if (connectedConnectorEVM === walletconnect) {
+      return "WALLET_CONNECT";
+    }
+    return (
+      detectedWallet ??
+      (Object.keys(SUPPORTED_WALLETS) as SUPPORTED_WALLET[]).find(
+        (walletKey) => {
+          const wallet = SUPPORTED_WALLETS[walletKey];
+          return isConnectedEVM && wallet.connector === connectedConnectorEVM;
+        }
+      )
+    );
+  }, [connectedConnectorEVM, isConnectedEVM]);
 
   return {
-    address,
-    isConnected,
-    sequenceConnect,
-    metamaskConnect,
-    walletConnectConnect,
-    walletConnectLegacyConnect,
-    disconnect,
+    // chainId: chainIdState,
+    account: addressEVM,
+    walletKey: walletKeyEVM,
+    walletEVM: useMemo(() => {
+      return {
+        isConnected: isConnectedEVM,
+        connector: connectedConnectorEVM,
+        walletKey: walletKeyEVM,
+        chainId: chainIdEVM,
+      };
+    }, [isConnectedEVM, connectedConnectorEVM, walletKeyEVM, chainIdEVM]),
+    // networkInfo: NETWORKS_INFO[chainIdState],
   };
-};
+}
 
-export default useWagmiLibrary;
+export function useWeb3React(
+  key?: string
+): Web3ReactContextInterface<Web3Provider> & { chainId?: ChainId } {
+  const {
+    connector,
+    library,
+    chainId,
+    account,
+    active,
+    error,
+    activate,
+    setError,
+    deactivate,
+  } = useWeb3ReactCore(key);
+  // const chainIdState = useSelector<AppState, ChainId>(
+  //   (state) => state.user.chainId
+  // );
+
+  const activateWrapped = useCallback(
+    (
+      connector: AbstractConnector,
+      onError?: (error: Error) => void,
+      throwErrors?: boolean
+    ) => {
+      return activate(connector, onError, throwErrors);
+    },
+    [activate]
+  );
+  const deactivateWrapped = useCallback(() => {
+    return deactivate();
+  }, [deactivate]);
+  return {
+    connector,
+    // library: library || providers[chainId],
+    chainId: chainId || ChainId.MATIC,
+    account,
+    active,
+    error,
+    activate: activateWrapped,
+    setError,
+    deactivate: deactivateWrapped,
+  } as Web3ReactContextInterface;
+}
+
+async function isAuthorized(): Promise<boolean> {
+  if (!window.ethereum) {
+    return false;
+  }
+
+  try {
+    const accounts = await window.ethereum.request({ method: "eth_accounts" });
+    if (accounts?.length > 0) return true;
+    return false;
+  } catch {
+    return false;
+  }
+}
+
+export function useEagerConnect() {
+  const { activate, active } = useWeb3React();
+  const [tried, setTried] = useState(false);
+
+  useEffect(() => {
+    try {
+      isAuthorized()
+        .then((isAuthorized) => {
+          setTried(true);
+          if (isAuthorized) {
+            activate(injected, undefined, true);
+          } else if (isMobile && window.ethereum) {
+            activate(injected, undefined, true);
+          }
+        })
+        .catch((e) => {
+          console.log("Eagerly connect: authorize error", e);
+          setTried(true);
+        });
+    } catch (e) {
+      console.log("Eagerly connect: authorize error", e);
+      setTried(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // intentionally only running on mount (make sure it's only mounted once :))
+
+  // if the connection worked, wait until we get confirmation of that to flip the flag
+  useEffect(() => {
+    if (active) {
+      setTried(true);
+    }
+  }, [active]);
+
+  return tried;
+}
+
+/**
+ * Use for network and injected - logs user in
+ * and out after checking what network they're on
+ */
+export const useInactiveListener = (suppress = false) => {
+  const { active, error, activate } = useWeb3React(); // specifically using useWeb3React because of what this hook does
+
+  useEffect(() => {
+    const { ethereum } = window;
+    if (ethereum && ethereum.on && !active && !error && !suppress) {
+      const handleChainChanged = () => {
+        // eat errors
+        activate(injected, undefined, true).catch((error) => {
+          console.error("Failed to activate after chain changed", error);
+        });
+      };
+
+      const handleAccountsChanged = (accounts: string[]) => {
+        if (accounts.length > 0) {
+          // eat errors
+          activate(injected, undefined, true).catch((error) => {
+            console.error("Failed to activate after accounts changed", error);
+          });
+        }
+      };
+
+      ethereum.on("chainChanged", handleChainChanged);
+      ethereum.on("accountsChanged", handleAccountsChanged);
+
+      return () => {
+        if (ethereum.removeListener) {
+          ethereum.removeListener("chainChanged", handleChainChanged);
+          ethereum.removeListener("accountsChanged", handleAccountsChanged);
+        }
+      };
+    }
+    return undefined;
+  }, [active, error, suppress, activate]);
+};

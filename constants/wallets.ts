@@ -52,7 +52,7 @@ export interface EVMWalletInfo extends WalletInfo {
   readyState: () => WalletReadyState;
 }
 
-export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
+export const SUPPORTED_WALLETS: { [key: string]: EVMWalletInfo } = {
   METAMASK: {
     connector: injected,
     name: "MetaMask",
@@ -78,3 +78,5 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     readyState: () => WalletReadyState.Installed,
   } as EVMWalletInfo,
 } as const;
+
+export type SUPPORTED_WALLET = keyof typeof SUPPORTED_WALLETS;

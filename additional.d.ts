@@ -11,3 +11,9 @@ interface Window {
     providers?: any[];
   };
 }
+
+interface Navigator {
+  brave?: {
+    isBrave: () => Promise<boolean | undefined>;
+  };
+}

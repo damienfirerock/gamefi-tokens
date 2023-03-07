@@ -1,3 +1,4 @@
+import { StaticImageData } from "next/image";
 import PolygonIcon from "../public/networks/polygon-network.png";
 
 export enum ChainId {
@@ -5,7 +6,24 @@ export enum ChainId {
   MUMBAI = 80001,
 }
 
-export const maticInfo = {
+export interface NETWORK_INFO {
+  chainId: ChainId;
+  name: string;
+  icon: StaticImageData;
+  etherscanUrl: string;
+  etherscanName: string;
+  nativeToken: {
+    symbol: string;
+    name: string;
+    logo: StaticImageData;
+    decimal: number;
+    minForGas: number;
+  };
+  rpcUrl: string;
+  contracts: Record<string, string>;
+}
+
+export const maticInfo: NETWORK_INFO = {
   chainId: ChainId.MATIC,
   name: "Polygon",
   icon: PolygonIcon,
@@ -29,7 +47,7 @@ export const maticInfo = {
   },
 };
 
-export const mumbaiInfo = {
+export const mumbaiInfo: NETWORK_INFO = {
   chainId: ChainId.MUMBAI,
   name: "Polygon",
   icon: PolygonIcon,
@@ -56,3 +74,5 @@ export const NETWORKS_INFO_CONFIG = {
   [ChainId.MATIC]: maticInfo,
   [ChainId.MUMBAI]: mumbaiInfo,
 } as const;
+
+export const NETWORKS = [ChainId.MATIC, ChainId.MUMBAI] as const;
