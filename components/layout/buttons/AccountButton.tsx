@@ -35,6 +35,7 @@ const AccountButton: React.FunctionComponent = () => {
     sequenceConnect,
     metamaskConnect,
     walletConnectConnect,
+    walletConnectLegacyConnect,
     disconnect,
   } = useWagmiLibrary();
 
@@ -49,19 +50,16 @@ const AccountButton: React.FunctionComponent = () => {
 
   if (!isConnected)
     return (
-      <MetaMaskButton
-        handleClick={walletConnectConnect}
-        text="Connect MetaMask"
-      />
+      <MetaMaskButton handleClick={sequenceConnect} text="Connect MetaMask" />
     );
 
-  if (chainId !== parseInt(CONFIG.NETWORK_CHAIN_ID || "80001"))
-    return (
-      <MetaMaskButton
-        handleClick={requestChangeChainId}
-        text={`Change to ${nextNetwork()}`}
-      />
-    );
+  // if (chainId !== parseInt(CONFIG.NETWORK_CHAIN_ID || "80001"))
+  //   return (
+  //     <MetaMaskButton
+  //       handleClick={requestChangeChainId}
+  //       text={`Change to ${nextNetwork()}`}
+  //     />
+  //   );
 
   return (
     <>

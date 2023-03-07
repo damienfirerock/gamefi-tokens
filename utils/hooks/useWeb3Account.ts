@@ -7,6 +7,7 @@ import { publicProvider } from "wagmi/providers/public";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "@wagmi/core/connectors/walletConnect";
+import { WalletConnectLegacyConnector } from "wagmi/connectors/walletConnectLegacy";
 
 const { chains } = configureChains(
   [polygon, polygonMumbai],
@@ -20,7 +21,7 @@ const metamaskConnector = new MetaMaskConnector();
 // unless converted to dynamic import
 // Error Msg: Instead change the require of index.js, to a dynamic import() which is available in all CommonJS modules
 // Unaware of any other solution other than asynchronous import
-// Relevant StackOverFloe Link: https://stackoverflow.com/questions/71804844/how-would-you-fix-an-err-require-esm-error
+// Relevant StackOverFlow Link: https://stackoverflow.com/questions/71804844/how-would-you-fix-an-err-require-esm-error
 const getSequenceConnector = () =>
   import("@0xsequence/wagmi-connector").then(
     ({ SequenceConnector }) =>
@@ -35,6 +36,10 @@ const getSequenceConnector = () =>
       })
   );
 
+// Occasional Error: CustomElementRegistry.define: 'w3m-box-button' has already been defined as a custom element
+// https://github.com/WalletConnect/web3modal/issues/921
+// Not reproducible in this repo, which uses the connector,
+// But I do notice the issue if I try Web3Modal on a fresh project
 // Pending: Metamask update to be compatitble with WalletConnect V2
 // https://github.com/MetaMask/metamask-mobile/issues/3957
 // Currently stated as 18th June
@@ -48,6 +53,14 @@ const walletConnectConnector = new WalletConnectConnector({
       url: "https://wagmi.sh",
       icons: ["https://wagmi.sh/icon.png"],
     },
+  },
+});
+
+// To be used until Metamask issue mentione dabove is solved
+const walletConnectLegacyConnector = new WalletConnectLegacyConnector({
+  chains,
+  options: {
+    qrcode: true,
   },
 });
 
@@ -71,6 +84,10 @@ const useWagmiLibrary = () => {
     connector: walletConnectConnector,
   });
 
+  const { connect: walletConnectLegacyConnect } = useConnect({
+    connector: walletConnectLegacyConnector,
+  });
+
   const setupSequenceConnector = async () => {
     const nextSequenceConntactor = await getSequenceConnector();
     setSequenceConnector(nextSequenceConntactor);
@@ -86,6 +103,7 @@ const useWagmiLibrary = () => {
     sequenceConnect,
     metamaskConnect,
     walletConnectConnect,
+    walletConnectLegacyConnect,
     disconnect,
   };
 };
