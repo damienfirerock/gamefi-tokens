@@ -5,7 +5,6 @@ import MetaMaskButton from "./common/MetaMaskButton";
 import MenuStyledButton from "./common/MenuStyledButton";
 
 import useConnectWallet from "../../../utils/hooks/useConnectWallet";
-import useWagmiLibrary from "../../../utils/hooks/useWeb3Account";
 import { truncateString, handleOpenWindow } from "../../../utils/common";
 import CONFIG from "../../../config";
 
@@ -29,16 +28,6 @@ const AccountButton: React.FunctionComponent = () => {
   const { provider, account, chainId, requestConnect, requestChangeChainId } =
     useConnectWallet();
 
-  const {
-    address,
-    isConnected,
-    sequenceConnect,
-    metamaskConnect,
-    walletConnectConnect,
-    walletConnectLegacyConnect,
-    disconnect,
-  } = useWagmiLibrary();
-
   const handleInstallMetamask = () => {
     handleOpenWindow("https://metamask.io/");
   };
@@ -48,10 +37,10 @@ const AccountButton: React.FunctionComponent = () => {
   //     <MetaMaskButton handleClick={sequenceConnect} text="Install MetaMask" />
   //   );
 
-  if (!isConnected)
-    return (
-      <MetaMaskButton handleClick={sequenceConnect} text="Connect MetaMask" />
-    );
+  // if (!isConnected)
+  //   return (
+  //     <MetaMaskButton handleClick={sequenceConnect} text="Connect MetaMask" />
+  //   );
 
   // if (chainId !== parseInt(CONFIG.NETWORK_CHAIN_ID || "80001"))
   //   return (
@@ -66,13 +55,13 @@ const AccountButton: React.FunctionComponent = () => {
       <MenuStyledButton variant="contained" disabled={true}>
         <Typography variant="h6" sx={{ marginLeft: 1 }}>
           {/* {truncateString(account)} */}
-          {address}
+          {/* {address} */}
         </Typography>
       </MenuStyledButton>
       <MenuStyledButton
         variant="contained"
         // disabled={true}
-        onClick={() => disconnect()}
+        // onClick={() => disconnect()}
       >
         <Typography variant="h6" sx={{ marginLeft: 1 }}>
           Disconnect

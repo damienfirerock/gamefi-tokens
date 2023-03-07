@@ -24,3 +24,5 @@ export const AIRDROP_DETAILS: IAirDropDetails = {
     [TEST_ADDRESSES[7]]: 700,
   },
 };
+
+export const NETWORK_CONTEXT_NAME = "NETWORK";
