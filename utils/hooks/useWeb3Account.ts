@@ -51,8 +51,6 @@ const walletConnectConnector = new WalletConnectConnector({
   },
 });
 
-console.log({ HERE: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID });
-
 // Hook to centralise all wagmi imports in one place
 // Especially due to certain workarounds (i.e. require issue for Sequence connector)
 const useWagmiLibrary = () => {
