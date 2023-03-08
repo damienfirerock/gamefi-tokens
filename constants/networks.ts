@@ -51,7 +51,7 @@ export const mumbaiInfo: NETWORK_INFO = {
   chainId: ChainId.MUMBAI,
   name: "Polygon",
   icon: PolygonIcon,
-  etherscanUrl: "https://mumbai.polygonscan.com/",
+  etherscanUrl: "https://mumbai.polygonscan.com",
   etherscanName: "Polygonscan",
   nativeToken: {
     symbol: "MATIC",

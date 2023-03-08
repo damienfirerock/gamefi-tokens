@@ -4,11 +4,10 @@ import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 
 import { ChainId, NETWORKS_INFO_CONFIG } from "./networks";
 
-export const chainId: ChainId = parseInt(
-  process.env.NEXT_PUBLIC_NETWORK_CHAIN_ID!
-);
+export const chainId: ChainId =
+  parseInt(process.env.NEXT_PUBLIC_NETWORK_CHAIN_ID!) || 137;
 const NETWORK_URL = NETWORKS_INFO_CONFIG[chainId].rpcUrl;
-
+console.log({ NETWORK_URL });
 const options = {
   appName: "XY3",
 };
@@ -27,8 +26,11 @@ export const injected = new InjectedConnector(injectedConnectorParam);
 
 // Wallet Connect
 export const walletconnect = new WalletConnectConnector({
-  supportedChainIds: [chainId],
-  rpc: NETWORK_URL,
+  // supportedChainIds: [137, 80001],
+  // rpc: NETWORK_URL,
+  rpc: {
+    [chainId]: NETWORK_URL,
+  },
   bridge: "https://bridge.walletconnect.org",
   qrcode: true,
 });

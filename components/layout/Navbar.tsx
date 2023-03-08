@@ -2,12 +2,15 @@ import React from "react";
 import { AppBar, Box, BoxProps, Toolbar, Typography } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 import NextLink from "next/link";
 
 import { Header } from "../common";
-import AccountButton from "./buttons/AccountButton";
 
 import MenuStyledButton from "./buttons/common/MenuStyledButton";
+
+// Decreases First Load from 355kb to 214kb
+const DynamicAccountButton = dynamic(() => import("./buttons/AccountButton"));
 
 const StyledBox = styled(Box)<BoxProps>(() => ({
   flexGrow: 1,
@@ -34,7 +37,7 @@ const NavBar: React.FunctionComponent = () => {
               </MenuStyledButton>
             </NextLink>
           )}
-          <AccountButton />
+          <DynamicAccountButton />
         </Toolbar>
       </AppBar>
     </div>

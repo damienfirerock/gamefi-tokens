@@ -2,7 +2,7 @@
 let isBraveBrowser = false;
 (async () => {
   isBraveBrowser =
-    (navigator.brave && (await navigator.brave.isBrave())) || false;
+    (navigator?.brave && (await navigator.brave.isBrave())) || false;
 })();
 
 const checkForBraveBrowser = () => {
