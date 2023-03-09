@@ -142,29 +142,36 @@ const CumulativeAirdrop: React.FunctionComponent = () => {
           variant="h6"
           sx={{ display: "inline-block", textAlign: "left" }}
         >
-          {" "}
           <pre>{JSON.stringify(airdropDetails, null, 4)}</pre>
         </Typography>
-        <Box sx={{ marginBottom: 2 }}>
-          <InteractButton
-            text="Set New Merkle Root"
-            method={handleSetMerkleRoot}
-            loading={loading}
-          />
-          <InteractButton
-            text="Reset Merkle Root"
-            method={resetMerkleRoot}
-            loading={loading}
-          />
-        </Box>
+
+        {account && (
+          <Box sx={{ marginBottom: 2 }}>
+            <InteractButton
+              text="Set New Merkle Root"
+              method={handleSetMerkleRoot}
+              loading={loading}
+            />
+            <InteractButton
+              text="Reset Merkle Root"
+              method={resetMerkleRoot}
+              loading={loading}
+            />
+          </Box>
+        )}
       </Box>
 
-      <Typography variant="h3">Claimed: {pastClaimed}</Typography>
-      {/* Show the merkle root */}
-      <Typography variant="h5">Merkle Root: {merkleRoot}</Typography>
-      {/* Show current balance */}
-      <Typography variant="h5">$FRG Balance: {walletBalance}</Typography>
-      <InteractButton text="Claim" method={handleClaim} loading={loading} />
+      {account && (
+        <>
+          {" "}
+          <Typography variant="h3">Claimed: {pastClaimed}</Typography>
+          {/* Show the merkle root */}
+          <Typography variant="h5">Merkle Root: {merkleRoot}</Typography>
+          {/* Show current balance */}
+          <Typography variant="h5">$FRG Balance: {walletBalance}</Typography>
+          <InteractButton text="Claim" method={handleClaim} loading={loading} />
+        </>
+      )}
     </>
   );
 };

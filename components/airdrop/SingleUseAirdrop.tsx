@@ -14,12 +14,6 @@ import { parseTokenValue } from "../../utils/common";
 import { AIRDROP_DETAILS } from "../../constants/common";
 import { AirdropType } from "../../interfaces/IAirdrop";
 
-const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
-  display: "flex",
-  justifyContent: "center",
-  margin: theme.spacing(2, 0),
-}));
-
 const InteractButton = (props: {
   text: string;
   method: () => void;
@@ -107,17 +101,21 @@ const SingleUseAirdrop: React.FunctionComponent = () => {
         </Typography>
       </Box>
 
-      <Typography variant="h3">Claimed: {hasClaimed.toString()}</Typography>
-      {/* Show the merkle root */}
-      <Typography variant="h5">Merkle Root: {merkleRoot}</Typography>
-      {/* Show current balance */}
-      <Typography variant="h5">$FRG Balance: {walletBalance}</Typography>
-      <InteractButton
-        text="Claim"
-        method={handleClaim}
-        loading={loading}
-        disabled={hasClaimed}
-      />
+      {account && (
+        <>
+          <Typography variant="h3">Claimed: {hasClaimed.toString()}</Typography>
+          {/* Show the merkle root */}
+          <Typography variant="h5">Merkle Root: {merkleRoot}</Typography>
+          {/* Show current balance */}
+          <Typography variant="h5">$FRG Balance: {walletBalance}</Typography>
+          <InteractButton
+            text="Claim"
+            method={handleClaim}
+            loading={loading}
+            disabled={hasClaimed}
+          />
+        </>
+      )}
     </>
   );
 };
