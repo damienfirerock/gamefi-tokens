@@ -7,7 +7,7 @@ import SequenceIcon from "../public/wallets/sequence-icon.svg";
 import WalletConnectIcon from "../public/wallets/wallet-connect.svg";
 
 // Ref: https://github.com/solana-labs/wallet-adapter/blob/05e3c3d864831ded29b1100ef2b0e4fd4b936e30/packages/core/base/src/adapter.ts
-enum WalletReadyState {
+export enum WalletReadyState {
   /**
    * User-installable wallets can typically be detected by scanning for an API
    * that they've injected into the global context. If such an API is present,
