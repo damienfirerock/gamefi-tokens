@@ -8,7 +8,6 @@ import CumulativeAirdrop from "./CumulativeAirdrop";
 
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
 import { AirdropType } from "../../interfaces/IAirdrop";
-import useActiveWeb3React from "../../utils/hooks/web3React/useActiveWeb3React";
 
 const addresses = Object.values(CONTRACT_ADDRESSES);
 
@@ -38,8 +37,6 @@ const InteractButton = (props: {
 };
 
 const AirdropInformation: React.FunctionComponent = () => {
-  const { account } = useActiveWeb3React();
-
   const [type, setType] = useState<AirdropType>(AirdropType.SINGLE_USE);
 
   const toggleType = () => {

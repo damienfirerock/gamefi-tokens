@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { useMemo } from "react";
 import { useDispatch } from "react-redux";
 
 import { AppDispatch } from "../../store";
@@ -11,6 +11,8 @@ import {
   setWalletBalance,
 } from "../../features/AirdropSlice";
 import { formatTokenValue } from "../../utils/common";
+import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
+import { getContract } from "../web3";
 
 import { AirdropType } from "../../interfaces/IAirdrop";
 
@@ -37,69 +39,58 @@ const useAirdropTransactions = (type: AirdropType) => {
   const { sendTransactionError, sendTransactionErrorOnMetaMaskRequest } =
     useDispatchErrors();
 
-  const address =
+  const { account, library } = useWeb3React();
+
+  const contractDetails =
     type === AirdropType.SINGLE_USE
-      ? NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS
-      : NEXT_PUBLIC_CUMULATIVE_MERKLE_AIRDROP_ADDRESS;
+      ? {
+          address: NEXT_PUBLIC_SINGLE_USE_MERKLE_AIRDROP_ADDRESS,
+          abi: SingleUseAirdropWalletJson.abi,
+        }
+      : {
+          address: NEXT_PUBLIC_CUMULATIVE_MERKLE_AIRDROP_ADDRESS,
+          abi: CumulativeAirdropWalletJson.abi,
+        };
 
-  // Note: Important to run pre-checks before every transaction
-  // But may be a bit excessive during initial setup in transaction details
-  // Unfortunately, will still require the checking of connection in subsequent transactions
-  const runPreChecks = async () => {
-    const { ethereum } = window as any;
-
-    if (!window || !ethereum) {
-      sendTransactionError("No wallet installed");
-      return;
+  const airdropContract = useMemo(() => {
+    if (!contractDetails.address || !library || !account) {
+      return null;
     }
 
-    const provider = new ethers.providers.Web3Provider(ethereum, "any");
+    return getContract(
+      contractDetails.address,
+      contractDetails.abi,
+      library,
+      account
+    );
+  }, [contractDetails.address, library, account]);
 
-    let walletAddress;
-
-    try {
-      const accounts = await ethereum.request({
-        method: "eth_requestAccounts",
-      });
-      walletAddress = accounts[0]; // first account in MetaMask
-    } catch (error: any) {
-      sendTransactionErrorOnMetaMaskRequest(error);
-      return;
+  const fireRockGoldContract = useMemo(() => {
+    if (!library || !account) {
+      return null;
     }
 
-    const { chainId } = await provider.getNetwork();
-
-    if (chainId !== parseInt(process.env.NEXT_PUBLIC_NETWORK_CHAIN_ID || "")) {
-      sendTransactionError("Please switch to Mumbai network");
-      return;
-    }
-
-    const signer = provider.getSigner(walletAddress);
-
-    return { signer };
-  };
+    return getContract(
+      NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS!,
+      ERC20ABI,
+      library,
+      account
+    );
+  }, [library, account]);
 
   const checkIfClaimed = async (): Promise<boolean> => {
-    if (type === AirdropType.CUMULATIVE) {
-      sendTransactionError("Method is for Single Use Airdrop");
-      return false;
-    }
-
-    const { signer } = (await runPreChecks()) || {};
-
-    if (!signer) return false;
-
-    const airdropContract = new ethers.Contract(
-      address || "",
-      SingleUseAirdropWalletJson.abi,
-      signer
-    );
-
     let result;
 
     try {
-      const address = await signer.getAddress();
-      result = await airdropContract.hasClaimed(address);
+      if (type === AirdropType.CUMULATIVE) {
+        throw Error("Method is for Single Use Airdrop");
+      }
+
+      if (!airdropContract) {
+        throw Error("Invalid Connection");
+      }
+
+      result = await airdropContract.hasClaimed(account);
 
       dispatch(setHasClaimed(result));
     } catch (error: any) {
@@ -111,26 +102,18 @@ const useAirdropTransactions = (type: AirdropType) => {
   };
 
   const checkPastClaim = async (): Promise<number> => {
-    if (type === AirdropType.SINGLE_USE) {
-      sendTransactionError("Method is for Cumulative Airdrop");
-      return 0;
-    }
-
-    const { signer } = (await runPreChecks()) || {};
-
-    if (!signer) return 0;
-
-    const airdropContract = new ethers.Contract(
-      address || "",
-      CumulativeAirdropWalletJson.abi,
-      signer
-    );
-
     let result;
 
     try {
-      const address = await signer.getAddress();
-      result = await airdropContract.cumulativeClaimed(address);
+      if (type === AirdropType.SINGLE_USE) {
+        throw Error("Method is for Cumulative Airdrop");
+      }
+
+      if (!airdropContract) {
+        throw Error("Invalid Connection");
+      }
+
+      result = await airdropContract.cumulativeClaimed(account);
 
       dispatch(setPastClaimed(formatValue(result)));
     } catch (error: any) {
@@ -142,19 +125,13 @@ const useAirdropTransactions = (type: AirdropType) => {
   };
 
   const getMerkleRoot = async (): Promise<boolean> => {
-    const { signer } = (await runPreChecks()) || {};
-
-    if (!signer) return false;
-
-    const airdropContract = new ethers.Contract(
-      address || "",
-      SingleUseAirdropWalletJson.abi,
-      signer
-    );
-
     let result;
 
     try {
+      if (!airdropContract) {
+        throw Error("Invalid Connection");
+      }
+
       result = await airdropContract.merkleRoot();
 
       dispatch(setMerkleRoot(result));
@@ -167,22 +144,15 @@ const useAirdropTransactions = (type: AirdropType) => {
   };
 
   const setNextMerkleRoot = async (hash: string) => {
-    if (type === AirdropType.SINGLE_USE) {
-      sendTransactionError("Method is for Cumulative Airdrop");
-      return;
-    }
-
-    const { signer } = (await runPreChecks()) || {};
-
-    if (!signer) return false;
-
-    const airdropContract = new ethers.Contract(
-      address || "",
-      CumulativeAirdropWalletJson.abi,
-      signer
-    );
-
     try {
+      if (type === AirdropType.SINGLE_USE) {
+        throw Error("Method is for Cumulative Airdrop");
+      }
+
+      if (!airdropContract) {
+        throw Error("Invalid Connection");
+      }
+
       const txn = await airdropContract.setMerkleRoot(hash);
       await txn.wait(10);
 
@@ -196,20 +166,14 @@ const useAirdropTransactions = (type: AirdropType) => {
   };
 
   const checkWalletBalance = async (): Promise<boolean> => {
-    const { signer } = (await runPreChecks()) || {};
-
-    if (!signer) return false;
-
-    const tokenContract = new ethers.Contract(
-      NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS || "",
-      ERC20ABI,
-      signer
-    );
-
     let result;
 
     try {
-      result = await tokenContract.balanceOf(signer._address);
+      if (!fireRockGoldContract) {
+        throw Error("Invalid Connection");
+      }
+
+      result = await fireRockGoldContract.balanceOf(account);
 
       const nextValue = formatValue(result);
 
@@ -223,22 +187,12 @@ const useAirdropTransactions = (type: AirdropType) => {
   };
 
   const submitClaim = async (amount: BigInt, proof: string[]) => {
-    const { signer } = (await runPreChecks()) || {};
-
-    if (!signer) return;
-
-    const airdropContract = new ethers.Contract(
-      address || "",
-      SingleUseAirdropWalletJson.abi,
-      signer
-    );
-
     try {
-      const transaction = await airdropContract.claim(
-        signer._address,
-        amount,
-        proof
-      );
+      if (!airdropContract) {
+        throw Error("Invalid Connection");
+      }
+
+      const transaction = await airdropContract.claim(account, amount, proof);
       await transaction.wait(10);
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);

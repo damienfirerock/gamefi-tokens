@@ -1,6 +1,11 @@
+import { ethers } from "ethers";
+import { Contract, ContractInterface } from "@ethersproject/contracts";
+import { JsonRpcSigner, Web3Provider } from "@ethersproject/providers";
+
 import checkForBraveBrowser from "./checkForBraveBrowser";
 import { chainId } from "../constants/connectors";
 import { NETWORKS_INFO_CONFIG } from "../constants/networks";
+import { ZERO_ADDRESS } from "../constants/common";
 
 export const getEtherscanLink = (
   data: string,
@@ -40,4 +45,32 @@ export const detectInjectedType = (): "BRAVE" | "METAMASK" | null => {
     return "METAMASK";
   }
   return null;
+};
+
+// account is required
+const getSigner = (library: Web3Provider, account: string): JsonRpcSigner => {
+  return library.getSigner(account).connectUnchecked();
+};
+
+// account is optional
+const getProviderOrSigner = (
+  library: Web3Provider,
+  account?: string
+): Web3Provider | JsonRpcSigner => {
+  return account ? getSigner(library, account) : library;
+};
+
+// account is optional
+export const getContract = (
+  address: string,
+  ABI: ContractInterface,
+  library: Web3Provider,
+  account?: string
+): Contract => {
+  if (!ethers.utils.isAddress(address) || address === ZERO_ADDRESS) {
+    throw Error(`Invalid 'address' parameter '${address}'.`);
+  }
+  const provider = getProviderOrSigner(library, account) as any;
+
+  return new Contract(address, ABI, provider);
 };

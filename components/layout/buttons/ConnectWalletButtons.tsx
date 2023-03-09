@@ -43,7 +43,6 @@ const ConnectWalletButtons: React.FunctionComponent = () => {
         const wallet = SUPPORTED_WALLETS[walletKey];
         await tryActivationEVM(wallet.connector);
       } catch (error) {
-        console.log({ error });
         sendTransactionError(JSON.stringify(error));
       }
     },

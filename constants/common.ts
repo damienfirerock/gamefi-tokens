@@ -1,5 +1,7 @@
 import { IAirDropDetails } from "../interfaces/IAirdrop";
 
+export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+
 export const DEFAULT_DECIMALS = 18;
 
 export const TEST_ADDRESSES = {
