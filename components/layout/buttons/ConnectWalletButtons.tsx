@@ -5,11 +5,8 @@ import { isMobile } from "react-device-detect";
 
 import ConnectWalletButton from "./common/ConnectWalletButton";
 
-import useConnectWallet from "../../../utils/hooks/useConnectWallet";
 import useActivationWallet from "../../../utils/hooks/web3React/useActivationWallet";
-import useWeb3React from "../../../utils/hooks/web3React/useWeb3React";
 import useDispatchErrors from "../../../utils/hooks/useDispatchErrors";
-import useActiveWeb3React from "../../../utils/hooks/web3React/useActiveWeb3React";
 import { detectMetamask, WalletReadyState } from "../../../constants/wallets";
 import {
   SUPPORTED_WALLET,
@@ -38,19 +35,7 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
 
 const ConnectWalletButtons: React.FunctionComponent = () => {
   const { sendTransactionError } = useDispatchErrors();
-
-  const { active, connector, error, deactivate } = useWeb3React();
   const { tryActivationEVM } = useActivationWallet();
-  const { account, walletKey } = useActiveWeb3React();
-  const {
-    account: originalAccount,
-    chainId,
-    requestChangeChainId,
-  } = useConnectWallet();
-
-  //   const handleInstallMetamask = () => {
-  //     handleOpenWindow("https://metamask.io/");
-  //   };
 
   const handleConnectWallet = useCallback(
     async (walletKey: SUPPORTED_WALLET) => {

@@ -5,12 +5,10 @@ import MenuStyledButton from "./common/MenuStyledButton";
 import ConnectWalletButtons from "./ConnectWalletButtons";
 import PopoverBox from "./common/PopoverBox";
 
-import useConnectWallet from "../../../utils/hooks/useConnectWallet";
 import { truncateString } from "../../../utils/common";
 import useWeb3React from "../../../utils/hooks/web3React/useWeb3React";
 import useActiveWeb3React from "../../../utils/hooks/web3React/useActiveWeb3React";
 
-// FIXME: Connecting with Metamask does not update account in useActiveWeb3Wallet()
 // FIXME: Button jumps to left in navbar on mobile
 // TODO: Update useAirdropTransactions
 // TODO: Add useSignTransactions for signatures between Sequence versus Metamask for binding of wallets
@@ -25,7 +23,6 @@ import useActiveWeb3React from "../../../utils/hooks/web3React/useActiveWeb3Reac
 const AccountButton: React.FunctionComponent = () => {
   const { deactivate } = useWeb3React();
   const { account } = useActiveWeb3React();
-  const { account: originalAccount } = useConnectWallet();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
@@ -42,13 +39,11 @@ const AccountButton: React.FunctionComponent = () => {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
-  const connectedAddress = account || originalAccount;
-  console.log({ account, originalAccount });
   return (
     <>
       <MenuStyledButton variant="contained" onClick={handleClick}>
         <Typography variant="h6" sx={{ marginLeft: 1 }}>
-          {connectedAddress ? truncateString(connectedAddress) : "Connect"}
+          {account ? truncateString(account) : "Connect"}
         </Typography>
       </MenuStyledButton>
       <Popover
@@ -74,11 +69,11 @@ const AccountButton: React.FunctionComponent = () => {
         }}
       >
         <PopoverBox sx={{ textAlign: "center" }}>
-          {connectedAddress ? (
+          {account ? (
             <>
               <MenuStyledButton variant="contained" disabled={true}>
                 <Typography variant="h6" sx={{ marginLeft: 1 }}>
-                  {truncateString(connectedAddress)}
+                  {truncateString(account)}
                 </Typography>
               </MenuStyledButton>
               <MenuStyledButton variant="contained" onClick={deactivate}>
