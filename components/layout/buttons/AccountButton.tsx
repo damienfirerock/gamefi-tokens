@@ -10,7 +10,8 @@ import useWeb3React from "../../../utils/hooks/web3React/useWeb3React";
 import useActiveWeb3React from "../../../utils/hooks/web3React/useActiveWeb3React";
 
 // FIXME: Button jumps to left in navbar on mobile
-// TODO: Update useAirdropTransactions
+// FIXME: Need to double try connect with Metamask on Walletconnect
+// TODO: Maintaining connection between page refresh
 // TODO: Add useSignTransactions for signatures between Sequence versus Metamask for binding of wallets
 
 // Connects to Metamask on Desktop
