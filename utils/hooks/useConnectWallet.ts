@@ -8,14 +8,14 @@ import CONFIG from "../../config";
 const useConnectWallet = () => {
   const { sendTransactionErrorOnMetaMaskRequest } = useDispatchErrors();
 
-  const [account, setAccount] = useState(null);
+  const [account, setAccount] = useState<string | null>(null);
   const [chainId, setChainId] = useState(null);
   const [provider, setProvider] = useState<any>(null);
 
   const findProvider = async () => {
     if (!window) return;
 
-    const { ethereum } = window as any;
+    const { ethereum } = window;
 
     const nextProvider = ethereum
       ? new ethers.providers.Web3Provider(ethereum, "any")

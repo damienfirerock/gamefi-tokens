@@ -52,8 +52,14 @@ export interface EVMWalletInfo extends WalletInfo {
   readyState: () => WalletReadyState;
 }
 
+export enum WalletKeys {
+  Metamask = "METAMASK",
+  Sequence = "SEQUENCE",
+  WalletConnect = "WALLET_CONNECT",
+}
+
 export const SUPPORTED_WALLETS: { [key: string]: EVMWalletInfo } = {
-  METAMASK: {
+  [WalletKeys.Metamask]: {
     connector: injected,
     name: "MetaMask",
     icon: MetaMaskIcon,
@@ -61,7 +67,7 @@ export const SUPPORTED_WALLETS: { [key: string]: EVMWalletInfo } = {
     installLink: "https://metamask.io/download",
     readyState: detectMetamask,
   } as EVMWalletInfo,
-  SEQUENCE: {
+  [WalletKeys.Sequence]: {
     connector: sequence,
     name: "Sequence",
     icon: SequenceIcon,
@@ -69,7 +75,7 @@ export const SUPPORTED_WALLETS: { [key: string]: EVMWalletInfo } = {
     installLink: "https://sequence.xyz/",
     readyState: () => WalletReadyState.Installed,
   } as EVMWalletInfo,
-  WALLET_CONNECT: {
+  [WalletKeys.WalletConnect]: {
     connector: walletconnect,
     name: "WalletConnect",
     icon: WalletConnectIcon,

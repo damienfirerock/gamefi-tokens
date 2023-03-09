@@ -2,22 +2,22 @@ import React from "react";
 import { Button, Typography } from "@mui/material";
 import Image from "next/image";
 
-interface IMetaMaskButton {
+interface IConnectButton {
   text: string;
+  src?: string;
   handleClick: () => void;
 }
 
-const MetaMaskButton: React.FunctionComponent<IMetaMaskButton> = (props) => {
-  const { handleClick, text } = props;
+const ConnectButton: React.FunctionComponent<IConnectButton> = (props) => {
+  const {
+    handleClick,
+    text,
+    src = "/metamask-logo-black-and-white.png",
+  } = props;
 
   return (
     <Button variant="contained" onClick={handleClick}>
-      <Image
-        src="/metamask-logo-black-and-white.png"
-        alt="me"
-        width="28"
-        height="28"
-      />
+      <Image src={src} alt={src} width="28" height="28" />
       <Typography variant="h6" sx={{ marginLeft: 1 }}>
         {text}
       </Typography>
@@ -25,4 +25,4 @@ const MetaMaskButton: React.FunctionComponent<IMetaMaskButton> = (props) => {
   );
 };
 
-export default MetaMaskButton;
+export default ConnectButton;
