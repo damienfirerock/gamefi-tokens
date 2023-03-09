@@ -6,7 +6,12 @@ import { ChainId, NETWORKS_INFO_CONFIG } from "./networks";
 
 export const chainId: ChainId =
   parseInt(process.env.NEXT_PUBLIC_NETWORK_CHAIN_ID!) || 137;
+
+console.log({ chainId });
+
 const NETWORK_URL = NETWORKS_INFO_CONFIG[chainId].rpcUrl;
+
+console.log({ NETWORK_URL });
 
 const options = {
   appName: "XY3",
