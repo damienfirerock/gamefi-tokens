@@ -5,12 +5,13 @@ import { useSelector } from "react-redux";
 
 import StyledCircularProgress from "../common/StyledCircularProgress";
 import SingleUseAirdrop from "./SingleUseAirdrop";
+import CumulativeAirdrop from "./CumulativeAirdrop";
 
 import { RootState } from "../../store";
 import useConnectWallet from "../../utils/hooks/useConnectWallet";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
 import { AirdropType } from "../../interfaces/IAirdrop";
-import CumulativeAirdrop from "./CumulativeAirdrop";
+import useActiveWeb3React from "../../utils/hooks/web3React/useActiveWeb3React";
 
 const addresses = Object.values(CONTRACT_ADDRESSES);
 
@@ -40,7 +41,8 @@ const InteractButton = (props: {
 };
 
 const AirdropInformation: React.FunctionComponent = () => {
-  const { account, requestConnect } = useConnectWallet();
+  const { account } = useActiveWeb3React();
+  const { account: originalAccount, requestConnect } = useConnectWallet();
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { loading } = transactionSlice;
@@ -55,10 +57,12 @@ const AirdropInformation: React.FunctionComponent = () => {
     setType(nextType);
   };
 
+  const connectedAddress = account || originalAccount;
+
   return (
     <>
       {/* Show button to connect if not connected */}
-      {!account && (
+      {!connectedAddress && (
         <StyledBox>
           <InteractButton
             text="Connect"
@@ -68,7 +72,7 @@ const AirdropInformation: React.FunctionComponent = () => {
         </StyledBox>
       )}
 
-      {account && (
+      {connectedAddress && (
         <>
           <Box sx={{ marginTop: 5 }}>
             <InteractButton

@@ -13,6 +13,7 @@ import { getMerkleProof } from "../../utils/merkleAirdrop";
 import { parseTokenValue } from "../../utils/common";
 import { AIRDROP_DETAILS } from "../../constants/common";
 import { AirdropType } from "../../interfaces/IAirdrop";
+import useActiveWeb3React from "../../utils/hooks/web3React/useActiveWeb3React";
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
@@ -38,9 +39,12 @@ const InteractButton = (props: {
 const SingleUseAirdrop: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { account, requestConnect } = useConnectWallet();
+  const { account } = useActiveWeb3React();
+  const { account: originalAccount, requestConnect } = useConnectWallet();
   const { checkIfClaimed, getMerkleRoot, checkWalletBalance, submitClaim } =
     useAirdropTransactions(AirdropType.SINGLE_USE);
+
+  const connectedAddress = account || originalAccount;
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { loading } = transactionSlice;
@@ -59,17 +63,17 @@ const SingleUseAirdrop: React.FunctionComponent = () => {
   };
 
   const handleClaim = async () => {
-    if (!account) return;
+    if (!connectedAddress) return;
 
     dispatch(setLoading(true));
 
     const amount = parseTokenValue(
-      AIRDROP_DETAILS.airdrop[account].toString(),
+      AIRDROP_DETAILS.airdrop[connectedAddress].toString(),
       18
     );
     const proof = getMerkleProof(
-      account,
-      AIRDROP_DETAILS.airdrop[account],
+      connectedAddress,
+      AIRDROP_DETAILS.airdrop[connectedAddress],
       AIRDROP_DETAILS
     );
 
@@ -81,15 +85,15 @@ const SingleUseAirdrop: React.FunctionComponent = () => {
   };
 
   useEffect(() => {
-    if (account) {
+    if (connectedAddress) {
       setupInitial();
     }
-  }, [account]);
+  }, [connectedAddress]);
 
   return (
     <>
       {/* Show button to connect if not connected */}
-      {!account && (
+      {!connectedAddress && (
         <StyledBox>
           <InteractButton
             text="Connect"
@@ -100,7 +104,7 @@ const SingleUseAirdrop: React.FunctionComponent = () => {
         </StyledBox>
       )}
 
-      {account && (
+      {connectedAddress && (
         <>
           {/* Show JSON file for the airdrop details */}
           <Box

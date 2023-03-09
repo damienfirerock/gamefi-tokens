@@ -31,7 +31,7 @@ const AccountButton: React.FunctionComponent = () => {
   const id = open ? "simple-popover" : undefined;
 
   const connectedAddress = account || originalAccount;
-
+  console.log({ account, originalAccount });
   return (
     <>
       <MenuStyledButton variant="contained" onClick={handleClick}>
