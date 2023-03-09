@@ -96,7 +96,7 @@ const ConnectWalletButtons: React.FunctionComponent = () => {
             handleConnectWallet(WalletKeys.Sequence);
           }}
           src={SUPPORTED_WALLETS[WalletKeys.Sequence].icon}
-          text={`Connect ${SUPPORTED_WALLETS[WalletKeys.Sequence].name}`}
+          text={`${SUPPORTED_WALLETS[WalletKeys.Sequence].name} (Recommended)`}
         />
       </StyledBox>
       {isMetamask && (
@@ -106,7 +106,7 @@ const ConnectWalletButtons: React.FunctionComponent = () => {
               handleConnectWallet(WalletKeys.Metamask);
             }}
             src={SUPPORTED_WALLETS[WalletKeys.Metamask].icon}
-            text={`Connect ${SUPPORTED_WALLETS[WalletKeys.Metamask].name}`}
+            text={`${SUPPORTED_WALLETS[WalletKeys.Metamask].name}`}
           />
         </StyledBox>
       )}
@@ -117,7 +117,7 @@ const ConnectWalletButtons: React.FunctionComponent = () => {
               handleConnectWallet(WalletKeys.WalletConnect);
             }}
             src={SUPPORTED_WALLETS[WalletKeys.WalletConnect].icon}
-            text={`Connect ${SUPPORTED_WALLETS[WalletKeys.WalletConnect].name}`}
+            text={`${SUPPORTED_WALLETS[WalletKeys.WalletConnect].name}`}
           />
         </StyledBox>
       )}

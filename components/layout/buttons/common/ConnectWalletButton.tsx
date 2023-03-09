@@ -16,9 +16,13 @@ const ConnectButton: React.FunctionComponent<IConnectButton> = (props) => {
   } = props;
 
   return (
-    <Button variant="contained" onClick={handleClick}>
+    <Button
+      variant="contained"
+      onClick={handleClick}
+      sx={{ minWidth: 255, justifyContent: "start" }}
+    >
       <Image src={src} alt={src} width="28" height="28" />
-      <Typography variant="h6" sx={{ marginLeft: 1 }}>
+      <Typography variant="h6" sx={{ marginLeft: 2 }}>
         {text}
       </Typography>
     </Button>
