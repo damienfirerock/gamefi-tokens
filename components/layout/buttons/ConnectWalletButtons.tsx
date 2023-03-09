@@ -32,27 +32,6 @@ import {
 // Mobile: Show 1) Sequence, 2) Metamask* 3) WalletConnect
 // * If provider is detected, which only happens in the rare scenario where user is accessing from Metamask mobile browser
 
-//   if (chainId !== parseInt(CONFIG.NETWORK_CHAIN_ID || "80001"))
-//     return (
-//       <ConnectWalletButton
-//         handleClick={requestChangeChainId}
-//         text={`Change to ${nextNetwork()}`}
-//       />
-//     );
-
-// FIXME: Connecting with Metamask does not update account in useActiveWeb3Wallet()
-// TODO: Update useAirdropTransactions
-// TODO: Add useSignTransactions for signatures between Sequence versus Metamask for binding of wallets
-// TODO: Hide WalletConnect on Desktop
-// TODO: Show Metamask only with provider on Mobile
-
-// Connects to Metamask on Desktop
-// Connects to Sequence on Desktop
-
-// Connects to Metamask via WalletConnect on Mobile
-// Connects to Sequence on Mobile
-// Connects to Metamask via Metamask Browser on Mobile
-
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));

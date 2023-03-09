@@ -10,6 +10,18 @@ import { truncateString } from "../../../utils/common";
 import useWeb3React from "../../../utils/hooks/web3React/useWeb3React";
 import useActiveWeb3React from "../../../utils/hooks/web3React/useActiveWeb3React";
 
+// FIXME: Connecting with Metamask does not update account in useActiveWeb3Wallet()
+// FIXME: Button jumps to left in navbar on mobile
+// TODO: Update useAirdropTransactions
+// TODO: Add useSignTransactions for signatures between Sequence versus Metamask for binding of wallets
+
+// Connects to Metamask on Desktop
+// Connects to Sequence on Desktop
+
+// Connects to Metamask via WalletConnect on Mobile
+// Connects to Sequence on Mobile
+// Connects to Metamask via Metamask Browser on Mobile
+
 const AccountButton: React.FunctionComponent = () => {
   const { deactivate } = useWeb3React();
   const { account } = useActiveWeb3React();
