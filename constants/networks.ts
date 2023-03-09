@@ -60,7 +60,8 @@ export const mumbaiInfo: NETWORK_INFO = {
     decimal: 18,
     minForGas: 10 ** 16,
   },
-  rpcUrl: "https://rpc-mumbai.maticvigil.com",
+  // Public rpc url: https://rpc-mumbai.maticvigil.com
+  rpcUrl: process.env.NEXT_PUBLIC_ALCHEMY_HTTPS_PROVIDER!,
   contracts: {
     FIRE_ROCK_GOLD_ADDRESS: "0xb3170835AfebF0F69dfEE0c70Bf0207E269C0ffe",
     SINGLE_USE_MERKLE_AIRDROP_ADDRESS:
