@@ -31,11 +31,10 @@ export const injected = new InjectedConnector(injectedConnectorParam);
 
 // Wallet Connect
 export const walletconnect = new WalletConnectConnector({
-  // supportedChainIds: [137, 80001],
-  // rpc: NETWORK_URL,
   rpc: {
     [chainId]: NETWORK_URL,
   },
+  chainId: chainId,
   bridge: "https://bridge.walletconnect.org",
   qrcode: true,
 });
