@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { Box, BoxProps, Button, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Box, Button, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import Link from "next/link";
+import { useTranslation } from "next-i18next";
 
 import StyledCircularProgress from "../common/StyledCircularProgress";
 
@@ -31,6 +32,7 @@ const InteractButton = (props: {
 
 const SingleUseAirdrop: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const { t } = useTranslation("common");
 
   const { account } = useActiveWeb3React();
   const { checkIfClaimed, getMerkleRoot, checkWalletBalance, submitClaim } =
@@ -100,6 +102,10 @@ const SingleUseAirdrop: React.FunctionComponent = () => {
           <pre>{JSON.stringify(AIRDROP_DETAILS, null, 4)}</pre>
         </Typography>
       </Box>
+
+      <Link href="/" locale="zh">
+        {t("test")}
+      </Link>
 
       {account && (
         <>

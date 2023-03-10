@@ -4,6 +4,7 @@ import { CacheProvider, EmotionCache } from "@emotion/react";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { Provider } from "react-redux";
 import { Web3ReactProvider } from "@web3-react/core";
+import { appWithTranslation } from "next-i18next";
 
 import createEmotionCache from "../utils/createEmotionCache";
 import theme from "../src/theme";
@@ -33,4 +34,4 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
   );
 };
 
-export default MyApp;
+export default appWithTranslation(MyApp);
