@@ -2,15 +2,19 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 import { UnsupportedChainIdError } from "@web3-react/core";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { useCallback } from "react";
+import { WalletKeys } from "../../../constants/wallets";
 
 import useWeb3React from "./useWeb3React";
 
 import { chainId } from "../../../constants/connectors";
+import { SUPPORTED_WALLETS } from "../../../constants/wallets";
 
 export const useActivationWallet = () => {
   const { activate, library } = useWeb3React();
   const tryActivationEVM = useCallback(
-    async (connector: AbstractConnector | undefined) => {
+    async (walletKey: WalletKeys) => {
+      const connector = SUPPORTED_WALLETS[walletKey].connector;
+
       // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
       if (connector instanceof WalletConnectConnector) {
         connector.walletConnectProvider = undefined;
@@ -27,6 +31,7 @@ export const useActivationWallet = () => {
               },
             ],
           });
+          localStorage.setItem("isWalletConnected", walletKey);
         } catch (error) {
           if (error instanceof UnsupportedChainIdError) {
             await activate(connector);

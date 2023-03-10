@@ -8,11 +8,7 @@ import ConnectWalletButton from "./common/ConnectWalletButton";
 import useActivationWallet from "../../../utils/hooks/web3React/useActivationWallet";
 import useDispatchErrors from "../../../utils/hooks/useDispatchErrors";
 import { detectMetamask, WalletReadyState } from "../../../constants/wallets";
-import {
-  SUPPORTED_WALLET,
-  SUPPORTED_WALLETS,
-  WalletKeys,
-} from "../../../constants/wallets";
+import { SUPPORTED_WALLETS, WalletKeys } from "../../../constants/wallets";
 
 // Issue: WalletConnect does not work with Sequence Wallet on Desktop
 // (Should not be an issue since Sequence Wallet directly available)
@@ -37,17 +33,13 @@ const ConnectWalletButtons: React.FunctionComponent = () => {
   const { sendTransactionError } = useDispatchErrors();
   const { tryActivationEVM } = useActivationWallet();
 
-  const handleConnectWallet = useCallback(
-    async (walletKey: SUPPORTED_WALLET) => {
-      try {
-        const wallet = SUPPORTED_WALLETS[walletKey];
-        await tryActivationEVM(wallet.connector);
-      } catch (error) {
-        sendTransactionError(JSON.stringify(error));
-      }
-    },
-    []
-  );
+  const handleConnectWallet = useCallback(async (walletKey: WalletKeys) => {
+    try {
+      await tryActivationEVM(walletKey);
+    } catch (error) {
+      sendTransactionError(JSON.stringify(error));
+    }
+  }, []);
 
   const isMetamask = detectMetamask() === WalletReadyState.Installed;
 
