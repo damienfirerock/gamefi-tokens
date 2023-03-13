@@ -5,6 +5,8 @@
   "single": "单次",
   "cumulative": "累积",
   "claimed": "已领取",
+  "set-new": "设置新的",
+  "reset": "重置",
   "merkle-root": "默克尔根",
   "balance": "余额",
   "claim": "领取"

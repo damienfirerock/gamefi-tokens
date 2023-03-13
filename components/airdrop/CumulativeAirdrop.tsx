@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Box, BoxProps, Button, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Box, Button, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "next-i18next";
 
 import StyledCircularProgress from "../common/StyledCircularProgress";
 
@@ -39,6 +39,7 @@ const InteractButton = (props: {
 
 const CumulativeAirdrop: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const { t } = useTranslation("airdrop");
 
   const { account } = useActiveWeb3React();
   const {
@@ -148,12 +149,12 @@ const CumulativeAirdrop: React.FunctionComponent = () => {
         {account && (
           <Box sx={{ marginBottom: 2 }}>
             <InteractButton
-              text="Set New Merkle Root"
+              text={`${t("set-new")} ${t("merkle-root")}`}
               method={handleSetMerkleRoot}
               loading={loading}
             />
             <InteractButton
-              text="Reset Merkle Root"
+              text={`${t("reset")} ${t("merkle-root")}`}
               method={resetMerkleRoot}
               loading={loading}
             />
@@ -164,12 +165,23 @@ const CumulativeAirdrop: React.FunctionComponent = () => {
       {account && (
         <>
           {" "}
-          <Typography variant="h3">Claimed: {pastClaimed}</Typography>
+          <Typography variant="h3">
+            {" "}
+            {t("claimed")}: {pastClaimed}
+          </Typography>
           {/* Show the merkle root */}
-          <Typography variant="h5">Merkle Root: {merkleRoot}</Typography>
+          <Typography variant="h5">
+            {t("merkle-root")}: {merkleRoot}
+          </Typography>
           {/* Show current balance */}
-          <Typography variant="h5">$FRG Balance: {walletBalance}</Typography>
-          <InteractButton text="Claim" method={handleClaim} loading={loading} />
+          <Typography variant="h5">
+            $FRG {t("balance")}: {walletBalance}
+          </Typography>
+          <InteractButton
+            text={t("claim")}
+            method={handleClaim}
+            loading={loading}
+          />
         </>
       )}
     </>

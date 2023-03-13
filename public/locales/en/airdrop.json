@@ -5,6 +5,8 @@
   "single": "Single Use",
   "cumulative": "Cumulative",
   "claimed": "Claimed",
+  "set-new": "Set New",
+  "reset": "reset",
   "merkle-root": "Merkle Root",
   "balance": "balance",
   "claim": "claim"
