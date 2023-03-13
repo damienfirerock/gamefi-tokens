@@ -4,6 +4,7 @@ import { Popover, Typography } from "@mui/material";
 import MenuStyledButton from "./common/MenuStyledButton";
 import ConnectWalletButtons from "./ConnectWalletButtons";
 import PopoverBox from "./common/PopoverBox";
+import AccountLink from "./common/AccountLink";
 
 import { truncateString } from "../../../utils/common";
 import useWeb3React from "../../../utils/hooks/web3React/useWeb3React";
@@ -65,11 +66,17 @@ const AccountButton: React.FunctionComponent = () => {
         <PopoverBox sx={{ textAlign: "center" }}>
           {account ? (
             <>
-              <MenuStyledButton variant="contained" disabled={true}>
-                <Typography variant="h6" sx={{ marginLeft: 1 }}>
-                  {truncateString(account)}
-                </Typography>
-              </MenuStyledButton>
+              <AccountLink
+                href="/"
+                text="Main"
+                // icon={<HouseIcon />}
+              />
+
+              <AccountLink
+                href="/airdrop"
+                text="Airdrop"
+                // icon={<CelebrationIcon />}
+              />
               <MenuStyledButton variant="contained" onClick={deactivate}>
                 <Typography variant="h6" sx={{ marginLeft: 1 }}>
                   Disconnect

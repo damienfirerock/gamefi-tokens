@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, BoxProps, Button, Link, Typography } from "@mui/material";
+import { Box, BoxProps, Button, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 
@@ -7,18 +7,11 @@ import StyledCircularProgress from "../common/StyledCircularProgress";
 import SingleUseAirdrop from "./SingleUseAirdrop";
 import CumulativeAirdrop from "./CumulativeAirdrop";
 
-import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
 import { AirdropType } from "../../interfaces/IAirdrop";
-
-const addresses = Object.values(CONTRACT_ADDRESSES);
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
   justifyContent: "center",
-  margin: theme.spacing(2, 0),
-}));
-
-const ContractsBox = styled(Box)<BoxProps>(({ theme }) => ({
   margin: theme.spacing(2, 0),
 }));
 
@@ -79,29 +72,6 @@ const AirdropInformation: React.FunctionComponent = () => {
       ) : (
         <CumulativeAirdrop />
       )}
-
-      <ContractsBox>
-        <Typography variant="h3">Addresses</Typography>
-        {addresses.map((address) => {
-          if (!address) return;
-          return (
-            <Typography
-              variant="h4"
-              key={address}
-              sx={{ display: "inline-flex", alignItems: "center" }}
-            >
-              {ADDRESS_NAMES[address]}:
-              <Link
-                href={`${CONFIG.POLYGONSCAN_URL}${address}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {address}
-              </Link>
-            </Typography>
-          );
-        })}
-      </ContractsBox>
     </>
   );
 };

@@ -12,7 +12,7 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
 interface IAccountLink {
   href: string;
   text: string;
-  icon: ReactElement<any, any>;
+  icon?: ReactElement<any, any>;
 }
 
 const AccountLink: React.FunctionComponent<IAccountLink> = ({
@@ -25,7 +25,7 @@ const AccountLink: React.FunctionComponent<IAccountLink> = ({
       <NextLink href={href} passHref>
         <MenuStyledButton variant="outlined">
           <>
-            {icon}
+            {!!icon && icon}
             <Typography variant="h6" sx={{ marginLeft: 1 }}>
               {text}
             </Typography>

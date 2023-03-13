@@ -1,4 +1,4 @@
-import MainPage from "../components/views/Main";
+import AirdropPage from "../components/views/Airdrop";
 import type { GetStaticProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
@@ -10,4 +10,4 @@ export const getStaticProps: GetStaticProps<Props> = async ({ locale }) => ({
   },
 });
 
-export default MainPage;
+export default AirdropPage;

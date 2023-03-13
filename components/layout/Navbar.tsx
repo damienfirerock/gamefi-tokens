@@ -26,8 +26,8 @@ const NavBar: React.FunctionComponent = () => {
           <StyledBox>
             <Header text="Airdrop Explorer" variant="h4" />
           </StyledBox>
-          <Link href="/" locale={locale === "en" ? "zh" : "en"}>
-            {t("test")}
+          <Link href="" locale={locale === "en" ? "zh" : "en"}>
+            {t("language")}
           </Link>
           <DynamicAccountButton />
         </Toolbar>
