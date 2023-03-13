@@ -132,22 +132,20 @@ const CumulativeAirdrop: React.FunctionComponent = () => {
       {/* Show JSON file for the airdrop details */}
       <Box
         sx={{
-          display: "inline-block",
-          paddingX: 3,
+          padding: 3,
           border: "1px solid #D3D3D3",
           borderRadius: 5,
           marginBottom: 3,
         }}
       >
-        <Typography
-          variant="h6"
-          sx={{ display: "inline-block", textAlign: "left" }}
-        >
-          <pre>{JSON.stringify(airdropDetails, null, 4)}</pre>
+        <Typography variant="h6" sx={{ textAlign: "center" }}>
+          <code style={{ whiteSpace: "pre-line" }}>
+            {JSON.stringify(airdropDetails, null, 4)}
+          </code>
         </Typography>
 
         {account && (
-          <Box sx={{ marginBottom: 2 }}>
+          <Box>
             <InteractButton
               text={`${t("set-new")} ${t("merkle-root")}`}
               method={handleSetMerkleRoot}

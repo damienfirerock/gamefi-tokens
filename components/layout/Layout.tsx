@@ -14,7 +14,6 @@ type LayoutProps = {
 };
 
 const StyledContainer = styled(Container)<ContainerProps>(({ theme }) => ({
-  paddingY: 8,
   textAlign: "center",
   wordWrap: "break-word",
 }));

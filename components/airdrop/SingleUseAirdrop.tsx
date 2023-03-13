@@ -86,19 +86,18 @@ const SingleUseAirdrop: React.FunctionComponent = () => {
       {/* Show JSON file for the airdrop details */}
       <Box
         sx={{
-          display: "inline-block",
-          paddingX: 3,
+          padding: 3,
           border: "1px solid #D3D3D3",
           borderRadius: 5,
           marginBottom: 3,
         }}
       >
-        <Typography
-          variant="h6"
-          sx={{ display: "inline-block", textAlign: "left" }}
-        >
-          {" "}
-          <pre>{JSON.stringify(AIRDROP_DETAILS, null, 4)}</pre>
+        <Typography variant="h6" sx={{ textAlign: "center" }}>
+          {/* pre preserves line breaks and spaces,
+          will disrupt width on mobile */}
+          <code style={{ whiteSpace: "pre-line" }}>
+            {JSON.stringify(AIRDROP_DETAILS, null, 4)}
+          </code>
         </Typography>
       </Box>
 

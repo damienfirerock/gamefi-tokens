@@ -25,13 +25,9 @@ const NavBar: React.FunctionComponent = () => {
         <StyledBox>
           <Header text={t("contracts-explorer")} variant="h4" />
         </StyledBox>
-        <Link
-          href=""
-          locale={locale === "en" ? "zh" : "en"}
-          style={{ marginRight: 5 }}
-        >
+        <Link href="" locale={locale === "en" ? "zh" : "en"}>
           {t("language")}
-        </Link>{" "}
+        </Link>
         <DynamicAccountButton />
       </Toolbar>
     </AppBar>

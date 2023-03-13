@@ -43,20 +43,34 @@ const Main: React.FunctionComponent = () => {
         {addresses.map((address) => {
           if (!address) return;
           return (
-            <Typography
-              variant="h4"
+            <Box
               key={address}
-              sx={{ display: "inline-flex", alignItems: "center" }}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                marginY: 3,
+              }}
             >
-              {ADDRESS_NAMES[address]}:
-              <Link
-                href={`${CONFIG.POLYGONSCAN_URL}${address}`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Typography
+                variant="h4"
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
               >
-                {address}
-              </Link>
-            </Typography>
+                {ADDRESS_NAMES[address]}:
+              </Typography>
+              <Typography variant="h4">
+                <Link
+                  href={`${CONFIG.POLYGONSCAN_URL}${address}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {address}
+                </Link>
+              </Typography>
+            </Box>
           );
         })}
       </ContractsBox>
