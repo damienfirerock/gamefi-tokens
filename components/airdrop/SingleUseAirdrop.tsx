@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import Link from "next/link";
 import { useTranslation } from "next-i18next";
 
 import StyledCircularProgress from "../common/StyledCircularProgress";
@@ -32,7 +31,7 @@ const InteractButton = (props: {
 
 const SingleUseAirdrop: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("airdrop");
 
   const { account } = useActiveWeb3React();
   const { checkIfClaimed, getMerkleRoot, checkWalletBalance, submitClaim } =
@@ -103,19 +102,21 @@ const SingleUseAirdrop: React.FunctionComponent = () => {
         </Typography>
       </Box>
 
-      <Link href="/" locale="zh">
-        {t("test")}
-      </Link>
-
       {account && (
         <>
-          <Typography variant="h3">Claimed: {hasClaimed.toString()}</Typography>
+          <Typography variant="h3">
+            {t("claimed")}: {hasClaimed.toString()}
+          </Typography>
           {/* Show the merkle root */}
-          <Typography variant="h5">Merkle Root: {merkleRoot}</Typography>
+          <Typography variant="h5">
+            {t("merkle-root")}: {merkleRoot}
+          </Typography>
           {/* Show current balance */}
-          <Typography variant="h5">$FRG Balance: {walletBalance}</Typography>
+          <Typography variant="h5">
+            $FRG {t("balance")}: {walletBalance}
+          </Typography>
           <InteractButton
-            text="Claim"
+            text={t("claim")}
             method={handleClaim}
             loading={loading}
             disabled={hasClaimed}

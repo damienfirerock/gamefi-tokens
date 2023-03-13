@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Box, BoxProps, Button, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { useTranslation } from "next-i18next";
 
 import StyledCircularProgress from "../common/StyledCircularProgress";
 import SingleUseAirdrop from "./SingleUseAirdrop";
@@ -38,6 +39,7 @@ const InteractButton = (props: {
 
 const AirdropInformation: React.FunctionComponent = () => {
   const [type, setType] = useState<AirdropType>(AirdropType.SINGLE_USE);
+  const { t } = useTranslation("airdrop");
 
   const toggleType = () => {
     const nextType =
@@ -51,13 +53,13 @@ const AirdropInformation: React.FunctionComponent = () => {
     <>
       <Box sx={{ marginTop: 5 }}>
         <InteractButton
-          text="Single Use"
+          text={t("single")}
           method={toggleType}
           loading={false}
           disabled={type === AirdropType.SINGLE_USE}
         />
         <InteractButton
-          text="Cumulative"
+          text={t("cumulative")}
           method={toggleType}
           loading={false}
           disabled={type === AirdropType.CUMULATIVE}
@@ -66,8 +68,8 @@ const AirdropInformation: React.FunctionComponent = () => {
 
       <StyledBox>
         <Typography variant="h2">
-          {type === AirdropType.SINGLE_USE ? "Single Use" : "Cumulative"}{" "}
-          Airdrop Details
+          {type === AirdropType.SINGLE_USE ? t("single") : t("cumulative")}{" "}
+          {t("airdrop-details")}
         </Typography>
       </StyledBox>
 

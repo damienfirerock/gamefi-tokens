@@ -13,25 +13,28 @@ type LayoutProps = {
 
 const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   const { children } = props;
-  const { activate } = useWeb3React();
+  const { account, activate } = useWeb3React();
 
   // Ensures that connection is maintained between browser refreshes
   useEffect(() => {
+    if (account) return;
+
     const connectWalletOnPageLoad = async () => {
       const walletKey = localStorage?.getItem("isWalletConnected");
 
       if (!walletKey) return;
 
       const connector = SUPPORTED_WALLETS[walletKey].connector;
-      console.log({ connector });
+
       try {
         await activate(connector);
       } catch (error) {
         console.error(error);
       }
     };
+
     connectWalletOnPageLoad();
-  }, []);
+  }, [account]);
 
   return (
     <>

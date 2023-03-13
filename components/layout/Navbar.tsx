@@ -2,6 +2,9 @@ import React from "react";
 import { AppBar, Box, BoxProps, Toolbar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 
 import { Header } from "../common";
 
@@ -13,6 +16,9 @@ const StyledBox = styled(Box)<BoxProps>(() => ({
 }));
 
 const NavBar: React.FunctionComponent = () => {
+  const { t } = useTranslation("common");
+  const { locale } = useRouter();
+
   return (
     <div style={{ flexGrow: 1 }}>
       <AppBar position="fixed" color="secondary" elevation={5}>
@@ -20,7 +26,9 @@ const NavBar: React.FunctionComponent = () => {
           <StyledBox>
             <Header text="Airdrop Explorer" variant="h4" />
           </StyledBox>
-
+          <Link href="/" locale={locale === "en" ? "zh" : "en"}>
+            {t("test")}
+          </Link>
           <DynamicAccountButton />
         </Toolbar>
       </AppBar>

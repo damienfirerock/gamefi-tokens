@@ -40,10 +40,12 @@ export function useWeb3React(): Web3ReactContextInterface<Web3Provider> & {
     },
     [activate]
   );
+
   const deactivateWrapped = useCallback(() => {
     localStorage.removeItem("isWalletConnected");
     return deactivate();
   }, [deactivate]);
+
   return {
     connector,
     library: library || providers[chainId],

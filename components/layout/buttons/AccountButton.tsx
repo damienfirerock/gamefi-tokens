@@ -10,16 +10,9 @@ import useWeb3React from "../../../utils/hooks/web3React/useWeb3React";
 import useActiveWeb3React from "../../../utils/hooks/web3React/useActiveWeb3React";
 
 // FIXME: Button jumps to left in navbar on mobile
-// FIXME: Need to double try connect with Metamask on Walletconnect
-// TODO: Maintaining connection between page refresh
+// FIXME: Need to double try connect with Metamask on Walletconnect ??
 // TODO: Add useSignTransactions for signatures between Sequence versus Metamask for binding of wallets
-
-// Connects to Metamask on Desktop
-// Connects to Sequence on Desktop
-
-// Connects to Metamask via WalletConnect on Mobile
-// Connects to Sequence on Mobile
-// Connects to Metamask via Metamask Browser on Mobile
+// TODO: Potential issues in the future as font size between chinese and english text are clearly different
 
 const AccountButton: React.FunctionComponent = () => {
   const { deactivate } = useWeb3React();
