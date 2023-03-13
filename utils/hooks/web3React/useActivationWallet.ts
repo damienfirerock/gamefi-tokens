@@ -1,13 +1,12 @@
-import { AbstractConnector } from "@web3-react/abstract-connector";
+import { useCallback } from "react";
 import { UnsupportedChainIdError } from "@web3-react/core";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
-import { useCallback } from "react";
-import { WalletKeys } from "../../../constants/wallets";
-
 import useWeb3React from "./useWeb3React";
+import { Web3Provider } from "@ethersproject/providers";
 
 import { chainId } from "../../../constants/connectors";
 import { SUPPORTED_WALLETS } from "../../../constants/wallets";
+import { WalletKeys } from "../../../constants/wallets";
 
 export const useActivationWallet = () => {
   const { activate, library } = useWeb3React();
@@ -22,7 +21,9 @@ export const useActivationWallet = () => {
       if (connector) {
         try {
           await activate(connector, undefined, true);
+
           const activeProvider = library?.provider ?? window.ethereum;
+
           activeProvider?.request?.({
             method: "wallet_switchEthereumChain",
             params: [

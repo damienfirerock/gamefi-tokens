@@ -1,7 +1,6 @@
 import React, { Suspense } from "react";
 import dynamic from "next/dynamic";
-import { Container, ContainerProps } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
 import Layout from "../layout/Layout";
@@ -11,11 +10,6 @@ import StyledCircularProgress from "../common/StyledCircularProgress";
 import { AppDispatch, RootState } from "../../store";
 import { clearError } from "../../features/TransactionSlice";
 import { clearError as clearAirdropError } from "../../features/AirdropSlice";
-
-const StyledContainer = styled(Container)<ContainerProps>(({ theme }) => ({
-  marginTop: theme.spacing(1),
-  textAlign: "center",
-}));
 
 // Decreases First Load from 366kb to 312kb
 const DynamicAirdropInformation = dynamic(
@@ -42,11 +36,11 @@ const Airdrop: React.FunctionComponent = () => {
   return (
     <Layout>
       {/* Header */}
-      <StyledContainer>
+      <Box>
         <Suspense fallback={<StyledCircularProgress />}>
           <DynamicAirdropInformation />
         </Suspense>
-      </StyledContainer>
+      </Box>
 
       <AlertBar
         severity="warning"

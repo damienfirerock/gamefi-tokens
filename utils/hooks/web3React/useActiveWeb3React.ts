@@ -13,13 +13,6 @@ import { ChainId } from "../../../constants/networks";
 import { NETWORKS_INFO_CONFIG, NETWORKS } from "../../../constants/networks";
 import useWeb3React from "./useWeb3React";
 
-export const providers = NETWORKS.reduce((acc, val) => {
-  acc[val] = new ethers.providers.JsonRpcProvider(
-    NETWORKS_INFO_CONFIG[val].rpcUrl
-  );
-  return acc;
-}, {} as Record<string, ethers.providers.JsonRpcProvider>);
-
 export function useActiveWeb3React(): {
   account?: string;
   walletKey: SUPPORTED_WALLET | undefined;

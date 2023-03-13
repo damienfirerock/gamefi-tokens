@@ -2,13 +2,15 @@ import React from "react";
 import { Button, Typography } from "@mui/material";
 import Image from "next/image";
 
-interface IConnectButton {
+interface IConnectWalletButton {
   text: string;
   src?: string;
   handleClick: () => void;
 }
 
-const ConnectButton: React.FunctionComponent<IConnectButton> = (props) => {
+const ConnectWalletButton: React.FunctionComponent<IConnectWalletButton> = (
+  props
+) => {
   const {
     handleClick,
     text,
@@ -29,4 +31,4 @@ const ConnectButton: React.FunctionComponent<IConnectButton> = (props) => {
   );
 };
 
-export default ConnectButton;
+export default ConnectWalletButton;

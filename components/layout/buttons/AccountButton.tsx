@@ -37,7 +37,7 @@ const AccountButton: React.FunctionComponent = () => {
   return (
     <>
       <MenuStyledButton variant="contained" onClick={handleClick}>
-        <Typography variant="h6" sx={{ marginLeft: 1 }}>
+        <Typography variant="h6">
           {account ? truncateString(account) : "Connect"}
         </Typography>
       </MenuStyledButton>
@@ -54,9 +54,6 @@ const AccountButton: React.FunctionComponent = () => {
         PaperProps={{
           elevation: 0,
           variant: "popup",
-          sx: {
-            width: 300,
-          },
         }}
         transitionDuration={300}
         sx={{
@@ -87,7 +84,7 @@ const AccountButton: React.FunctionComponent = () => {
             <ConnectWalletButtons />
           )}
         </PopoverBox>
-      </Popover>{" "}
+      </Popover>
     </>
   );
 };

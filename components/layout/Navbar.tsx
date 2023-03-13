@@ -20,19 +20,21 @@ const NavBar: React.FunctionComponent = () => {
   const { locale } = useRouter();
 
   return (
-    <div style={{ flexGrow: 1 }}>
-      <AppBar position="fixed" color="secondary" elevation={5}>
-        <Toolbar>
-          <StyledBox>
-            <Header text="Airdrop Explorer" variant="h4" />
-          </StyledBox>
-          <Link href="" locale={locale === "en" ? "zh" : "en"}>
-            {t("language")}
-          </Link>
-          <DynamicAccountButton />
-        </Toolbar>
-      </AppBar>
-    </div>
+    <AppBar position="fixed" color="secondary" elevation={5}>
+      <Toolbar>
+        <StyledBox>
+          <Header text={t("contracts-explorer")} variant="h4" />
+        </StyledBox>
+        <Link
+          href=""
+          locale={locale === "en" ? "zh" : "en"}
+          style={{ marginRight: 5 }}
+        >
+          {t("language")}
+        </Link>{" "}
+        <DynamicAccountButton />
+      </Toolbar>
+    </AppBar>
   );
 };
 
