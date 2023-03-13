@@ -1,5 +1,8 @@
 {
   "language": "ENGLISH",
+  "account-details": "Account Details",
+  "address": "Address",
   "addresses": "Addresses",
+  "network": "network",
   "contracts-explorer": "Contracts Explorer"
 }

@@ -1,5 +1,4 @@
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { ethers } from "ethers";
 import { useMemo } from "react";
 
 import { walletconnect } from "../../../constants/connectors";
@@ -10,7 +9,6 @@ import {
 import { detectInjectedType } from "../../web3";
 
 import { ChainId } from "../../../constants/networks";
-import { NETWORKS_INFO_CONFIG, NETWORKS } from "../../../constants/networks";
 import useWeb3React from "./useWeb3React";
 
 export function useActiveWeb3React(): {

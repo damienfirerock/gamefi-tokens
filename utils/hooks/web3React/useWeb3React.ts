@@ -6,7 +6,7 @@ import { ethers } from "ethers";
 import { useCallback } from "react";
 
 import { ChainId } from "../../../constants/networks";
-import { chainId } from "../../../constants/connectors";
+import { chainId as envChainId } from "../../../constants/connectors";
 import { NETWORKS_INFO_CONFIG, NETWORKS } from "../../../constants/networks";
 
 export const providers = NETWORKS.reduce((acc, val) => {
@@ -20,6 +20,7 @@ export function useWeb3React(): Web3ReactContextInterface<Web3Provider> & {
   chainId?: ChainId;
 } {
   const {
+    chainId,
     connector,
     library,
     account,
@@ -48,8 +49,8 @@ export function useWeb3React(): Web3ReactContextInterface<Web3Provider> & {
 
   return {
     connector,
-    library: library || providers[chainId],
-    chainId: chainId || ChainId.MATIC,
+    library: library || providers[chainId || envChainId],
+    chainId: chainId || envChainId || ChainId.MATIC,
     account,
     active,
     error,

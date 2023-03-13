@@ -25,7 +25,7 @@ export interface NETWORK_INFO {
 
 export const maticInfo: NETWORK_INFO = {
   chainId: ChainId.MATIC,
-  name: "Polygon",
+  name: "Polygon Mainnet",
   icon: PolygonIcon,
   etherscanUrl: "https://polygonscan.com",
   etherscanName: "Polygonscan",
@@ -49,7 +49,7 @@ export const maticInfo: NETWORK_INFO = {
 
 export const mumbaiInfo: NETWORK_INFO = {
   chainId: ChainId.MUMBAI,
-  name: "Polygon",
+  name: "Polygon Mumbai Testnet",
   icon: PolygonIcon,
   etherscanUrl: "https://mumbai.polygonscan.com",
   etherscanName: "Polygonscan",

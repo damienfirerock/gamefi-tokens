@@ -10,6 +10,7 @@ import { AppDispatch, RootState } from "../../store";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
 import { clearError } from "../../features/TransactionSlice";
 import { clearError as clearAirdropError } from "../../features/AirdropSlice";
+import AccountDetails from "../main/AccountDetails";
 
 const addresses = Object.values(CONTRACT_ADDRESSES);
 
@@ -38,6 +39,7 @@ const Main: React.FunctionComponent = () => {
   return (
     <Layout>
       {/* Header */}
+      <AccountDetails />
       <ContractsBox>
         <Typography variant="h3">{t("addresses")}</Typography>
         {addresses.map((address) => {
