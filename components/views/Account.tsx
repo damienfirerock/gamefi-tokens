@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "next-i18next";
@@ -43,6 +43,8 @@ const Account: React.FunctionComponent = () => {
   const airdropSlice = useSelector((state: RootState) => state.airdrop);
   const { error: airdropError } = airdropSlice;
 
+  const [signStatus, setSignStatus] = useState<boolean>(false);
+
   const handleClearAlert = () => {
     if (airdropError) {
       dispatch(clearAirdropError());
@@ -55,7 +57,10 @@ const Account: React.FunctionComponent = () => {
     if (!session) return;
 
     dispatch(setLoading(true));
+
     const response = await checkSignature(session!.user.email!);
+    setSignStatus(!!response);
+
     dispatch(setLoading(false));
     console.log({ handle: response });
   };
@@ -83,6 +88,11 @@ const Account: React.FunctionComponent = () => {
           // disabled={type === AirdropType.CUMULATIVE}
         />
       )}
+
+      {session && (
+        <Typography variant="h4">Signed:{signStatus.toString()}</Typography>
+      )}
+
       {/* TODO: Move error bar into layout */}
       <AlertBar
         severity="warning"
