@@ -5,6 +5,7 @@ import { ThemeProvider, CssBaseline } from "@mui/material";
 import { Provider } from "react-redux";
 import { Web3ReactProvider } from "@web3-react/core";
 import { appWithTranslation } from "next-i18next";
+import { SessionProvider } from "next-auth/react";
 
 import createEmotionCache from "../utils/createEmotionCache";
 import theme from "../src/theme";
@@ -17,16 +18,20 @@ interface MyAppProps extends AppProps {
 
 const clientSideEmotionCache = createEmotionCache();
 
-const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
-  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-
+const MyApp: React.FunctionComponent<MyAppProps> = ({
+  Component,
+  emotionCache = clientSideEmotionCache,
+  pageProps: { session, ...pageProps },
+}) => {
   return (
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={theme}>
         <Provider store={store}>
           <Web3ReactProvider getLibrary={getLibrary}>
-            <CssBaseline />
-            <Component {...pageProps} />{" "}
+            <SessionProvider session={session}>
+              <CssBaseline />
+              <Component {...pageProps} />{" "}
+            </SessionProvider>
           </Web3ReactProvider>
         </Provider>
       </ThemeProvider>

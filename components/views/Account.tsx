@@ -1,8 +1,8 @@
 import React from "react";
-import { Box, BoxProps, Button, Link, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Button, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "next-i18next";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 import Layout from "../layout/Layout";
 import AlertBar from "../common/AlertBar";
@@ -33,6 +33,7 @@ const InteractButton = (props: {
 const Account: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation("common");
+  const { data: session } = useSession();
 
   const { checkSignature } = useSignature();
 
@@ -51,7 +52,9 @@ const Account: React.FunctionComponent = () => {
   };
 
   const handleSignature = async () => {
-    const response = await checkSignature("test@test.com");
+    if (!session) return;
+
+    const response = await checkSignature(session!.user.email!);
     console.log({ handle: response });
   };
 
@@ -59,12 +62,28 @@ const Account: React.FunctionComponent = () => {
     <Layout>
       {/* Header */}
       <AccountDetails />
+
+      {session && (
+        <Typography variant="h4">
+          Email Account: {session.user.email}
+        </Typography>
+      )}
+
       <InteractButton
-        text={"lol"}
-        method={handleSignature}
+        text={session ? "Log Out" : "Log In"}
+        method={session ? signOut : signIn}
         loading={false}
         // disabled={type === AirdropType.CUMULATIVE}
       />
+
+      {session && (
+        <InteractButton
+          text={"Sign"}
+          method={handleSignature}
+          loading={false}
+          // disabled={type === AirdropType.CUMULATIVE}
+        />
+      )}
 
       <AlertBar
         severity="warning"
