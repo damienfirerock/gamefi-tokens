@@ -1,3 +1,5 @@
+import { ethers } from "ethers";
+
 import { StaticImageData } from "next/image";
 import PolygonIcon from "../public/networks/polygon-network.png";
 
@@ -77,3 +79,10 @@ export const NETWORKS_INFO_CONFIG = {
 } as const;
 
 export const NETWORKS = [ChainId.MATIC, ChainId.MUMBAI] as const;
+
+export const providers = NETWORKS.reduce((acc, val) => {
+  acc[val] = new ethers.providers.JsonRpcProvider(
+    NETWORKS_INFO_CONFIG[val].rpcUrl
+  );
+  return acc;
+}, {} as Record<string, ethers.providers.JsonRpcProvider>);

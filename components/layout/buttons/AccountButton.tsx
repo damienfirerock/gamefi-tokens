@@ -10,7 +10,6 @@ import { truncateString } from "../../../utils/common";
 import useWeb3React from "../../../utils/hooks/web3React/useWeb3React";
 import useActiveWeb3React from "../../../utils/hooks/web3React/useActiveWeb3React";
 
-// FIXME: Button jumps to left in navbar on mobile
 // FIXME: Need to double try connect with Metamask on Walletconnect ??
 // FIXME: Metamask Button does not work if not on ChainId
 // TODO: Add useSignTransactions for signatures between Sequence versus Metamask for binding of wallets
@@ -73,6 +72,12 @@ const AccountButton: React.FunctionComponent = () => {
               <AccountLink
                 href="/airdrop"
                 text="Airdrop"
+                // icon={<CelebrationIcon />}
+              />
+
+              <AccountLink
+                href="/account"
+                text="Account"
                 // icon={<CelebrationIcon />}
               />
               <MenuStyledButton variant="contained" onClick={deactivate}>
