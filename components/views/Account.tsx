@@ -10,7 +10,7 @@ import AccountDetails from "../main/AccountDetails";
 import StyledCircularProgress from "../common/StyledCircularProgress";
 
 import { AppDispatch, RootState } from "../../store";
-import { clearError } from "../../features/TransactionSlice";
+import { clearError, setLoading } from "../../features/TransactionSlice";
 import { clearError as clearAirdropError } from "../../features/AirdropSlice";
 import useSignature from "../../utils/hooks/useSignature";
 
@@ -38,7 +38,7 @@ const Account: React.FunctionComponent = () => {
   const { checkSignature } = useSignature();
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
-  const { error } = transactionSlice;
+  const { loading, error } = transactionSlice;
 
   const airdropSlice = useSelector((state: RootState) => state.airdrop);
   const { error: airdropError } = airdropSlice;
@@ -54,7 +54,9 @@ const Account: React.FunctionComponent = () => {
   const handleSignature = async () => {
     if (!session) return;
 
+    dispatch(setLoading(true));
     const response = await checkSignature(session!.user.email!);
+    dispatch(setLoading(false));
     console.log({ handle: response });
   };
 
@@ -62,29 +64,26 @@ const Account: React.FunctionComponent = () => {
     <Layout>
       {/* Header */}
       <AccountDetails />
-
       {session && (
         <Typography variant="h4">
           Email Account: {session.user.email}
         </Typography>
       )}
-
       <InteractButton
         text={session ? "Log Out" : "Log In"}
         method={session ? signOut : signIn}
-        loading={false}
+        loading={loading}
         // disabled={type === AirdropType.CUMULATIVE}
       />
-
       {session && (
         <InteractButton
           text={"Sign"}
           method={handleSignature}
-          loading={false}
+          loading={loading}
           // disabled={type === AirdropType.CUMULATIVE}
         />
       )}
-
+      {/* TODO: Move error bar into layout */}
       <AlertBar
         severity="warning"
         text={error || airdropError}
