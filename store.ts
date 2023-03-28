@@ -1,12 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import transactionReducer from "./features/TransactionSlice";
-import airdropReducer from "./features/AirdropSlice";
+import swapReducer from "./features/SwapSlice";
 
 const store = configureStore({
   reducer: {
     transaction: transactionReducer,
-    airdrop: airdropReducer,
+    swap: swapReducer,
   },
 });
 

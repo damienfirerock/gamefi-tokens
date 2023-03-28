@@ -70,8 +70,8 @@ const AccountButton: React.FunctionComponent = () => {
               />
 
               <AccountLink
-                href="/airdrop"
-                text="Airdrop"
+                href="/swap"
+                text="Swap"
                 // icon={<CelebrationIcon />}
               />
 
