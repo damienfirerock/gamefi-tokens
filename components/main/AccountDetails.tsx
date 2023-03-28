@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "next-i18next";
 
 import { AppDispatch, RootState } from "../../store";
-import useAirdropTransactions from "../../utils/hooks/useAirdropTransactions";
 import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
 import { setLoading } from "../../features/TransactionSlice";
 
@@ -16,15 +15,11 @@ const AccountDetails: React.FunctionComponent = () => {
   const { t } = useTranslation(["common", "airdrop"]);
 
   const { account, chainId } = useWeb3React();
-  const { checkWalletBalance } = useAirdropTransactions(AirdropType.SINGLE_USE);
-
-  const airdropSlice = useSelector((state: RootState) => state.airdrop);
-  const { walletBalance } = airdropSlice;
 
   const setupInitial = async () => {
     dispatch(setLoading(true));
 
-    await checkWalletBalance();
+    // await checkWalletBalance();
 
     dispatch(setLoading(false));
   };
@@ -49,9 +44,9 @@ const AccountDetails: React.FunctionComponent = () => {
             {t("common:network")}:{" "}
             {!!chainId ? NETWORKS_INFO_CONFIG[chainId].name : "unknown"}
           </Typography>
-          <Typography variant="h4">
+          {/* <Typography variant="h4">
             $FRG {t("airdrop:balance")}: {walletBalance}
-          </Typography>
+          </Typography> */}
         </>
       )}
     </>

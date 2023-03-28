@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { Box, BoxProps, Button, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { SwapWidget } from "@uniswap/widgets";
+import "@uniswap/widgets/fonts.css";
 import { useTranslation } from "next-i18next";
 
 import StyledCircularProgress from "../common/StyledCircularProgress";
+
+import useHasMounted from "../../utils/hooks/useHasMounted";
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
@@ -28,8 +32,17 @@ const InteractButton = (props: {
 
 const AirdropInformation: React.FunctionComponent = () => {
   const { t } = useTranslation("airdrop");
+  const hasMounted = useHasMounted();
 
-  return <></>;
+  if (!hasMounted) return null;
+
+  return (
+    <>
+      <div className="Uniswap">
+        <SwapWidget />
+      </div>
+    </>
+  );
 };
 
 export default AirdropInformation;

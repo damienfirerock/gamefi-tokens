@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 
@@ -19,7 +19,7 @@ const AlertBar: React.FunctionComponent<IAlertBar> = ({
   handleClearAlertSource,
   severity,
 }) => {
-  const [alertText, setAlertText] = React.useState<string>("");
+  const [alertText, setAlertText] = useState<string>("");
 
   const handleClose = (
     event?: React.SyntheticEvent | Event,

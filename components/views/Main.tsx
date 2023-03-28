@@ -9,7 +9,7 @@ import AlertBar from "../common/AlertBar";
 import { AppDispatch, RootState } from "../../store";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
 import { clearError } from "../../features/TransactionSlice";
-import { clearError as clearAirdropError } from "../../features/AirdropSlice";
+import { clearError as clearSwapError } from "../../features/SwapSlice";
 import AccountDetails from "../main/AccountDetails";
 
 const addresses = Object.values(CONTRACT_ADDRESSES);
@@ -25,12 +25,12 @@ const Main: React.FunctionComponent = () => {
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { error } = transactionSlice;
 
-  const airdropSlice = useSelector((state: RootState) => state.airdrop);
-  const { error: airdropError } = airdropSlice;
+  const swapSlice = useSelector((state: RootState) => state.swap);
+  const { error: swapError } = swapSlice;
 
   const handleClearAlert = () => {
-    if (airdropError) {
-      dispatch(clearAirdropError());
+    if (swapError) {
+      dispatch(clearSwapError());
     } else if (error) {
       dispatch(clearError());
     }
@@ -79,7 +79,7 @@ const Main: React.FunctionComponent = () => {
 
       <AlertBar
         severity="warning"
-        text={error || airdropError}
+        text={error || swapError}
         handleClearAlertSource={handleClearAlert}
       />
     </Layout>

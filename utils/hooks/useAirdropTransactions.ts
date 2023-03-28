@@ -4,12 +4,12 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store";
 import useDispatchErrors from "./useDispatchErrors";
 
-import {
-  setHasClaimed,
-  setPastClaimed,
-  setMerkleRoot,
-  setWalletBalance,
-} from "../../features/AirdropSlice";
+// import {
+//   setHasClaimed,
+//   setPastClaimed,
+//   setMerkleRoot,
+//   setWalletBalance,
+// } from "../../features/AirdropSlice";
 import { formatTokenValue } from "../../utils/common";
 import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
 import { getContract } from "../web3";
@@ -92,7 +92,7 @@ const useAirdropTransactions = (type: AirdropType) => {
 
       result = await airdropContract.hasClaimed(account);
 
-      dispatch(setHasClaimed(result));
+      // dispatch(setHasClaimed(result));
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
       return false;
@@ -115,7 +115,7 @@ const useAirdropTransactions = (type: AirdropType) => {
 
       result = await airdropContract.cumulativeClaimed(account);
 
-      dispatch(setPastClaimed(formatValue(result)));
+      // dispatch(setPastClaimed(formatValue(result)));
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
       return 0;
@@ -134,7 +134,7 @@ const useAirdropTransactions = (type: AirdropType) => {
 
       result = await airdropContract.merkleRoot();
 
-      dispatch(setMerkleRoot(result));
+      // dispatch(setMerkleRoot(result));
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
       return false;
@@ -158,7 +158,7 @@ const useAirdropTransactions = (type: AirdropType) => {
 
       const result = await airdropContract.merkleRoot();
 
-      dispatch(setMerkleRoot(result));
+      // dispatch(setMerkleRoot(result));
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
       return;
@@ -177,7 +177,7 @@ const useAirdropTransactions = (type: AirdropType) => {
 
       const nextValue = formatValue(result);
 
-      dispatch(setWalletBalance(Number(nextValue)));
+      // dispatch(setWalletBalance(Number(nextValue)));
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
       return false;

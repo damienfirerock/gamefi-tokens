@@ -11,7 +11,7 @@ import StyledCircularProgress from "../common/StyledCircularProgress";
 
 import { AppDispatch, RootState } from "../../store";
 import { clearError, setLoading } from "../../features/TransactionSlice";
-import { clearError as clearAirdropError } from "../../features/AirdropSlice";
+import { clearError as clearSwapError } from "../../features/SwapSlice";
 import useSignature from "../../utils/hooks/useSignature";
 
 //TODO: Change into common component
@@ -40,14 +40,14 @@ const Account: React.FunctionComponent = () => {
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { loading, error } = transactionSlice;
 
-  const airdropSlice = useSelector((state: RootState) => state.airdrop);
-  const { error: airdropError } = airdropSlice;
+  const swapSlice = useSelector((state: RootState) => state.swap);
+  const { error: swapError } = swapSlice;
 
   const [signStatus, setSignStatus] = useState<boolean>(false);
 
   const handleClearAlert = () => {
-    if (airdropError) {
-      dispatch(clearAirdropError());
+    if (swapError) {
+      dispatch(clearSwapError());
     } else if (error) {
       dispatch(clearError());
     }
@@ -78,14 +78,14 @@ const Account: React.FunctionComponent = () => {
         text={session ? "Log Out" : "Log In"}
         method={session ? signOut : signIn}
         loading={loading}
-        // disabled={type === AirdropType.CUMULATIVE}
+        // disabled={type === SwapType.CUMULATIVE}
       />
       {session && (
         <InteractButton
           text={"Sign"}
           method={handleSignature}
           loading={loading}
-          // disabled={type === AirdropType.CUMULATIVE}
+          // disabled={type === SwapType.CUMULATIVE}
         />
       )}
 
@@ -96,7 +96,7 @@ const Account: React.FunctionComponent = () => {
       {/* TODO: Move error bar into layout */}
       <AlertBar
         severity="warning"
-        text={error || airdropError}
+        text={error || swapError}
         handleClearAlertSource={handleClearAlert}
       />
     </Layout>
