@@ -8,6 +8,8 @@ import { useTranslation } from "next-i18next";
 import StyledCircularProgress from "../common/StyledCircularProgress";
 
 import useHasMounted from "../../utils/hooks/useHasMounted";
+import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
+import { NETWORKS_INFO_CONFIG } from "../../constants/networks";
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
@@ -33,13 +35,17 @@ const InteractButton = (props: {
 const AirdropInformation: React.FunctionComponent = () => {
   const { t } = useTranslation("airdrop");
   const hasMounted = useHasMounted();
+  const { chainId, library } = useWeb3React();
 
   if (!hasMounted) return null;
 
   return (
     <>
       <div className="Uniswap">
-        <SwapWidget />
+        <SwapWidget
+          provider={library}
+          jsonRpcUrlMap={{ [chainId!]: NETWORKS_INFO_CONFIG[chainId!].rpcUrl }}
+        />
       </div>
     </>
   );
