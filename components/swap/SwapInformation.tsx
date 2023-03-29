@@ -45,6 +45,7 @@ const AirdropInformation: React.FunctionComponent = () => {
         <SwapWidget
           provider={library}
           jsonRpcUrlMap={{ [chainId!]: NETWORKS_INFO_CONFIG[chainId!].rpcUrl }}
+          tokenList={NETWORKS_INFO_CONFIG[chainId!].tokenList}
         />
       </div>
     </>
