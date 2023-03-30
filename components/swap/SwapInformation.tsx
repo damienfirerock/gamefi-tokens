@@ -29,7 +29,7 @@ const theme: Theme = {
   accent: "#71FF98",
   outline: "#CC1",
   dialog: "#000",
-  fontFamily: "Josefin Sans",
+  fontFamily: "Comic Sans MS",
   borderRadius: { small: 1, medium: 1, large: 1 },
 };
 
