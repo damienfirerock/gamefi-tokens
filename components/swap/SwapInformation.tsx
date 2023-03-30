@@ -6,7 +6,6 @@ import { Theme } from "@uniswap/widgets";
 import "@uniswap/widgets/fonts.css";
 import { useRouter } from "next/router";
 
-import useHasMounted from "../../utils/hooks/useHasMounted";
 import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
 import { CONTRACT_LIST, NETWORKS_INFO_CONFIG } from "../../constants/networks";
 
