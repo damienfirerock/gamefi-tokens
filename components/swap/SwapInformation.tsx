@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { Theme } from "@uniswap/widgets";
 import "@uniswap/widgets/fonts.css";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 import StyledCircularProgress from "../common/StyledCircularProgress";
 
@@ -60,6 +61,7 @@ const AirdropInformation: React.FunctionComponent = () => {
   const { t } = useTranslation("airdrop");
   const hasMounted = useHasMounted();
   const { chainId, library } = useWeb3React();
+  const { locale } = useRouter();
 
   if (!hasMounted) return null;
 
@@ -81,7 +83,7 @@ const AirdropInformation: React.FunctionComponent = () => {
           }
           // Note: https://github.com/Uniswap/widgets/issues/465
           // Locale is currently not working
-          locale="zh-CN"
+          locale={locale === "zh" ? "zh-CN" : "en-GB"}
         />
 
         <SwapWidget
