@@ -30,7 +30,7 @@ const theme: Theme = {
   outline: "#CC1",
   dialog: "#000",
   fontFamily: "Comic Sans MS",
-  borderRadius: { small: 1, medium: 1, large: 1 },
+  borderRadius: { small: 0, medium: 0, large: 0 },
 };
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
