@@ -11,7 +11,7 @@ const handleImage = async (req: NextApiRequest, res: NextApiResponse) => {
     const imageBuffer = fs.createReadStream(filePath);
 
     await new Promise(function (resolve) {
-      res.setHeader("Content-Type", "image/png+xml");
+      res.setHeader("Content-Type", "image/png");
       imageBuffer.pipe(res);
       imageBuffer.on("end", resolve);
       imageBuffer.on("error", function (err: any) {
