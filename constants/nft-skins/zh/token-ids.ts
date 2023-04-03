@@ -1,35 +1,35 @@
 import {
   DisplayType,
-  RarityEnglish,
+  RarityChinese,
   ICharacterSkinAttributes,
 } from "../../../interfaces/INFTAttributes";
 
 const { NEXT_PUBLIC_BACKEND_URL } = process.env;
 const imageURL = NEXT_PUBLIC_BACKEND_URL + "/nft/skin/images/";
-const infoURL = NEXT_PUBLIC_BACKEND_URL + "/nft/info/skin/en/"; // TODO: Replace with Marketplace Link once up
+const infoURL = NEXT_PUBLIC_BACKEND_URL + "/nft/info/skin/zh/"; // TODO: Replace with Marketplace Link once up
 
-const ENGLISH_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
+const CHINESE_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
   1: {
-    name: "SunWuKong-1",
+    name: "孙悟空-1",
     image: imageURL + "1",
     external_url: infoURL + "1",
-    description: "Founder's Skin for the Wu Kong Character in XY3",
+    description: "XY3游戏中悟空角色的创始者皮肤",
     attributes: [
       {
-        trait_type: "Rarity",
-        value: RarityEnglish.Founder,
+        trait_type: "稀有度",
+        value: RarityChinese.Founder,
       },
       {
-        trait_type: "Element",
-        value: "Fire",
+        trait_type: "元素",
+        value: "火",
       },
       {
-        trait_type: "ATK",
+        trait_type: "攻击",
         value: 9999,
         display_type: DisplayType.BoostNumber,
       },
       {
-        trait_type: "Health",
+        trait_type: "生命",
         value: 99,
         max_value: 100,
         display_type: DisplayType.BoostPercentage,
@@ -37,26 +37,26 @@ const ENGLISH_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
     ],
   },
   2: {
-    name: "SunWuKong-2",
+    name: "孙悟空-2",
     image: imageURL + "2",
     external_url: infoURL + "2",
-    description: "Super-Rare Skin for the Wu Kong Character in XY3",
+    description: "XY3游戏中悟空角色的超稀有皮肤",
     attributes: [
       {
-        trait_type: "Rarity",
-        value: RarityEnglish.SuperRare,
+        trait_type: "稀有度",
+        value: RarityChinese.SuperRare,
       },
       {
-        trait_type: "Element",
-        value: "Gold",
+        trait_type: "元素",
+        value: "金",
       },
       {
-        trait_type: "ATK",
+        trait_type: "攻击",
         value: 999,
         display_type: DisplayType.BoostNumber,
       },
       {
-        trait_type: "Health",
+        trait_type: "生命",
         value: 80,
         max_value: 100,
         display_type: DisplayType.BoostPercentage,
@@ -64,26 +64,26 @@ const ENGLISH_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
     ],
   },
   3: {
-    name: "SunWuKong-3",
+    name: "孙悟空-3",
     image: imageURL + "3",
     external_url: infoURL + "3",
-    description: "Rare Skin for the Wu Kong Character in XY3",
+    description: "XY3游戏中悟空角色的稀有皮肤",
     attributes: [
       {
-        trait_type: "Rarity",
-        value: RarityEnglish.Rare,
+        trait_type: "稀有度",
+        value: RarityChinese.Rare,
       },
       {
-        trait_type: "Element",
-        value: "Water",
+        trait_type: "元素",
+        value: "水",
       },
       {
-        trait_type: "ATK",
+        trait_type: "攻击",
         value: 99,
         display_type: DisplayType.BoostNumber,
       },
       {
-        trait_type: "Health",
+        trait_type: "生命",
         value: 50,
         max_value: 100,
         display_type: DisplayType.BoostPercentage,
@@ -91,26 +91,26 @@ const ENGLISH_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
     ],
   },
   4: {
-    name: "SunWuKong-4",
+    name: "孙悟空-4",
     image: imageURL + "4",
     external_url: infoURL + "4",
-    description: "Common Skin for the Wu Kong Character in XY3",
+    description: "XY3游戏中悟空角色的常见皮肤",
     attributes: [
       {
-        trait_type: "Rarity",
-        value: RarityEnglish.Common,
+        trait_type: "稀有度",
+        value: RarityChinese.Common,
       },
       {
-        trait_type: "Element",
-        value: "Earth",
+        trait_type: "元素",
+        value: "地",
       },
       {
-        trait_type: "ATK",
+        trait_type: "攻击",
         value: 9,
         display_type: DisplayType.BoostNumber,
       },
       {
-        trait_type: "Health",
+        trait_type: "生命",
         value: 25,
         max_value: 100,
         display_type: DisplayType.BoostPercentage,
@@ -118,26 +118,26 @@ const ENGLISH_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
     ],
   },
   5: {
-    name: "Tripitaka-1",
+    name: "三藏法师-1",
     image: imageURL + "5",
     external_url: infoURL + "5",
-    description: "Common Skin for the Tripitaka Character in XY3",
+    description: "XY3游戏中三藏法师角色的创始者皮肤",
     attributes: [
       {
-        trait_type: "Rarity",
-        value: RarityEnglish.Founder,
+        trait_type: "稀有度",
+        value: RarityChinese.Founder,
       },
       {
-        trait_type: "Element",
-        value: "Fire",
+        trait_type: "元素",
+        value: "火",
       },
       {
-        trait_type: "ATK",
+        trait_type: "攻击",
         value: 99999,
         display_type: DisplayType.BoostNumber,
       },
       {
-        trait_type: "Health",
+        trait_type: "生命",
         value: 100,
         max_value: 100,
         display_type: DisplayType.BoostPercentage,
@@ -145,27 +145,27 @@ const ENGLISH_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
     ],
   },
   6: {
-    name: "Tripitaka-2",
+    name: "三藏法师-2",
     image: imageURL + "6",
     external_url: infoURL + "6",
-    description: "Super Rare Skin for the Tripitaka Character in XY3",
+    description: "XY3游戏中三藏法师角色的超稀有皮肤",
     attributes: [
       {
-        trait_type: "Rarity",
-        value: RarityEnglish.SuperRare,
+        trait_type: "稀有度",
+        value: RarityChinese.SuperRare,
       },
       {
-        trait_type: "Element",
-        value: "Fire",
+        trait_type: "元素",
+        value: "金",
       },
       {
-        trait_type: "ATK",
-        value: 99999,
+        trait_type: "攻击",
+        value: 8888,
         display_type: DisplayType.BoostNumber,
       },
       {
-        trait_type: "Health",
-        value: 100,
+        trait_type: "生命",
+        value: 88,
         max_value: 100,
         display_type: DisplayType.BoostPercentage,
       },
@@ -173,4 +173,4 @@ const ENGLISH_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
   },
 };
 
-export default ENGLISH_TOKEN_IDS;
+export default CHINESE_TOKEN_IDS;
