@@ -12,7 +12,7 @@ const handleImage = async (req: NextApiRequest, res: NextApiResponse) => {
       `/public/nft-images/skins/${id}.png`
     );
     const imageBuffer = fs.createReadStream(filePath);
-
+    console.log({ filePath });
     await new Promise(function (resolve) {
       res.setHeader("Content-Type", "image/png");
       imageBuffer.pipe(res);
