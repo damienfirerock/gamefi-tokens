@@ -4,7 +4,6 @@ import { Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
 import Layout from "../layout/Layout";
-import AlertBar from "../common/AlertBar";
 import StyledCircularProgress from "../common/StyledCircularProgress";
 
 import { AppDispatch, RootState } from "../../store";
@@ -39,12 +38,6 @@ const Swap: React.FunctionComponent = () => {
           <DynamicSwapInformation />
         </Suspense>
       </Box>
-
-      <AlertBar
-        severity="warning"
-        text={error || swapError}
-        handleClearAlertSource={handleClearAlert}
-      />
     </Layout>
   );
 };

@@ -1,15 +1,11 @@
 import React from "react";
 import { Box, BoxProps, Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "next-i18next";
 
 import Layout from "../layout/Layout";
-import AlertBar from "../common/AlertBar";
-import { AppDispatch, RootState } from "../../store";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
-import { clearError } from "../../features/TransactionSlice";
-import { clearError as clearSwapError } from "../../features/SwapSlice";
+
 import AccountDetails from "../main/AccountDetails";
 
 const addresses = Object.values(CONTRACT_ADDRESSES);
@@ -19,22 +15,7 @@ const ContractsBox = styled(Box)<BoxProps>(({ theme }) => ({
 }));
 
 const Main: React.FunctionComponent = () => {
-  const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation("common");
-
-  const transactionSlice = useSelector((state: RootState) => state.transaction);
-  const { error } = transactionSlice;
-
-  const swapSlice = useSelector((state: RootState) => state.swap);
-  const { error: swapError } = swapSlice;
-
-  const handleClearAlert = () => {
-    if (swapError) {
-      dispatch(clearSwapError());
-    } else if (error) {
-      dispatch(clearError());
-    }
-  };
 
   return (
     <Layout>
@@ -76,12 +57,6 @@ const Main: React.FunctionComponent = () => {
           );
         })}
       </ContractsBox>
-
-      <AlertBar
-        severity="warning"
-        text={error || swapError}
-        handleClearAlertSource={handleClearAlert}
-      />
     </Layout>
   );
 };

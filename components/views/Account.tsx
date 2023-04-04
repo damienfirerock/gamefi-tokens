@@ -5,13 +5,11 @@ import { useTranslation } from "next-i18next";
 import { useSession, signIn, signOut } from "next-auth/react";
 
 import Layout from "../layout/Layout";
-import AlertBar from "../common/AlertBar";
 import AccountDetails from "../main/AccountDetails";
 import StyledCircularProgress from "../common/StyledCircularProgress";
 
 import { AppDispatch, RootState } from "../../store";
-import { clearError, setLoading } from "../../features/TransactionSlice";
-import { clearError as clearSwapError } from "../../features/SwapSlice";
+import { setLoading } from "../../features/TransactionSlice";
 import useSignature from "../../utils/hooks/useSignature";
 
 //TODO: Change into common component
@@ -38,20 +36,9 @@ const Account: React.FunctionComponent = () => {
   const { checkSignature } = useSignature();
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
-  const { loading, error } = transactionSlice;
-
-  const swapSlice = useSelector((state: RootState) => state.swap);
-  const { error: swapError } = swapSlice;
+  const { loading } = transactionSlice;
 
   const [signStatus, setSignStatus] = useState<boolean>(false);
-
-  const handleClearAlert = () => {
-    if (swapError) {
-      dispatch(clearSwapError());
-    } else if (error) {
-      dispatch(clearError());
-    }
-  };
 
   const handleSignature = async () => {
     if (!session) return;
@@ -92,13 +79,6 @@ const Account: React.FunctionComponent = () => {
       {session && (
         <Typography variant="h4">Signed:{signStatus.toString()}</Typography>
       )}
-
-      {/* TODO: Move error bar into layout */}
-      <AlertBar
-        severity="warning"
-        text={error || swapError}
-        handleClearAlertSource={handleClearAlert}
-      />
     </Layout>
   );
 };

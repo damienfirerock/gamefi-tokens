@@ -1,42 +1,58 @@
 import React, { useMemo, Suspense } from "react";
 import dynamic from "next/dynamic";
 import { Box } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import GooglePayButton from "@google-pay/button-react";
 
 import Layout from "../layout/Layout";
-import AlertBar from "../common/AlertBar";
 import StyledCircularProgress from "../common/StyledCircularProgress";
 
-import { AppDispatch, RootState } from "../../store";
-import { clearError } from "../../features/TransactionSlice";
-import { clearError as clearSwapError } from "../../features/SwapSlice";
 import NFT_COLLECTIONS from "../../constants/nft-collections";
 import { Locale } from "../../interfaces/locale";
 import { Collection } from "../../interfaces/INFTAttributes";
 
+const mockPaymentRequest: google.payments.api.PaymentDataRequest = {
+  apiVersion: 2,
+  apiVersionMinor: 0,
+  allowedPaymentMethods: [
+    {
+      type: "CARD",
+      parameters: {
+        allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
+        allowedCardNetworks: ["MASTERCARD", "VISA"],
+      },
+      tokenizationSpecification: {
+        type: "PAYMENT_GATEWAY",
+        parameters: {
+          gateway: "example",
+          gatewayMerchantId: "exampleGatewayMerchantId",
+        },
+      },
+    },
+  ],
+  merchantInfo: {
+    merchantId: "12345678901234567890",
+    merchantName: "Demo Merchant",
+  },
+  transactionInfo: {
+    totalPriceStatus: "FINAL",
+    totalPriceLabel: "Total",
+    totalPrice: "10.00",
+    currencyCode: "USD",
+    countryCode: "US",
+  },
+};
+
 const CollectionEnumValues: string[] = Object.values(Collection);
 
 const Marketplace: React.FunctionComponent = () => {
-  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const { locale } = router;
 
   const { tokenId, collection } = router.query;
 
-  const transactionSlice = useSelector((state: RootState) => state.transaction);
-  const { error } = transactionSlice;
-
-  const swapSlice = useSelector((state: RootState) => state.swap);
-  const { error: swapError } = swapSlice;
-
-  const handleClearAlert = () => {
-    if (swapError) {
-      dispatch(clearSwapError());
-    } else if (error) {
-      dispatch(clearError());
-    }
+  const handlePayment = (paymentData: google.payments.api.PaymentData) => {
+    console.log("load payment data", paymentData);
   };
 
   const tokenDetails = useMemo(() => {
@@ -78,6 +94,7 @@ const Marketplace: React.FunctionComponent = () => {
   console.log(tokenDetails);
 
   // map out available items based on cards
+  // link payment to mint
 
   return (
     <Layout>
@@ -85,46 +102,8 @@ const Marketplace: React.FunctionComponent = () => {
 
       <GooglePayButton
         environment="TEST"
-        paymentRequest={{
-          apiVersion: 2,
-          apiVersionMinor: 0,
-          allowedPaymentMethods: [
-            {
-              type: "CARD",
-              parameters: {
-                allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
-                allowedCardNetworks: ["MASTERCARD", "VISA"],
-              },
-              tokenizationSpecification: {
-                type: "PAYMENT_GATEWAY",
-                parameters: {
-                  gateway: "example",
-                  gatewayMerchantId: "exampleGatewayMerchantId",
-                },
-              },
-            },
-          ],
-          merchantInfo: {
-            merchantId: "12345678901234567890",
-            merchantName: "Demo Merchant",
-          },
-          transactionInfo: {
-            totalPriceStatus: "FINAL",
-            totalPriceLabel: "Total",
-            totalPrice: "10.00",
-            currencyCode: "USD",
-            countryCode: "US",
-          },
-        }}
-        onLoadPaymentData={(paymentRequest) => {
-          console.log("load payment data", paymentRequest);
-        }}
-      />
-
-      <AlertBar
-        severity="warning"
-        text={error || swapError}
-        handleClearAlertSource={handleClearAlert}
+        paymentRequest={mockPaymentRequest}
+        onLoadPaymentData={handlePayment}
       />
     </Layout>
   );
