@@ -9,10 +9,10 @@ const imageURL = NEXT_PUBLIC_BACKEND_URL + "/nft/skin/images/";
 const infoURL = NEXT_PUBLIC_BACKEND_URL + "/nft/info/skin/en/"; // TODO: Replace with Marketplace Link once up
 
 const ENGLISH_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
-  1: {
+  0: {
     name: "SunWuKong-1",
-    image: imageURL + "1",
-    external_url: infoURL + "1",
+    image: imageURL + "0",
+    external_url: infoURL + "0",
     description: "Founder's Skin for the Wu Kong Character in XY3",
     attributes: [
       {
@@ -36,10 +36,10 @@ const ENGLISH_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
       },
     ],
   },
-  2: {
+  1: {
     name: "SunWuKong-2",
-    image: imageURL + "2",
-    external_url: infoURL + "2",
+    image: imageURL + "1",
+    external_url: infoURL + "1",
     description: "Super-Rare Skin for the Wu Kong Character in XY3",
     attributes: [
       {
@@ -63,10 +63,10 @@ const ENGLISH_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
       },
     ],
   },
-  3: {
+  2: {
     name: "SunWuKong-3",
-    image: imageURL + "3",
-    external_url: infoURL + "3",
+    image: imageURL + "2",
+    external_url: infoURL + "2",
     description: "Rare Skin for the Wu Kong Character in XY3",
     attributes: [
       {
@@ -90,10 +90,10 @@ const ENGLISH_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
       },
     ],
   },
-  4: {
+  3: {
     name: "SunWuKong-4",
-    image: imageURL + "4",
-    external_url: infoURL + "4",
+    image: imageURL + "3",
+    external_url: infoURL + "3",
     description: "Common Skin for the Wu Kong Character in XY3",
     attributes: [
       {
@@ -117,10 +117,10 @@ const ENGLISH_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
       },
     ],
   },
-  5: {
+  4: {
     name: "Tripitaka-1",
-    image: imageURL + "5",
-    external_url: infoURL + "5",
+    image: imageURL + "4",
+    external_url: infoURL + "4",
     description: "Common Skin for the Tripitaka Character in XY3",
     attributes: [
       {
@@ -144,10 +144,10 @@ const ENGLISH_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
       },
     ],
   },
-  6: {
+  5: {
     name: "Tripitaka-2",
-    image: imageURL + "6",
-    external_url: infoURL + "6",
+    image: imageURL + "5",
+    external_url: infoURL + "5",
     description: "Super Rare Skin for the Tripitaka Character in XY3",
     attributes: [
       {

@@ -9,10 +9,10 @@ const imageURL = NEXT_PUBLIC_BACKEND_URL + "/nft/skin/images/";
 const infoURL = NEXT_PUBLIC_BACKEND_URL + "/nft/info/skin/zh/"; // TODO: Replace with Marketplace Link once up
 
 const CHINESE_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
-  1: {
+  0: {
     name: "孙悟空-1",
-    image: imageURL + "1",
-    external_url: infoURL + "1",
+    image: imageURL + "0",
+    external_url: infoURL + "0",
     description: "XY3游戏中悟空角色的创始者皮肤",
     attributes: [
       {
@@ -36,10 +36,10 @@ const CHINESE_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
       },
     ],
   },
-  2: {
+  1: {
     name: "孙悟空-2",
-    image: imageURL + "2",
-    external_url: infoURL + "2",
+    image: imageURL + "1",
+    external_url: infoURL + "1",
     description: "XY3游戏中悟空角色的超稀有皮肤",
     attributes: [
       {
@@ -63,10 +63,10 @@ const CHINESE_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
       },
     ],
   },
-  3: {
+  2: {
     name: "孙悟空-3",
-    image: imageURL + "3",
-    external_url: infoURL + "3",
+    image: imageURL + "2",
+    external_url: infoURL + "2",
     description: "XY3游戏中悟空角色的稀有皮肤",
     attributes: [
       {
@@ -90,10 +90,10 @@ const CHINESE_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
       },
     ],
   },
-  4: {
+  3: {
     name: "孙悟空-4",
-    image: imageURL + "4",
-    external_url: infoURL + "4",
+    image: imageURL + "3",
+    external_url: infoURL + "3",
     description: "XY3游戏中悟空角色的常见皮肤",
     attributes: [
       {
@@ -117,10 +117,10 @@ const CHINESE_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
       },
     ],
   },
-  5: {
+  4: {
     name: "三藏法师-1",
-    image: imageURL + "5",
-    external_url: infoURL + "5",
+    image: imageURL + "4",
+    external_url: infoURL + "4",
     description: "XY3游戏中三藏法师角色的创始者皮肤",
     attributes: [
       {
@@ -144,10 +144,10 @@ const CHINESE_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
       },
     ],
   },
-  6: {
+  5: {
     name: "三藏法师-2",
-    image: imageURL + "6",
-    external_url: infoURL + "6",
+    image: imageURL + "5",
+    external_url: infoURL + "5",
     description: "XY3游戏中三藏法师角色的超稀有皮肤",
     attributes: [
       {
