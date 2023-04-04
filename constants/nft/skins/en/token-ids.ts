@@ -5,7 +5,7 @@ import {
 } from "../../../../interfaces/INFTAttributes";
 
 const { NEXT_PUBLIC_BACKEND_URL } = process.env;
-const imageURL = NEXT_PUBLIC_BACKEND_URL + "/nft/skin/images/";
+const imageURL = NEXT_PUBLIC_BACKEND_URL + "/nft/skins/images/";
 const infoURL = NEXT_PUBLIC_BACKEND_URL + "/nft/skins/info/en/"; // TODO: Replace with Marketplace Link once up
 
 const ENGLISH_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
