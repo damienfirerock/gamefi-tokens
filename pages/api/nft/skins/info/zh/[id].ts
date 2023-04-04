@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import CHINESE_TOKEN_IDS from "../../../../../../constants/nft/skins/zh/token-ids";
+import CHINESE_SKINS_TOKEN_IDS from "../../../../../../constants/nft/skins/zh/token-ids";
 
 const handleSkinChineseJSON = async (
   req: NextApiRequest,
@@ -12,7 +12,7 @@ const handleSkinChineseJSON = async (
     return res.status(404).json({ error: true, message: "Item not found" });
   }
 
-  const data = CHINESE_TOKEN_IDS[parseInt(id)];
+  const data = CHINESE_SKINS_TOKEN_IDS[parseInt(id)];
 
   if (!data) {
     res.status(404).json({ error: true, message: "Item not found" });

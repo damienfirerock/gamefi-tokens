@@ -8,7 +8,7 @@ const { NEXT_PUBLIC_BACKEND_URL } = process.env;
 const imageURL = NEXT_PUBLIC_BACKEND_URL + "/nft/skins/images/";
 const infoURL = NEXT_PUBLIC_BACKEND_URL + "/nft/skins/info/zh/"; // TODO: Replace with Marketplace Link once up
 
-const CHINESE_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
+const CHINESE_SKINS_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
   0: {
     name: "孙悟空-1",
     image: imageURL + "0",
@@ -173,4 +173,4 @@ const CHINESE_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
   },
 };
 
-export default CHINESE_TOKEN_IDS;
+export default CHINESE_SKINS_TOKEN_IDS;

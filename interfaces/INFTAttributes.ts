@@ -1,5 +1,9 @@
 // https://docs.opensea.io/docs/metadata-standards
 
+export enum Collection {
+  Skins = "skins",
+}
+
 export enum DisplayType {
   BoostNumber = "boost_number",
   BoostPercentage = "boost_percentage",
