@@ -7,7 +7,6 @@ import { AppDispatch, RootState } from "../../store";
 import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
 import { setLoading } from "../../features/TransactionSlice";
 
-import { AirdropType } from "../../interfaces/IAirdrop";
 import { NETWORKS_INFO_CONFIG } from "../../constants/networks";
 
 const AccountDetails: React.FunctionComponent = () => {

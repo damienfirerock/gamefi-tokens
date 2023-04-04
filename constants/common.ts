@@ -1,5 +1,3 @@
-import { IAirDropDetails } from "../interfaces/IAirdrop";
-
 export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 export const DEFAULT_DECIMALS = 18;
@@ -12,19 +10,6 @@ export const TEST_ADDRESSES = {
   5: "0x6F5744B20A60A3A6aCF73bfBee6C2BaCE4Ed1140",
   6: "0x75B59c086D31B4c8BbbD26DA29B1100c2928410A",
   7: "0xDEcaEFb18B535cAEEd79B36EE5D4F6ba06F5756B",
-};
-
-export const AIRDROP_DETAILS: IAirDropDetails = {
-  decimals: 18,
-  airdrop: {
-    [TEST_ADDRESSES[1]]: 100,
-    [TEST_ADDRESSES[2]]: 200,
-    [TEST_ADDRESSES[3]]: 300,
-    [TEST_ADDRESSES[4]]: 400,
-    [TEST_ADDRESSES[5]]: 500,
-    [TEST_ADDRESSES[6]]: 600,
-    [TEST_ADDRESSES[7]]: 700,
-  },
 };
 
 export const NETWORK_CONTEXT_NAME = "NETWORK";
