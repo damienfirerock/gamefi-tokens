@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import ENGLISH_TOKEN_IDS from "../../../../../../constants/nft-skins/en/token-ids";
+import CHINESE_TOKEN_IDS from "../../../../../../constants/nft/skins/zh/token-ids";
 
-const handleSkinEnglishJSON = async (
+const handleSkinChineseJSON = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
@@ -12,7 +12,7 @@ const handleSkinEnglishJSON = async (
     return res.status(404).json({ error: true, message: "Item not found" });
   }
 
-  const data = ENGLISH_TOKEN_IDS[parseInt(id)];
+  const data = CHINESE_TOKEN_IDS[parseInt(id)];
 
   if (!data) {
     res.status(404).json({ error: true, message: "Item not found" });
@@ -21,4 +21,4 @@ const handleSkinEnglishJSON = async (
   res.status(200).json(data);
 };
 
-export default handleSkinEnglishJSON;
+export default handleSkinChineseJSON;

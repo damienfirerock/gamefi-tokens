@@ -7,7 +7,10 @@ const handleImage = async (req: NextApiRequest, res: NextApiResponse) => {
   const id = req.query.id;
 
   try {
-    const filePath = path.join(process.cwd(), `/public/nft-images/${id}.png`);
+    const filePath = path.join(
+      process.cwd(),
+      `/public/nft-images/skins/${id}.png`
+    );
     const imageBuffer = fs.createReadStream(filePath);
 
     await new Promise(function (resolve) {

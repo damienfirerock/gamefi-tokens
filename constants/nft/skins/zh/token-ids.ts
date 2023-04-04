@@ -2,7 +2,7 @@ import {
   DisplayType,
   RarityChinese,
   ICharacterSkinAttributes,
-} from "../../../interfaces/INFTAttributes";
+} from "../../../../interfaces/INFTAttributes";
 
 const { NEXT_PUBLIC_BACKEND_URL } = process.env;
 const imageURL = NEXT_PUBLIC_BACKEND_URL + "/nft/skin/images/";
