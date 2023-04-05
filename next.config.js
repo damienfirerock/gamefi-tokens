@@ -7,6 +7,21 @@ const nextConfig = {
   images: {
     domains: ["raw.githubusercontent.com"],
   },
+  env: {
+    NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
+    NEXT_PUBLIC_CHARACTER_SKIN_ADDRESS:
+      process.env.NEXT_PUBLIC_CHARACTER_SKIN_ADDRESS,
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "web3-wallet-poc.vercel.app",
+        port: "",
+        pathname: "/api/nft/**",
+      },
+    ],
+  },
   i18n,
 };
 

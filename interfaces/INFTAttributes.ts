@@ -25,6 +25,8 @@ export enum RarityChinese {
 }
 
 export interface ICharacterSkinAttributes {
+  contract: string;
+  tokenId: number;
   name: string;
   image: string;
   external_url: string;

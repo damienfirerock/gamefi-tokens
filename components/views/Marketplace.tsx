@@ -2,10 +2,10 @@ import React, { useMemo, Suspense } from "react";
 import dynamic from "next/dynamic";
 import { Box } from "@mui/material";
 import { useRouter } from "next/router";
-import GooglePayButton from "@google-pay/button-react";
 
 import Layout from "../layout/Layout";
 import StyledCircularProgress from "../common/StyledCircularProgress";
+import Listing from "../marketplace/Listing";
 
 import NFT_COLLECTIONS from "../../constants/nft-collections";
 import { Locale } from "../../interfaces/locale";
@@ -51,10 +51,6 @@ const Marketplace: React.FunctionComponent = () => {
 
   const { tokenId, collection } = router.query;
 
-  const handlePayment = (paymentData: google.payments.api.PaymentData) => {
-    console.log("load payment data", paymentData);
-  };
-
   const tokenDetails = useMemo(() => {
     const nextLocale =
       locale === Locale.En || locale === Locale.Zh ? locale : Locale.En;
@@ -99,12 +95,9 @@ const Marketplace: React.FunctionComponent = () => {
   return (
     <Layout>
       <Box>Marketplace</Box>
-
-      <GooglePayButton
-        environment="TEST"
-        paymentRequest={mockPaymentRequest}
-        onLoadPaymentData={handlePayment}
-      />
+      {tokenDetails.map((details) => (
+        <Listing key={details.tokenId} {...details} />
+      ))}
     </Layout>
   );
 };
