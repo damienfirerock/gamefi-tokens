@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import { styled } from "@mui/material/styles";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 // import { RootState } from "../../../store";
 // import { IProduct } from "../../../interfaces/IProduct";
@@ -22,6 +22,10 @@ import { useSelector } from "react-redux";
 // import { ZERO_ADDRESS } from "../../../constants";
 
 import WrappedGooglePayButton from "./GooglePayButton";
+
+import { AppDispatch } from "../../store";
+import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
+import { submitGooglePayDataForMint } from "../../features/TransactionSlice";
 
 import {
   DisplayType,
@@ -69,6 +73,7 @@ interface IListing extends ICharacterSkinAttributes {
 
 const Listing: React.FunctionComponent<IListing> = (props) => {
   const {
+    contract,
     tokenId,
     collection,
     name,
@@ -79,6 +84,8 @@ const Listing: React.FunctionComponent<IListing> = (props) => {
     disabled,
     buttonText,
   } = props;
+  const dispatch = useDispatch<AppDispatch>();
+  const { account } = useWeb3React();
 
   // const transactionsSlice = useSelector(
   //   (state: RootState) => state.transactions
@@ -90,7 +97,15 @@ const Listing: React.FunctionComponent<IListing> = (props) => {
   // const isDisabled = disabled || pending;
 
   const handlePayment = (paymentData: google.payments.api.PaymentData) => {
-    console.log("load payment data", paymentData);
+    console.log({ paymentData });
+    dispatch(
+      submitGooglePayDataForMint({
+        paymentData,
+        account: account!,
+        contract,
+        tokenId: tokenId,
+      })
+    );
   };
 
   return (

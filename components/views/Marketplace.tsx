@@ -3,14 +3,19 @@ import dynamic from "next/dynamic";
 import { Box, BoxProps, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
 
 import Layout from "../layout/Layout";
 import StyledCircularProgress from "../common/StyledCircularProgress";
 import Listing from "../marketplace/Listing";
+import AlertBar from "../common/AlertBar";
 
+import { AppDispatch, RootState } from "../../store";
 import NFT_COLLECTIONS from "../../constants/nft-collections";
 import { Locale } from "../../interfaces/locale";
 import { Collection } from "../../interfaces/INFTAttributes";
+
+import { clearTxnHash } from "../../features/TransactionSlice";
 
 const StyledBox = styled(Box)<BoxProps>(() => ({
   display: "flex",
@@ -21,10 +26,13 @@ const StyledBox = styled(Box)<BoxProps>(() => ({
 const CollectionEnumValues: string[] = Object.values(Collection);
 
 const Marketplace: React.FunctionComponent = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const { locale } = router;
-
   const { tokenId, collection } = router.query;
+
+  const transactionSlice = useSelector((state: RootState) => state.transaction);
+  const { txnHash } = transactionSlice;
 
   const tokenDetails = useMemo(() => {
     const nextLocale =
@@ -64,8 +72,9 @@ const Marketplace: React.FunctionComponent = () => {
 
   console.log(tokenDetails);
 
-  // map out available items based on cards
-  // link payment to mint
+  const handleClearTxnHash = () => {
+    dispatch(clearTxnHash());
+  };
 
   return (
     <Layout>
@@ -75,6 +84,11 @@ const Marketplace: React.FunctionComponent = () => {
           <Listing key={details.tokenId} {...details} />
         ))}
       </StyledBox>
+      <AlertBar
+        severity="success"
+        text={txnHash}
+        handleClearAlertSource={handleClearTxnHash}
+      />
     </Layout>
   );
 };
