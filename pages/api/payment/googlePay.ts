@@ -47,7 +47,7 @@ const handleGooglePay = async (req: NextRequest, res: NextApiResponse) => {
       CharacterSkinJson.abi,
       signer
     );
-    console.log({ characterSkinNftContract });
+
     // Get Transaction Details
     const estimatedGasLimit = await characterSkinNftContract.estimateGas.mint(
       account,
@@ -65,7 +65,7 @@ const handleGooglePay = async (req: NextRequest, res: NextApiResponse) => {
     unsignedTransaction.chainId = parseInt(NETWORK_CHAIN_ID!);
     unsignedTransaction.gasLimit = estimatedGasLimit;
     unsignedTransaction.gasPrice = await provider.getGasPrice();
-    console.log({ unsignedTransaction });
+
     // Send transaction
     const walletAddress = await signer.getAddress();
     unsignedTransaction.nonce = await provider.getTransactionCount(

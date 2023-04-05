@@ -1,5 +1,6 @@
 import React from "react";
 import GooglePayButton from "@google-pay/button-react";
+import { useRouter } from "next/router";
 
 const mockPaymentRequest: google.payments.api.PaymentDataRequest = {
   apiVersion: 2,
@@ -41,12 +42,14 @@ const WrappedGooglePayButton: React.FunctionComponent<
   IWrappedGooglePayButton
 > = (props) => {
   const { handlePayment } = props;
+  const { locale } = useRouter();
 
   return (
     <GooglePayButton
       environment="TEST"
       paymentRequest={mockPaymentRequest}
       onLoadPaymentData={handlePayment}
+      buttonLocale={locale}
     />
   );
 };
