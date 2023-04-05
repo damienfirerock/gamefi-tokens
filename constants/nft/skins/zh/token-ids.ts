@@ -1,15 +1,22 @@
 import {
+  Collection,
   DisplayType,
   RarityChinese,
   ICharacterSkinAttributes,
 } from "../../../../interfaces/INFTAttributes";
 
-const { NEXT_PUBLIC_BACKEND_URL } = process.env;
+const NEXT_PUBLIC_BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+const NEXT_PUBLIC_CHARACTER_SKIN_ADDRESS =
+  process.env.NEXT_PUBLIC_CHARACTER_SKIN_ADDRESS;
 const imageURL = NEXT_PUBLIC_BACKEND_URL + "/nft/skins/images/";
 const infoURL = NEXT_PUBLIC_BACKEND_URL + "/nft/skins/info/zh/"; // TODO: Replace with Marketplace Link once up
 
+// TODO: Need to minimise DRY
 const CHINESE_SKINS_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
   0: {
+    contract: NEXT_PUBLIC_CHARACTER_SKIN_ADDRESS!,
+    collection: Collection.Skins,
+    tokenId: 0,
     name: "孙悟空-1",
     image: imageURL + "0",
     external_url: infoURL + "0",
@@ -37,6 +44,9 @@ const CHINESE_SKINS_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
     ],
   },
   1: {
+    contract: NEXT_PUBLIC_CHARACTER_SKIN_ADDRESS!,
+    collection: Collection.Skins,
+    tokenId: 1,
     name: "孙悟空-2",
     image: imageURL + "1",
     external_url: infoURL + "1",
@@ -64,6 +74,9 @@ const CHINESE_SKINS_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
     ],
   },
   2: {
+    contract: NEXT_PUBLIC_CHARACTER_SKIN_ADDRESS!,
+    collection: Collection.Skins,
+    tokenId: 2,
     name: "孙悟空-3",
     image: imageURL + "2",
     external_url: infoURL + "2",
@@ -91,6 +104,9 @@ const CHINESE_SKINS_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
     ],
   },
   3: {
+    contract: NEXT_PUBLIC_CHARACTER_SKIN_ADDRESS!,
+    collection: Collection.Skins,
+    tokenId: 3,
     name: "孙悟空-4",
     image: imageURL + "3",
     external_url: infoURL + "3",
@@ -118,6 +134,9 @@ const CHINESE_SKINS_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
     ],
   },
   4: {
+    contract: NEXT_PUBLIC_CHARACTER_SKIN_ADDRESS!,
+    collection: Collection.Skins,
+    tokenId: 4,
     name: "三藏法师-1",
     image: imageURL + "4",
     external_url: infoURL + "4",
@@ -145,6 +164,9 @@ const CHINESE_SKINS_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
     ],
   },
   5: {
+    contract: NEXT_PUBLIC_CHARACTER_SKIN_ADDRESS!,
+    collection: Collection.Skins,
+    tokenId: 5,
     name: "三藏法师-2",
     image: imageURL + "5",
     external_url: infoURL + "5",
