@@ -26,6 +26,7 @@ export enum RarityChinese {
 
 export interface ICharacterSkinAttributes {
   contract: string;
+  collection: Collection.Skins;
   tokenId: number;
   name: string;
   image: string;

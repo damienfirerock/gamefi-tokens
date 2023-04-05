@@ -1,4 +1,5 @@
 import {
+  Collection,
   DisplayType,
   RarityEnglish,
   ICharacterSkinAttributes,
@@ -14,6 +15,7 @@ const infoURL = NEXT_PUBLIC_BACKEND_URL + "/nft/skins/info/en/"; // TODO: Replac
 const ENGLISH_SKINS_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
   0: {
     contract: NEXT_PUBLIC_CHARACTER_SKIN_ADDRESS!,
+    collection: Collection.Skins,
     tokenId: 0,
     name: "SunWuKong-1",
     image: imageURL + "0",
@@ -43,6 +45,7 @@ const ENGLISH_SKINS_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
   },
   1: {
     contract: NEXT_PUBLIC_CHARACTER_SKIN_ADDRESS!,
+    collection: Collection.Skins,
     tokenId: 1,
     name: "SunWuKong-2",
     image: imageURL + "1",
@@ -72,6 +75,7 @@ const ENGLISH_SKINS_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
   },
   2: {
     contract: NEXT_PUBLIC_CHARACTER_SKIN_ADDRESS!,
+    collection: Collection.Skins,
     tokenId: 2,
     name: "SunWuKong-3",
     image: imageURL + "2",
@@ -101,6 +105,7 @@ const ENGLISH_SKINS_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
   },
   3: {
     contract: NEXT_PUBLIC_CHARACTER_SKIN_ADDRESS!,
+    collection: Collection.Skins,
     tokenId: 3,
     name: "SunWuKong-4",
     image: imageURL + "3",
@@ -130,6 +135,7 @@ const ENGLISH_SKINS_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
   },
   4: {
     contract: NEXT_PUBLIC_CHARACTER_SKIN_ADDRESS!,
+    collection: Collection.Skins,
     tokenId: 4,
     name: "Tripitaka-1",
     image: imageURL + "4",
@@ -159,6 +165,7 @@ const ENGLISH_SKINS_TOKEN_IDS: Record<number, ICharacterSkinAttributes> = {
   },
   5: {
     contract: NEXT_PUBLIC_CHARACTER_SKIN_ADDRESS!,
+    collection: Collection.Skins,
     tokenId: 5,
     name: "Tripitaka-2",
     image: imageURL + "5",

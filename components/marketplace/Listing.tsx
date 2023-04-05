@@ -23,51 +23,24 @@ import { useSelector } from "react-redux";
 
 import WrappedGooglePayButton from "./GooglePayButton";
 
-import { ICharacterSkinAttributes } from "../../interfaces/INFTAttributes";
+import {
+  DisplayType,
+  ICharacterSkinAttributes,
+} from "../../interfaces/INFTAttributes";
 
-interface IStyledCard extends CardProps {
-  shouldHoverEffect?: boolean;
-}
+export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
+  margin: theme.spacing(1),
+  width: theme.spacing(30),
+}));
 
-export const StyledCard = styled(Card)<IStyledCard>(
-  ({ theme, shouldHoverEffect }) => ({
-    margin: theme.spacing(1),
-    minWidth: 160,
-    "@keyframes Move": {
-      "0%": {
-        transform: "rotate(-0.01turn)",
-        bottom: "-5%",
-        left: "-5%",
-      },
-      "25%": {
-        bottom: "5%",
-        left: "0",
-      },
-      "50%": { transform: "rotate(0.01turn)", bottom: "-5%", left: "5%" },
-      "75%": {
-        bottom: "5%",
-        left: "0",
-      },
-      "100%": {
-        transform: "rotate(-0.01turn)",
-        bottom: "-5%",
-        left: "-5%",
-      },
-    },
-
-    "&:hover": {
-      "span > img": {
-        animation: shouldHoverEffect ? "Move 0.9s linear infinite" : "",
-      },
-    },
+export const StyledCardContent = styled(CardContent)<CardContentProps>(
+  ({ theme }) => ({
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    height: theme.spacing(65),
   })
 );
-
-export const StyledCardContent = styled(CardContent)<CardContentProps>(() => ({
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-}));
 
 export const StyledCardActions = styled(CardActions)<CardActionsProps>(
   ({ theme }) => ({
@@ -88,23 +61,6 @@ export const StyledCircularProgress = styled(
   marginLeft: "-12px",
 }));
 
-// const displayOwner = (address: string) => {
-//   switch (address) {
-//     case ZERO_ADDRESS:
-//       return "???";
-//     case process.env.NEXT_PUBLIC_TOKEN_SALE_CONTRACT_ADDRESS:
-//       return "Available";
-//     case process.env.NEXT_PUBLIC_POKEMON_CENTER_ADDRESS:
-//       return "Pokemon Center";
-//     case process.env.NEXT_PUBLIC_LUCKY_DRAW_ADDRESS:
-//       return "Lucky Draw";
-//     case process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS:
-//       return "Market Place";
-//     default:
-//       return truncateString(address);
-//   }
-// };
-
 interface IListing extends ICharacterSkinAttributes {
   owner?: string;
   disabled?: boolean;
@@ -112,8 +68,17 @@ interface IListing extends ICharacterSkinAttributes {
 }
 
 const Listing: React.FunctionComponent<IListing> = (props) => {
-  const { tokenId, name, description, image, owner, disabled, buttonText } =
-    props;
+  const {
+    tokenId,
+    collection,
+    name,
+    description,
+    image,
+    attributes,
+    owner,
+    disabled,
+    buttonText,
+  } = props;
 
   // const transactionsSlice = useSelector(
   //   (state: RootState) => state.transactions
@@ -129,14 +94,23 @@ const Listing: React.FunctionComponent<IListing> = (props) => {
   };
 
   return (
-    <StyledCard variant="outlined" shouldHoverEffect={!disabled}>
+    <StyledCard variant="outlined">
       <StyledCardContent>
-        <Typography variant="h4">{description}</Typography>
+        {" "}
+        <Typography variant="h4">Token Id: {tokenId}</Typography>
         <Typography variant="h5">{name}</Typography>
+        <Typography variant="h5">{description}</Typography>
+        <Typography variant="h5">Collection: {collection}</Typography>
         <Box sx={{ position: "relative" }}>
           <Image src={image} alt={image} width={125} height={125} />
         </Box>
-        {/* <Typography variant="h6">{displayOwner(owner)}</Typography> */}
+        {attributes.map(({ trait_type, value, display_type }) => (
+          <Typography variant="h5" key={trait_type}>
+            {trait_type}: {!!display_type && "+"}
+            {value}
+            {display_type === DisplayType.BoostPercentage && "%"}
+          </Typography>
+        ))}
       </StyledCardContent>
       <StyledCardActions>
         <Box sx={{ position: "relative" }}>

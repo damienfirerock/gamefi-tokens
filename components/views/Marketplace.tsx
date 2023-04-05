@@ -1,6 +1,7 @@
 import React, { useMemo, Suspense } from "react";
 import dynamic from "next/dynamic";
-import { Box } from "@mui/material";
+import { Box, BoxProps, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 
 import Layout from "../layout/Layout";
@@ -11,37 +12,11 @@ import NFT_COLLECTIONS from "../../constants/nft-collections";
 import { Locale } from "../../interfaces/locale";
 import { Collection } from "../../interfaces/INFTAttributes";
 
-const mockPaymentRequest: google.payments.api.PaymentDataRequest = {
-  apiVersion: 2,
-  apiVersionMinor: 0,
-  allowedPaymentMethods: [
-    {
-      type: "CARD",
-      parameters: {
-        allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
-        allowedCardNetworks: ["MASTERCARD", "VISA"],
-      },
-      tokenizationSpecification: {
-        type: "PAYMENT_GATEWAY",
-        parameters: {
-          gateway: "example",
-          gatewayMerchantId: "exampleGatewayMerchantId",
-        },
-      },
-    },
-  ],
-  merchantInfo: {
-    merchantId: "12345678901234567890",
-    merchantName: "Demo Merchant",
-  },
-  transactionInfo: {
-    totalPriceStatus: "FINAL",
-    totalPriceLabel: "Total",
-    totalPrice: "10.00",
-    currencyCode: "USD",
-    countryCode: "US",
-  },
-};
+const StyledBox = styled(Box)<BoxProps>(() => ({
+  display: "flex",
+  flexWrap: "wrap",
+  justifyContent: "space-evenly",
+}));
 
 const CollectionEnumValues: string[] = Object.values(Collection);
 
@@ -94,10 +69,12 @@ const Marketplace: React.FunctionComponent = () => {
 
   return (
     <Layout>
-      <Box>Marketplace</Box>
-      {tokenDetails.map((details) => (
-        <Listing key={details.tokenId} {...details} />
-      ))}
+      <Typography variant="h1">Marketplace</Typography>
+      <StyledBox>
+        {tokenDetails.map((details) => (
+          <Listing key={details.tokenId} {...details} />
+        ))}
+      </StyledBox>
     </Layout>
   );
 };
