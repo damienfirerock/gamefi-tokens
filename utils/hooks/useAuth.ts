@@ -1,24 +1,46 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
 
+import { useSelector, useDispatch } from "react-redux";
+
+import {
+  setSession,
+  setLoading,
+  setDialogOpen,
+} from "../../features/AuthSlice";
 import { AppDispatch, RootState } from "../../store";
-import { login, logout } from "../../features/AuthSlice";
 
 export default function useAuth() {
   const dispatch = useDispatch<AppDispatch>();
-  const { isLoggedIn, user } = useSelector((state: RootState) => state.auth);
+  const { data: session, status } = useSession();
 
-  const loginUser = (userData: { email: string; password: string }) => {
-    dispatch(login(userData));
-  };
+  const authSlice = useSelector((state: RootState) => state.auth);
+  const { session: reduxSession, loading: reduxLoading } = authSlice;
 
-  const logoutUser = () => {
-    dispatch(logout());
-  };
+  // Sets new Session on Session change
+  useEffect(() => {
+    if (status !== "loading") {
+      dispatch(setSession(session));
+      dispatch(setLoading(false));
+    }
+  }, [session, status]);
+
+  // Shows LoginDialog for new user
+  useEffect(() => {
+    if (!session && !reduxLoading) {
+      const popupShown = localStorage.getItem("loginPopupShown");
+
+      if (!popupShown) {
+        dispatch(setDialogOpen());
+        localStorage.setItem("loginPopupShown", "true");
+      }
+    }
+  }, [session, reduxLoading]);
 
   return {
-    isLoggedIn,
-    user,
-    loginUser,
-    logoutUser,
+    session: reduxSession,
+    loading: reduxLoading,
+    signIn: (provider: string) => signIn(provider),
+    signOut: () => signOut(),
   };
 }
