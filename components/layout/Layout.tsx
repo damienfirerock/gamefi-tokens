@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Container, ContainerProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
+import { useSession } from "next-auth/react";
 
 import NavBar from "./Navbar";
 import AlertBar from "../common/AlertBar";
@@ -12,6 +13,11 @@ import LoginDialog from "./LoginDialog";
 import { AppDispatch, RootState } from "../../store";
 import { clearError } from "../../features/TransactionSlice";
 import { clearError as clearSwapError } from "../../features/SwapSlice";
+import {
+  setSession,
+  setLoading,
+  setDialogOpen,
+} from "../../features/AuthSlice";
 import { SUPPORTED_WALLETS } from "../../constants/wallets";
 import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
 
@@ -29,6 +35,10 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   const { account, activate } = useWeb3React();
   const { t } = useTranslation("common");
   const dispatch = useDispatch<AppDispatch>();
+  const { data: session, status } = useSession();
+
+  const authSlice = useSelector((state: RootState) => state.auth);
+  const { loading: authLoading } = authSlice;
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { error } = transactionSlice;
@@ -64,6 +74,26 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
 
     connectWalletOnPageLoad();
   }, [account]);
+
+  // Sets new Session on Session change
+  useEffect(() => {
+    if (status !== "loading") {
+      dispatch(setSession(session));
+      dispatch(setLoading(false));
+    }
+  }, [session, status]);
+
+  // Shows LoginDialog for new user
+  useEffect(() => {
+    if (!session && !authLoading) {
+      const popupShown = localStorage.getItem("loginPopupShown");
+
+      if (!popupShown) {
+        dispatch(setDialogOpen());
+        localStorage.setItem("loginPopupShown", "true");
+      }
+    }
+  }, [session, authLoading]);
 
   return (
     <>

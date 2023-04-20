@@ -12,7 +12,6 @@ import useActiveWeb3React from "../../../utils/hooks/web3React/useActiveWeb3Reac
 
 // FIXME: Need to double try connect with Metamask on Walletconnect ??
 // FIXME: Metamask Button does not work if not on ChainId
-// TODO: Add useSignTransactions for signatures between Sequence versus Metamask for binding of wallets
 // TODO: Potential issues in the future as font size between chinese and english text are clearly different
 
 const AccountButton: React.FunctionComponent = () => {
