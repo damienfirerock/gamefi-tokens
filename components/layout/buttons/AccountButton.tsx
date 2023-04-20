@@ -51,10 +51,11 @@ const AccountButton: React.FunctionComponent = () => {
 
   return (
     <>
-      <MenuStyledButton variant="contained" onClick={handleClick}>
-        <Typography variant="h6">
-          {account ? truncateString(account) : "Connect"}
-        </Typography>
+      <MenuStyledButton
+        variant="contained"
+        onClick={isLoggedIn ? handleClick : handleOpenLoginDialog}
+      >
+        <Typography variant="h6">{session?.user.email ?? "Login"}</Typography>
       </MenuStyledButton>
       <Popover
         id={id}
@@ -76,6 +77,9 @@ const AccountButton: React.FunctionComponent = () => {
         }}
       >
         <PopoverBox sx={{ textAlign: "center" }}>
+          <Typography variant="h6">
+            {!!account && truncateString(account)}
+          </Typography>
           {account ? (
             <>
               <AccountLink
@@ -106,19 +110,19 @@ const AccountButton: React.FunctionComponent = () => {
                   Disconnect
                 </Typography>
               </MenuStyledButton>
-              <MenuStyledButton
-                variant="contained"
-                onClick={isLoggedIn ? handleLogOut : handleOpenLoginDialog}
-                disabled={status === "loading"}
-              >
-                <Typography variant="h6" sx={{ marginLeft: 1 }}>
-                  {isLoggedIn ? "Log Out" : "Log In"}
-                </Typography>
-              </MenuStyledButton>
             </>
           ) : (
             <ConnectWalletButtons />
           )}
+          <MenuStyledButton
+            variant="contained"
+            onClick={isLoggedIn ? handleLogOut : handleOpenLoginDialog}
+            disabled={status === "loading"}
+          >
+            <Typography variant="h6" sx={{ marginLeft: 1 }}>
+              {isLoggedIn ? "Log Out" : "Log In"}
+            </Typography>
+          </MenuStyledButton>
         </PopoverBox>
       </Popover>
     </>
