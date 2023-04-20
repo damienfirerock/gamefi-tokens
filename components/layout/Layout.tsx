@@ -7,6 +7,7 @@ import { useTranslation } from "next-i18next";
 
 import NavBar from "./Navbar";
 import AlertBar from "../common/AlertBar";
+import LoginDialog from "./LoginDialog";
 
 import { AppDispatch, RootState } from "../../store";
 import { clearError } from "../../features/TransactionSlice";
@@ -73,6 +74,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
       <NavBar />
       <StyledContainer maxWidth="lg" sx={{ paddingTop: 8 }}>
         {children}
+        <LoginDialog />
         <AlertBar
           severity="warning"
           text={error || swapError}
