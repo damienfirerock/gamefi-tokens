@@ -1,32 +1,16 @@
 import React, { useState } from "react";
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "next-i18next";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 import Layout from "../layout/Layout";
 import AccountDetails from "../main/AccountDetails";
-import StyledCircularProgress from "../common/StyledCircularProgress";
+import InteractButton from "../common/InteractButton";
 
 import { AppDispatch, RootState } from "../../store";
 import { setLoading } from "../../features/TransactionSlice";
 import useSignature from "../../utils/hooks/useSignature";
-
-//TODO: Change into common component
-const InteractButton = (props: {
-  text: string;
-  method: () => void;
-  loading: boolean;
-  disabled?: boolean;
-}) => {
-  const { text, method, loading, disabled = false } = props;
-  return (
-    <Button variant="outlined" onClick={method} disabled={loading || disabled}>
-      {text}
-      {loading && <StyledCircularProgress size={24} />}
-    </Button>
-  );
-};
 
 const Account: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -61,18 +45,12 @@ const Account: React.FunctionComponent = () => {
           Email Account: {session.user.email}
         </Typography>
       )}
-      <InteractButton
-        text={session ? "Log Out" : "Log In"}
-        method={session ? signOut : signIn}
-        loading={loading}
-        // disabled={type === SwapType.CUMULATIVE}
-      />
+
       {session && (
         <InteractButton
           text={"Sign"}
           method={handleSignature}
           loading={loading}
-          // disabled={type === SwapType.CUMULATIVE}
         />
       )}
 
