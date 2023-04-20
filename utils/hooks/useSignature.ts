@@ -54,50 +54,10 @@ export const useActivationWallet = () => {
       if (!SignaturesContract || !account || !library)
         throw Error("Invalid Method");
 
-      // let messageHash = ethers.utils.solidityKeccak256(["string"], [email]);
-      // let messageHashBinary = ethers.utils.arrayify(messageHash);
-
       const signer = library.getSigner();
 
       if (await checkIfSmartContract()) {
-        //--------------//
-        // const hash = await ethers.utils.solidityKeccak256(["string"], [email]);
-        // const nextHash = ethers.utils.arrayify(hash);
-        // const signature = await signer.signMessage(nextHash);
-        //--------------//
-
         const signature = await signer.signMessage(email);
-
-        // FIXME: Clarify with Sequence Team if this approach is possible
-        // sequence.utils.isValidMessageSignature works with normal message
-        // https://docs.sequence.xyz/quickstart
-        // Not able to get sequence.utils.isValidSignature working with hash
-
-        //--------------//
-        // const IERC1271Contract = getContract(
-        //   account,
-        //   IERC1271Json.abi,
-        //   library,
-        //   account
-        // );
-
-        // const test = await IERC1271Contract.isValidSignature(
-        //   nextHash,
-        //   signature
-        // );
-
-        // console.log({ test });
-        //--------------//
-
-        //--------------//
-        // const response = await sequence.utils.isValidSignature(
-        //   account,
-        //   nextHash,
-        //   signature,
-        //   library,
-        //   chainId
-        // );
-        //--------------//
 
         const response = await sequence.utils.isValidMessageSignature(
           account,
@@ -110,9 +70,6 @@ export const useActivationWallet = () => {
 
         return response;
       } else {
-        // TODO: Update Signatures SC after clarification with Sequence Team
-        // verify the message for an externally owned account (EOA)
-
         const hash = await SignaturesContract.getMessageHash(email, account);
         const signature = await signer.signMessage(ethers.utils.arrayify(hash));
 
