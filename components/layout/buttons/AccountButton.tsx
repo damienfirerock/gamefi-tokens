@@ -1,5 +1,7 @@
 import React from "react";
 import { Popover, Typography } from "@mui/material";
+import { useSession, signOut } from "next-auth/react";
+import { useDispatch } from "react-redux";
 
 import MenuStyledButton from "./common/MenuStyledButton";
 import ConnectWalletButtons from "./ConnectWalletButtons";
@@ -9,14 +11,18 @@ import AccountLink from "./common/AccountLink";
 import { truncateString } from "../../../utils/common";
 import useWeb3React from "../../../utils/hooks/web3React/useWeb3React";
 import useActiveWeb3React from "../../../utils/hooks/web3React/useActiveWeb3React";
+import { setDialogOpen } from "../../../features/AuthSlice";
 
 // FIXME: Need to double try connect with Metamask on Walletconnect ??
 // FIXME: Metamask Button does not work if not on ChainId
 // TODO: Potential issues in the future as font size between chinese and english text are clearly different
 
 const AccountButton: React.FunctionComponent = () => {
+  const dispatch = useDispatch();
   const { deactivate } = useWeb3React();
   const { account } = useActiveWeb3React();
+
+  const { data: session, status } = useSession();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
@@ -30,8 +36,18 @@ const AccountButton: React.FunctionComponent = () => {
     setAnchorEl(null);
   };
 
+  const handleOpenLoginDialog = () => {
+    dispatch(setDialogOpen());
+  };
+
+  const handleLogOut = async () => {
+    await signOut();
+  };
+
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+
+  const isLoggedIn = !!session;
 
   return (
     <>
@@ -88,6 +104,15 @@ const AccountButton: React.FunctionComponent = () => {
               <MenuStyledButton variant="contained" onClick={deactivate}>
                 <Typography variant="h6" sx={{ marginLeft: 1 }}>
                   Disconnect
+                </Typography>
+              </MenuStyledButton>
+              <MenuStyledButton
+                variant="contained"
+                onClick={isLoggedIn ? handleLogOut : handleOpenLoginDialog}
+                disabled={status === "loading"}
+              >
+                <Typography variant="h6" sx={{ marginLeft: 1 }}>
+                  {isLoggedIn ? "Log Out" : "Log In"}
                 </Typography>
               </MenuStyledButton>
             </>

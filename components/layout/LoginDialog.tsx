@@ -1,11 +1,11 @@
 import React from "react";
 import { DialogTitle, Dialog } from "@mui/material";
+import { signIn } from "next-auth/react";
 import { useDispatch, useSelector } from "react-redux";
 
 import InteractButton from "../common/InteractButton";
 
 import { AppDispatch, RootState } from "../../store";
-import useAuth from "../../utils/hooks/useAuth";
 import { setDialogClosed } from "../../features/AuthSlice";
 
 const providers = ["google", "facebook", "apple"];
@@ -18,8 +18,7 @@ const LoginDialog: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const authSlice = useSelector((state: RootState) => state.auth);
-  const { dialogOpen } = authSlice;
-  const { signIn, loading } = useAuth();
+  const { dialogOpen, loading } = authSlice;
 
   const handleClose = () => {
     dispatch(setDialogClosed());
