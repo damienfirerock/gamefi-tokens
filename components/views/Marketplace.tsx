@@ -80,10 +80,7 @@ const Marketplace: React.FunctionComponent = () => {
         success: boolean;
         txnHash?: string;
         error?: any;
-      } = await fetch(ENDPOINT, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-      }).then((res) => res.json());
+      } = await fetch(ENDPOINT).then((res) => res.json());
 
       console.log({ response });
     };
