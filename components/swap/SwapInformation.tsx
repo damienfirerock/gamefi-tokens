@@ -19,19 +19,6 @@ const SwapWidget = dynamic(
   { ssr: false }
 );
 
-const theme: Theme = {
-  primary: "#FFF",
-  secondary: "#A9A9A9",
-  interactive: "#000",
-  container: "#4E4E5A",
-  module: "#222633",
-  accent: "#71FF98",
-  outline: "#CC1",
-  dialog: "#000",
-  fontFamily: "Comic Sans MS",
-  borderRadius: { small: 0, medium: 0, large: 0 },
-};
-
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
   alignItems: "center",
@@ -61,19 +48,6 @@ const AirdropInformation: React.FunctionComponent = () => {
         // Note: https://github.com/Uniswap/widgets/issues/465
         // Locale is currently not working
         locale={locale === "zh" ? "zh-CN" : "en-GB"}
-      />
-
-      <SwapWidget
-        provider={library}
-        jsonRpcUrlMap={{
-          [chainId!]: [NETWORKS_INFO_CONFIG[chainId!].rpcUrl],
-        }}
-        tokenList={NETWORKS_INFO_CONFIG[chainId!].tokenList}
-        defaultInputTokenAddress={CONTRACT_LIST[chainId!].USDC_ADDRESS}
-        defaultOutputTokenAddress={
-          CONTRACT_LIST[chainId!].FIRE_ROCK_GOLD_ADDRESS
-        }
-        theme={theme}
       />
     </StyledBox>
   );
