@@ -1,12 +1,10 @@
-import React, { useMemo, Suspense } from "react";
-import dynamic from "next/dynamic";
+import React, { useEffect, useMemo } from "react";
 import { Box, BoxProps, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 
 import Layout from "../layout/Layout";
-import StyledCircularProgress from "../common/StyledCircularProgress";
 import Listing from "../marketplace/Listing";
 import AlertBar from "../common/AlertBar";
 
@@ -24,6 +22,8 @@ const StyledBox = styled(Box)<BoxProps>(() => ({
 }));
 
 const CollectionEnumValues: string[] = Object.values(Collection);
+
+const ENDPOINT = "/api/session";
 
 const Marketplace: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -70,11 +70,26 @@ const Marketplace: React.FunctionComponent = () => {
     // An empty array implies that there is no such token
   }, [locale, collection, tokenId]);
 
-  console.log(tokenDetails);
-
   const handleClearTxnHash = () => {
     dispatch(clearTxnHash());
   };
+
+  useEffect(() => {
+    const getSession = async () => {
+      const response: {
+        success: boolean;
+        txnHash?: string;
+        error?: any;
+      } = await fetch(ENDPOINT, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+      }).then((res) => res.json());
+
+      console.log({ response });
+    };
+
+    getSession();
+  }, []);
 
   return (
     <Layout>
