@@ -21,6 +21,18 @@ export const authOptions = {
     }),
   ],
   debug: true,
+  // https://github.com/nextauthjs/next-auth/discussions/6898
+  cookies: {
+    pkceCodeVerifier: {
+      name: "next-auth.pkce.code_verifier",
+      options: {
+        httpOnly: true,
+        sameSite: "none",
+        path: "/",
+        secure: true,
+      },
+    },
+  },
 };
 
 export default NextAuth(authOptions);
