@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   Box,
   Card,
@@ -28,6 +28,7 @@ import useCommonWeb3Transactions from "../../utils/hooks/useCommonTransactions";
 const MOCK_SERVERS = ["海洋", "正式服1", "测试服1", "YH1", "SG", "A1"];
 const MOCK_FRG_CRYSTAL_EXCHANGE_RATE = 10;
 const MOCK_FRG_CRYSTAL_TAX_PERCENTAGE = 0.03;
+const MOCK_FRG_CRYSTAL_WITHDRAWAL_MINIMUM = 1000;
 
 export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   margin: theme.spacing(1),
@@ -106,6 +107,23 @@ const CrystalHub: React.FunctionComponent = () => {
       checkWalletBalance();
     }
   }, [account]);
+
+  const withdrawFRGCrystalError = useMemo(() => {
+    if (withdrawFRGCrystal > mockCrystalBalance)
+      return "You don't have that much FRG Crystal";
+
+    if (withdrawFRGCrystal < MOCK_FRG_CRYSTAL_WITHDRAWAL_MINIMUM)
+      return `Minimum withdrawal amount is ${MOCK_FRG_CRYSTAL_WITHDRAWAL_MINIMUM} FRG Crystal`;
+
+    return null;
+  }, [withdrawFRGCrystal, mockCrystalBalance]);
+
+  const depositFRGTokenError = useMemo(() => {
+    if (!walletBalance || depositFRGToken > walletBalance)
+      return "You don't have that much $FRG";
+
+    return null;
+  }, [depositFRGToken, walletBalance]);
 
   return (
     <Layout>
@@ -190,51 +208,61 @@ const CrystalHub: React.FunctionComponent = () => {
             text={t("crystal-hub:withdraw")}
             method={() => null}
             loading={loading}
+            disabled={!!withdrawFRGCrystalError}
           />
+          {!!withdrawFRGCrystalError && (
+            <Typography variant="h6" sx={{ color: "red" }}>
+              {withdrawFRGCrystalError}
+            </Typography>
+          )}
         </StyledCard>
 
         <StyledCard variant="outlined">
-          <Typography variant="h4">
-            {t("crystal-hub:deposit")}
-            <Typography variant="h5">
-              Mock $FRG to FRG Crystal Exchange Rate: 1:
-              {MOCK_FRG_CRYSTAL_EXCHANGE_RATE}
-            </Typography>
+          <Typography variant="h4">{t("crystal-hub:deposit")} </Typography>
+          <Typography variant="h5">
+            Mock $FRG to FRG Crystal Exchange Rate: 1:
+            {MOCK_FRG_CRYSTAL_EXCHANGE_RATE}
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              marginY: 2,
+            }}
+          >
             <Box
               sx={{
                 display: "flex",
+                alignItems: "center",
                 justifyContent: "space-around",
-                marginY: 2,
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-around",
-                }}
-              >
-                <TextField
-                  value={depositFRGToken}
-                  label="$FRG"
-                  onChange={handleDepositFRGTokenAmounts}
-                />
-                <ArrowRightAltIcon />
-                <TextField
-                  value={depositFRGCrystal}
-                  label="FRG Crystal"
-                  disabled
-                  InputLabelProps={{ shrink: true }}
-                />
-              </Box>
+              <TextField
+                value={depositFRGToken}
+                label="$FRG"
+                onChange={handleDepositFRGTokenAmounts}
+              />
+              <ArrowRightAltIcon />
+              <TextField
+                value={depositFRGCrystal}
+                label="FRG Crystal"
+                disabled
+                InputLabelProps={{ shrink: true }}
+              />
             </Box>
-            {/* TODO: Sending of $FRG to company wallet, inducing listener to update mock FRG crystal value */}
-            <InteractButton
-              text={t("crystal-hub:deposit")}
-              method={() => null}
-              loading={loading}
-            />
-          </Typography>
+          </Box>
+          {/* TODO: Sending of $FRG to company wallet, inducing listener to update mock FRG crystal value */}
+          <InteractButton
+            text={t("crystal-hub:deposit")}
+            method={() => null}
+            loading={loading}
+            disabled={!!depositFRGTokenError}
+          />
+          {!!depositFRGTokenError && (
+            <Typography variant="h6" sx={{ color: "red" }}>
+              {depositFRGTokenError}
+            </Typography>
+          )}
         </StyledCard>
       </StyledCard>
     </Layout>
