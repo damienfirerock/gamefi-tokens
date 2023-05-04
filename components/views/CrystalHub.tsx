@@ -109,6 +109,8 @@ const CrystalHub: React.FunctionComponent = () => {
   }, [account]);
 
   const withdrawFRGCrystalError = useMemo(() => {
+    if (!selectedServer) return "Please select a server";
+
     if (withdrawFRGCrystal > mockCrystalBalance)
       return "You don't have that much FRG Crystal";
 
@@ -116,14 +118,16 @@ const CrystalHub: React.FunctionComponent = () => {
       return `Minimum withdrawal amount is ${MOCK_FRG_CRYSTAL_WITHDRAWAL_MINIMUM} FRG Crystal`;
 
     return null;
-  }, [withdrawFRGCrystal, mockCrystalBalance]);
+  }, [withdrawFRGCrystal, mockCrystalBalance, selectedServer]);
 
   const depositFRGTokenError = useMemo(() => {
+    if (!selectedServer) return "Please select a server";
+
     if (!walletBalance || depositFRGToken > walletBalance)
       return "You don't have that much $FRG";
 
     return null;
-  }, [depositFRGToken, walletBalance]);
+  }, [depositFRGToken, walletBalance, selectedServer]);
 
   return (
     <Layout>
