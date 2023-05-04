@@ -1,13 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import transactionReducer from "./features/TransactionSlice";
-import swapReducer from "./features/SwapSlice";
+import accountReducer from "./features/AccountSlice";
 import authReducer from "./features/AuthSlice";
 
 const store = configureStore({
   reducer: {
     transaction: transactionReducer,
-    swap: swapReducer,
+    account: accountReducer,
     auth: authReducer,
   },
 });

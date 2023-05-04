@@ -7,6 +7,8 @@ import ConnectWalletButton from "./common/ConnectWalletButton";
 
 import useActivationWallet from "../../../utils/hooks/web3React/useActivationWallet";
 import useDispatchErrors from "../../../utils/hooks/useDispatchErrors";
+import useCommonWeb3Transactions from "../../../utils/hooks/useCommonTransactions";
+import useWeb3React from "../../../utils/hooks/web3React/useWeb3React";
 import { detectMetamask, WalletReadyState } from "../../../constants/wallets";
 import { SUPPORTED_WALLETS, WalletKeys } from "../../../constants/wallets";
 
@@ -32,10 +34,13 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
 const ConnectWalletButtons: React.FunctionComponent = () => {
   const { sendTransactionError } = useDispatchErrors();
   const { tryActivationEVM } = useActivationWallet();
+  const { checkWalletBalance } = useCommonWeb3Transactions();
+  const { account } = useWeb3React();
 
   const handleConnectWallet = useCallback(async (walletKey: WalletKeys) => {
     try {
       await tryActivationEVM(walletKey);
+      if (account) await checkWalletBalance();
     } catch (error) {
       sendTransactionError(JSON.stringify(error));
     }

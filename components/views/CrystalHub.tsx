@@ -20,6 +20,7 @@ import AccountButton from "../layout/buttons/AccountButton";
 import { AppDispatch, RootState } from "../../store";
 import { setDialogOpen } from "../../features/AuthSlice";
 import useActiveWeb3React from "../../utils/hooks/web3React/useActiveWeb3React";
+import useCommonWeb3Transactions from "../../utils/hooks/useCommonTransactions";
 
 const MOCK_SERVERS = ["海洋", "正式服1", "测试服1", "YH1", "SG", "A1"];
 
@@ -32,12 +33,16 @@ const CrystalHub: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation("crystal-hub");
   const { account } = useActiveWeb3React();
+  const { checkWalletBalance } = useCommonWeb3Transactions();
 
   const { query } = useRouter();
   const { email, server, type } = query;
 
   const authSlice = useSelector((state: RootState) => state.auth);
   const { session, loading } = authSlice;
+
+  const accountSlice = useSelector((state: RootState) => state.account);
+  const { walletBalance } = accountSlice;
 
   const [selectedServer, selectServer] = useState<string>("");
   const [mockCrystalBalance, setMockCrystalBalance] = useState<number>(0);
@@ -65,6 +70,12 @@ const CrystalHub: React.FunctionComponent = () => {
     }
   }, [server]);
 
+  useEffect(() => {
+    if (!!account) {
+      checkWalletBalance();
+    }
+  }, [account]);
+
   return (
     <Layout>
       {/* Header */}
@@ -75,6 +86,9 @@ const CrystalHub: React.FunctionComponent = () => {
       {session && !account && <AccountButton />}
       {/* TODO: Eventually will need to check against account bound wallet */}
       {!!account && <Typography variant="h4">Wallet: {account}</Typography>}
+      {!!walletBalance && (
+        <Typography variant="h4">$FRG: {walletBalance}</Typography>
+      )}
 
       {/* Server Selection */}
       <Box sx={{ marginY: 2 }}>

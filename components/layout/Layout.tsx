@@ -12,7 +12,7 @@ import LoginDialog from "./LoginDialog";
 
 import { AppDispatch, RootState } from "../../store";
 import { clearError } from "../../features/TransactionSlice";
-import { clearError as clearSwapError } from "../../features/SwapSlice";
+import { clearError as clearAccountError } from "../../features/AccountSlice";
 import {
   setSession,
   setLoading,
@@ -20,12 +20,13 @@ import {
 } from "../../features/AuthSlice";
 import { SUPPORTED_WALLETS } from "../../constants/wallets";
 import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
+import useCommonWeb3Transactions from "../../utils/hooks/useCommonTransactions";
 
 type LayoutProps = {
   children: React.ReactNode;
 };
 
-const StyledContainer = styled(Container)<ContainerProps>(({ theme }) => ({
+const StyledContainer = styled(Container)<ContainerProps>(() => ({
   textAlign: "center",
   wordWrap: "break-word",
 }));
@@ -33,6 +34,7 @@ const StyledContainer = styled(Container)<ContainerProps>(({ theme }) => ({
 const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   const { children } = props;
   const { account, activate } = useWeb3React();
+  const { checkWalletBalance } = useCommonWeb3Transactions();
   const { t } = useTranslation("common");
   const dispatch = useDispatch<AppDispatch>();
   const { data: session, status } = useSession();
@@ -43,12 +45,12 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { error } = transactionSlice;
 
-  const swapSlice = useSelector((state: RootState) => state.swap);
-  const { error: swapError } = swapSlice;
+  const accountSlice = useSelector((state: RootState) => state.account);
+  const { error: accountError } = accountSlice;
 
   const handleClearAlert = () => {
-    if (swapError) {
-      dispatch(clearSwapError());
+    if (accountError) {
+      dispatch(clearAccountError());
     } else if (error) {
       dispatch(clearError());
     }
@@ -67,6 +69,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
 
       try {
         await activate(connector);
+        await checkWalletBalance();
       } catch (error) {
         console.error(error);
       }
@@ -107,7 +110,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
         <LoginDialog />
         <AlertBar
           severity="warning"
-          text={error || swapError}
+          text={error || accountError}
           handleClearAlertSource={handleClearAlert}
         />
       </StyledContainer>
