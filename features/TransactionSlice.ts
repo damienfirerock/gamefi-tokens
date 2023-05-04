@@ -15,6 +15,7 @@ type SliceState = {
   sigDetails: ISignatureDetails | null;
   txnDetails: IUserTransaction | null;
   error?: null | string;
+  success?: null | string;
   loading: boolean;
 };
 
@@ -73,6 +74,12 @@ export const TransactionSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+    setSuccess: (state, action) => {
+      state.success = action.payload;
+    },
+    clearSuccess: (state) => {
+      state.error = null;
+    },
     setTxnCount: (state, action) => {
       state.txCount = action.payload;
     },
@@ -118,6 +125,8 @@ export const {
   setLoading,
   setError,
   clearError,
+  setSuccess,
+  clearSuccess,
   setTxnCount,
   setTxnIndex,
   setTxnHash,

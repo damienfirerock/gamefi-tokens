@@ -11,7 +11,7 @@ import AlertBar from "../common/AlertBar";
 import LoginDialog from "./LoginDialog";
 
 import { AppDispatch, RootState } from "../../store";
-import { clearError } from "../../features/TransactionSlice";
+import { clearError, clearSuccess } from "../../features/TransactionSlice";
 import { clearError as clearAccountError } from "../../features/AccountSlice";
 import {
   setSession,
@@ -20,7 +20,7 @@ import {
 } from "../../features/AuthSlice";
 import { SUPPORTED_WALLETS } from "../../constants/wallets";
 import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
-import useCommonWeb3Transactions from "../../utils/hooks/useCommonTransactions";
+import useCommonWeb3Transactions from "../../utils/hooks/useCommonWeb3Transactions";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -43,7 +43,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   const { loading: authLoading } = authSlice;
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
-  const { error } = transactionSlice;
+  const { error, success } = transactionSlice;
 
   const accountSlice = useSelector((state: RootState) => state.account);
   const { error: accountError } = accountSlice;
@@ -112,6 +112,11 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
           severity="warning"
           text={error || accountError}
           handleClearAlertSource={handleClearAlert}
+        />
+        <AlertBar
+          severity="success"
+          text={success}
+          handleClearAlertSource={() => dispatch(clearSuccess())}
         />
       </StyledContainer>
     </>

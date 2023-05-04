@@ -24,7 +24,7 @@ import InteractButton from "../common/InteractButton";
 import { AppDispatch, RootState } from "../../store";
 import { setDialogOpen } from "../../features/AuthSlice";
 import useActiveWeb3React from "../../utils/hooks/web3React/useActiveWeb3React";
-import useCommonWeb3Transactions from "../../utils/hooks/useCommonTransactions";
+import useCommonWeb3Transactions from "../../utils/hooks/useCommonWeb3Transactions";
 
 const MOCK_SERVERS = ["海洋", "正式服1", "测试服1", "YH1", "SG", "A1"];
 const MOCK_FRG_CRYSTAL_EXCHANGE_RATE = 10;
@@ -40,7 +40,8 @@ const CrystalHub: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation("crystal-hub");
   const { account } = useActiveWeb3React();
-  const { checkWalletBalance } = useCommonWeb3Transactions();
+  const { checkWalletBalance, checkTransactionStatus } =
+    useCommonWeb3Transactions();
 
   const { query } = useRouter();
   const { email, server, type } = query;

@@ -1,18 +1,22 @@
 import { useMemo } from "react";
 import { useDispatch } from "react-redux";
+import { ethers } from "ethers";
 
 import { AppDispatch } from "../../store";
 import useDispatchErrors from "./useDispatchErrors";
 
-import { formatTokenValue } from "../../utils/common";
-import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
+import { formatTokenValue } from "../common";
+import useWeb3React from "./web3React/useWeb3React";
 import { getContract } from "../web3";
 import { setWalletBalance } from "../../features/AccountSlice";
+import { setSuccess } from "../../features/TransactionSlice";
 
 const ERC20ABI = require("../../constants/abis/ERC20-ABI.json");
 
 const NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS =
   process.env.NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS;
+const NEXT_PUBLIC_ALCHEMY_HTTPS_PROVIDER =
+  process.env.NEXT_PUBLIC_ALCHEMY_HTTPS_PROVIDER;
 
 const formatValue = (result: any) => {
   const nextResult = BigInt(result).toString();
@@ -23,7 +27,8 @@ const formatValue = (result: any) => {
 
 const useCommonWeb3Transactions = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { sendTransactionErrorOnMetaMaskRequest } = useDispatchErrors();
+  const { sendTransactionError, sendTransactionErrorOnMetaMaskRequest } =
+    useDispatchErrors();
 
   const { account, library } = useWeb3React();
 
@@ -61,8 +66,38 @@ const useCommonWeb3Transactions = () => {
     return result;
   };
 
+  async function checkTransactionStatus(
+    txHash: string,
+    interval: number = 5000
+  ) {
+    try {
+      const provider = new ethers.providers.JsonRpcProvider(
+        NEXT_PUBLIC_ALCHEMY_HTTPS_PROVIDER
+      );
+      const receipt = await provider.getTransactionReceipt(txHash);
+
+      if (receipt) {
+        if (receipt.status === 1) {
+          dispatch(setSuccess(`Transaction ${txHash} was successful`));
+          console.log("Transaction was successful");
+        } else if (receipt.status === 0) {
+          sendTransactionError(`Transaction (${txHash}) failed`);
+        } else {
+          console.log("Transaction is still pending");
+          setTimeout(() => checkTransactionStatus(txHash, interval), interval);
+        }
+      } else {
+        console.log("Transaction not found or still pending");
+        setTimeout(() => checkTransactionStatus(txHash, interval), interval);
+      }
+    } catch (error) {
+      sendTransactionErrorOnMetaMaskRequest(error);
+    }
+  }
+
   return {
     checkWalletBalance,
+    checkTransactionStatus,
   };
 };
 

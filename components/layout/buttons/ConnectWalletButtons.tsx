@@ -7,7 +7,7 @@ import ConnectWalletButton from "./common/ConnectWalletButton";
 
 import useActivationWallet from "../../../utils/hooks/web3React/useActivationWallet";
 import useDispatchErrors from "../../../utils/hooks/useDispatchErrors";
-import useCommonWeb3Transactions from "../../../utils/hooks/useCommonTransactions";
+import useCommonWeb3Transactions from "../../../utils/hooks/useCommonWeb3Transactions";
 import useWeb3React from "../../../utils/hooks/web3React/useWeb3React";
 import { detectMetamask, WalletReadyState } from "../../../constants/wallets";
 import { SUPPORTED_WALLETS, WalletKeys } from "../../../constants/wallets";
