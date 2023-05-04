@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
+import { ethers } from "ethers";
 import {
   Box,
   Card,
@@ -24,10 +25,15 @@ import InteractButton from "../common/InteractButton";
 import { AppDispatch, RootState } from "../../store";
 import { setDialogOpen } from "../../features/AuthSlice";
 import { setLoading } from "../../features/TransactionSlice";
-import useActiveWeb3React from "../../utils/hooks/web3React/useActiveWeb3React";
+import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
 import useCommonWeb3Transactions from "../../utils/hooks/useCommonWeb3Transactions";
 import useDispatchErrors from "../../utils/hooks/useDispatchErrors";
 import { setSuccess } from "../../features/TransactionSlice";
+import CONFIG from "../../config";
+
+const { FIRE_ROCK_TOKEN } = CONFIG;
+
+const FireRockGoldJson = require("../../constants/abis/FireRockGold.json");
 
 const MOCK_SERVERS = ["海洋", "正式服1", "测试服1", "YH1", "SG", "A1"];
 const MOCK_FRG_CRYSTAL_EXCHANGE_RATE = 10;
@@ -42,7 +48,7 @@ export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
 const CrystalHub: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation("crystal-hub");
-  const { account } = useActiveWeb3React();
+  const { account, library } = useWeb3React();
   const { checkWalletBalance, checkTransactionStatus } =
     useCommonWeb3Transactions();
   const { sendTransactionErrorOnMetaMaskRequest } = useDispatchErrors();
@@ -142,6 +148,44 @@ const CrystalHub: React.FunctionComponent = () => {
     setMockPendingCrystalBalance((prevState) => {
       return prevState - withdrawFRGCrystal;
     });
+  };
+
+  const handleDepositFRGToken = async () => {
+    dispatch(setLoading(true));
+    setMockPendingCrystalBalance((prevState) => prevState + depositFRGCrystal);
+    const signer = library!.getSigner(account!);
+
+    const fireRockGoldContract = new ethers.Contract(
+      FIRE_ROCK_TOKEN!,
+      FireRockGoldJson.abi,
+      signer
+    );
+
+    const decimals = await fireRockGoldContract.decimals();
+    const value = await ethers.utils.parseUnits(
+      depositFRGToken.toString(),
+      decimals
+    );
+
+    const tx = await fireRockGoldContract.transfer(
+      "0x2F8C6C5D12391F8D6AcE02A63a579f391F04b40f",
+      value
+    );
+    const { hash } = tx;
+
+    // TODO: Error Handling
+
+    setConfirmDepositFRGTokenDialog(false);
+
+    dispatch(setSuccess(`Running Transaction: ${hash}`));
+
+    dispatch(setLoading(false));
+
+    await checkTransactionStatus(hash);
+
+    setMockPendingCrystalBalance((prevState) => prevState - depositFRGCrystal);
+
+    checkWalletBalance();
   };
 
   useEffect(() => {
@@ -364,8 +408,8 @@ const CrystalHub: React.FunctionComponent = () => {
 如果 0x1234FIREROCK1234 不是交易的目标地址，请不要确认钱包交易。
 一旦您的转账被确认，我们将自动更新您的游戏帐户中的 FRG Crystal 余额.`}
           <InteractButton
-            text={t("crystal-hub:withdraw")}
-            method={() => null}
+            text={t("crystal-hub:deposit")}
+            method={handleDepositFRGToken}
             loading={loading}
           />
           <InteractButton
