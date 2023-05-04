@@ -3,6 +3,7 @@ import {
   Box,
   Card,
   CardProps,
+  Dialog,
   FormControl,
   InputLabel,
   MenuItem,
@@ -54,10 +55,16 @@ const CrystalHub: React.FunctionComponent = () => {
   const [mockCrystalBalance, setMockCrystalBalance] = useState<number>(99999);
   const [mockPendingCrystalBalance, setMockPendingCrystalBalance] =
     useState<number>(0);
-  const [depositFRGCrystal, setDepositFRGCrystal] = useState<number>(0);
-  const [depositFRGToken, setDepositFRGToken] = useState<number>(0);
+
   const [withdrawFRGCrystal, setWithdrawFRGCrystal] = useState<number>(0);
   const [withdrawFRGToken, setWithdrawFRGToken] = useState<number>(0);
+  const [confirmWithdrawFRGCrystalDialog, setConfirmWithdrawFRGCrystalDialog] =
+    useState<boolean>(false);
+
+  const [depositFRGToken, setDepositFRGToken] = useState<number>(0);
+  const [depositFRGCrystal, setDepositFRGCrystal] = useState<number>(0);
+  const [confirmDepositFRGTokenDialog, setConfirmDepositFRGTokenDialog] =
+    useState<boolean>(false);
 
   const handleSelectServer = (event: SelectChangeEvent) => {
     selectServer(event.target.value as string);
@@ -172,7 +179,7 @@ const CrystalHub: React.FunctionComponent = () => {
         <StyledCard variant="outlined">
           <Typography variant="h4">{t("crystal-hub:withdraw")}</Typography>
           <Typography variant="h5">
-            Mock FRG Crystal to $FRG Exchange Rate:{" "}
+            Mock FRG Crystal to $FRG Exchange Rate -{" "}
             {MOCK_FRG_CRYSTAL_EXCHANGE_RATE}:1
           </Typography>
           <Typography variant="h5">
@@ -210,7 +217,9 @@ const CrystalHub: React.FunctionComponent = () => {
           {/* TODO: Sending of $FRG to wallet upon Mock Deposit */}
           <InteractButton
             text={t("crystal-hub:withdraw")}
-            method={() => null}
+            method={() => {
+              setConfirmWithdrawFRGCrystalDialog(true);
+            }}
             loading={loading}
             disabled={!!withdrawFRGCrystalError}
           />
@@ -221,10 +230,32 @@ const CrystalHub: React.FunctionComponent = () => {
           )}
         </StyledCard>
 
+        <Dialog
+          open={confirmWithdrawFRGCrystalDialog}
+          onClose={() => {
+            setConfirmWithdrawFRGCrystalDialog(false);
+          }}
+        >
+          {`确认将 ${withdrawFRGCrystal} FRG Crystal 提现到 ${withdrawFRGToken} $FRG 吗？ （$FRG
+          将通过链上交易发送到您的绑定钱包`}
+          <InteractButton
+            text={t("crystal-hub:withdraw")}
+            method={() => null}
+            loading={loading}
+          />
+          <InteractButton
+            text="Cancel"
+            method={() => {
+              setConfirmWithdrawFRGCrystalDialog(false);
+            }}
+            loading={loading}
+          />
+        </Dialog>
+
         <StyledCard variant="outlined">
           <Typography variant="h4">{t("crystal-hub:deposit")} </Typography>
           <Typography variant="h5">
-            Mock $FRG to FRG Crystal Exchange Rate: 1:
+            Mock $FRG to FRG Crystal Exchange Rate - 1:
             {MOCK_FRG_CRYSTAL_EXCHANGE_RATE}
           </Typography>
           <Box
@@ -258,7 +289,9 @@ const CrystalHub: React.FunctionComponent = () => {
           {/* TODO: Sending of $FRG to company wallet, inducing listener to update mock FRG crystal value */}
           <InteractButton
             text={t("crystal-hub:deposit")}
-            method={() => null}
+            method={() => {
+              setConfirmDepositFRGTokenDialog(true);
+            }}
             loading={loading}
             disabled={!!depositFRGTokenError}
           />
@@ -268,6 +301,29 @@ const CrystalHub: React.FunctionComponent = () => {
             </Typography>
           )}
         </StyledCard>
+
+        <Dialog
+          open={confirmDepositFRGTokenDialog}
+          onClose={() => {
+            setConfirmDepositFRGTokenDialog(false);
+          }}
+        >
+          {`$FRG 将从您的钱包发送到官方游戏钱包：0x1234FIREROCK1234。
+如果 0x1234FIREROCK1234 不是交易的目标地址，请不要确认钱包交易。
+一旦您的转账被确认，我们将自动更新您的游戏帐户中的 FRG Crystal 余额.`}
+          <InteractButton
+            text={t("crystal-hub:withdraw")}
+            method={() => null}
+            loading={loading}
+          />
+          <InteractButton
+            text="Cancel"
+            method={() => {
+              setConfirmDepositFRGTokenDialog(false);
+            }}
+            loading={loading}
+          />
+        </Dialog>
       </StyledCard>
     </Layout>
   );
