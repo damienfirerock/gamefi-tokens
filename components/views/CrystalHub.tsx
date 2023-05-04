@@ -23,8 +23,11 @@ import InteractButton from "../common/InteractButton";
 
 import { AppDispatch, RootState } from "../../store";
 import { setDialogOpen } from "../../features/AuthSlice";
+import { setLoading } from "../../features/TransactionSlice";
 import useActiveWeb3React from "../../utils/hooks/web3React/useActiveWeb3React";
 import useCommonWeb3Transactions from "../../utils/hooks/useCommonWeb3Transactions";
+import useDispatchErrors from "../../utils/hooks/useDispatchErrors";
+import { setSuccess } from "../../features/TransactionSlice";
 
 const MOCK_SERVERS = ["海洋", "正式服1", "测试服1", "YH1", "SG", "A1"];
 const MOCK_FRG_CRYSTAL_EXCHANGE_RATE = 10;
@@ -42,12 +45,16 @@ const CrystalHub: React.FunctionComponent = () => {
   const { account } = useActiveWeb3React();
   const { checkWalletBalance, checkTransactionStatus } =
     useCommonWeb3Transactions();
+  const { sendTransactionErrorOnMetaMaskRequest } = useDispatchErrors();
 
   const { query } = useRouter();
   const { email, server, type } = query;
 
   const authSlice = useSelector((state: RootState) => state.auth);
-  const { session, loading } = authSlice;
+  const { session } = authSlice;
+
+  const transactionSlice = useSelector((state: RootState) => state.transaction);
+  const { loading } = transactionSlice;
 
   const accountSlice = useSelector((state: RootState) => state.account);
   const { walletBalance } = accountSlice;
@@ -91,6 +98,50 @@ const CrystalHub: React.FunctionComponent = () => {
       (nextCrystalValue / MOCK_FRG_CRYSTAL_EXCHANGE_RATE) *
       (1 - MOCK_FRG_CRYSTAL_TAX_PERCENTAGE);
     setWithdrawFRGToken(nextTokenValue);
+  };
+
+  const handleWithdrawFRGCrystal = async () => {
+    dispatch(setLoading(true));
+    const prevMockCrystalBalance = mockCrystalBalance;
+    setMockCrystalBalance(prevMockCrystalBalance - withdrawFRGCrystal);
+    setMockPendingCrystalBalance(
+      mockPendingCrystalBalance + withdrawFRGCrystal
+    );
+
+    const body = JSON.stringify({ account, amount: withdrawFRGToken });
+
+    const response: {
+      success: boolean;
+      txnHash?: string;
+      error?: any;
+    } = await fetch("/api/crystal-hub/withdraw-frg-crystal", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body,
+    }).then((res) => res.json());
+
+    const { txnHash, error } = response;
+
+    dispatch(setLoading(false));
+    setConfirmWithdrawFRGCrystalDialog(false);
+
+    if (error || !txnHash) {
+      setMockCrystalBalance(prevMockCrystalBalance);
+      setMockPendingCrystalBalance((prevState) => {
+        return prevState - withdrawFRGCrystal;
+      });
+      sendTransactionErrorOnMetaMaskRequest(error);
+      return;
+    }
+
+    dispatch(setSuccess(`Running Transaction: ${txnHash}`));
+
+    await checkTransactionStatus(txnHash);
+
+    checkWalletBalance();
+    setMockPendingCrystalBalance((prevState) => {
+      return prevState - withdrawFRGCrystal;
+    });
   };
 
   useEffect(() => {
@@ -241,7 +292,7 @@ const CrystalHub: React.FunctionComponent = () => {
           将通过链上交易发送到您的绑定钱包`}
           <InteractButton
             text={t("crystal-hub:withdraw")}
-            method={() => null}
+            method={handleWithdrawFRGCrystal}
             loading={loading}
           />
           <InteractButton

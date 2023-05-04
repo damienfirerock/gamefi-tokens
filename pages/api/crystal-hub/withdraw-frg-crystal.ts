@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 
 import CONFIG from "../../../config";
 
-const CharacterSkinJson = require("../../../constants/abis/CharacterSkin.json");
+const FireRockGoldJson = require("../../../constants/abis/FireRockGold.json");
 
 type Override<T1, T2> = Omit<T1, keyof T2> & T2;
 
@@ -16,52 +16,42 @@ type NextRequest = Override<NextApiRequest, { body: NextRequestBody }>;
 
 const {
   ALCHEMY_WEB_SOCKET_PROVIDER,
-  CHARACTER_SKIN_ADDRESS,
   DUMMY_KEY,
   NETWORK_CHAIN_ID,
+  FIRE_ROCK_TOKEN,
 } = CONFIG;
 
 const handleWithdrawFRGCrystal = async (
   req: NextRequest,
   res: NextApiResponse
 ) => {
-  console.log({
-    ALCHEMY_WEB_SOCKET_PROVIDER,
-    CHARACTER_SKIN_ADDRESS,
-    DUMMY_KEY,
-    NETWORK_CHAIN_ID,
-  });
   try {
     const { account, amount } = req.body;
-    // TODO: Check if valid address and tokenId
-    // TODO: Check payment data with third party
-    console.log("Server API to handle successful Google Pay...");
 
-    // If valid, mint nft
-    const provider = await new ethers.providers.WebSocketProvider(
+    const provider = new ethers.providers.WebSocketProvider(
       ALCHEMY_WEB_SOCKET_PROVIDER!
     );
+
     const signer = new ethers.Wallet(DUMMY_KEY!, provider);
 
-    const characterSkinNftContract = new ethers.Contract(
-      CHARACTER_SKIN_ADDRESS!,
-      CharacterSkinJson.abi,
+    const fireRockGoldContract = new ethers.Contract(
+      FIRE_ROCK_TOKEN!,
+      FireRockGoldJson.abi,
       signer
     );
 
+    const nextAmount = ethers.utils.parseEther(amount.toString());
+
     // Get Transaction Details
-    const estimatedGasLimit = await characterSkinNftContract.estimateGas.mint(
+    const estimatedGasLimit = await fireRockGoldContract.estimateGas.transfer(
       account,
-      tokenId,
-      1,
-      []
+      nextAmount
     );
+
     const unsignedTransaction =
-      await characterSkinNftContract.populateTransaction.mint(
+      await fireRockGoldContract.populateTransaction.transfer(
         account,
-        tokenId,
-        1,
-        []
+        nextAmount
       );
     unsignedTransaction.chainId = parseInt(NETWORK_CHAIN_ID!);
     unsignedTransaction.gasLimit = estimatedGasLimit;
@@ -76,8 +66,6 @@ const handleWithdrawFRGCrystal = async (
     const submittedTx = await provider.sendTransaction(approveTxSigned);
     // The free plan on Vercel has a 10 second time-out
     // As such, waiting for 10 blocks would cause a false positive error
-    // HOTFIX: Wait 15 seconds on client-side (~3 seconds per block)
-    // Alternative: ping blockchain on clientside until a positive result is received
     const approveReceipt = await submittedTx.wait();
 
     if (approveReceipt.status === 0) {
@@ -92,6 +80,7 @@ const handleWithdrawFRGCrystal = async (
       txnHash: approveReceipt.transactionHash,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ success: false, error: `Internal Server Error` });
   }
 };
