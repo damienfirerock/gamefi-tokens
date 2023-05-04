@@ -6,6 +6,7 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
+  TextField,
   Typography,
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
@@ -13,9 +14,11 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
+import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 
 import Layout from "../layout/Layout";
 import AccountButton from "../layout/buttons/AccountButton";
+import InteractButton from "../common/InteractButton";
 
 import { AppDispatch, RootState } from "../../store";
 import { setDialogOpen } from "../../features/AuthSlice";
@@ -47,12 +50,38 @@ const CrystalHub: React.FunctionComponent = () => {
   const { walletBalance } = accountSlice;
 
   const [selectedServer, selectServer] = useState<string>("");
-  const [mockCrystalBalance, setMockCrystalBalance] = useState<number>(999);
+  const [mockCrystalBalance, setMockCrystalBalance] = useState<number>(99999);
   const [mockPendingCrystalBalance, setMockPendingCrystalBalance] =
     useState<number>(0);
+  const [depositFRGCrystal, setDepositFRGCrystal] = useState<number>(0);
+  const [depositFRGToken, setDepositFRGToken] = useState<number>(0);
+  const [withdrawFRGCrystal, setWithdrawFRGCrystal] = useState<number>(0);
+  const [withdrawFRGToken, setWithdrawFRGToken] = useState<number>(0);
 
   const handleSelectServer = (event: SelectChangeEvent) => {
     selectServer(event.target.value as string);
+  };
+
+  const handleDepositFRGTokenAmounts = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const nextTokenValue = Number(event.target.value);
+    setDepositFRGToken(nextTokenValue);
+
+    const nextCrystalValue = nextTokenValue * MOCK_FRG_CRYSTAL_EXCHANGE_RATE;
+    setDepositFRGCrystal(nextCrystalValue);
+  };
+
+  const handleWithdrawFRGCrystalAmounts = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const nextCrystalValue = Number(event.target.value);
+    setWithdrawFRGCrystal(nextCrystalValue);
+
+    const nextTokenValue =
+      (nextCrystalValue / MOCK_FRG_CRYSTAL_EXCHANGE_RATE) *
+      (1 - MOCK_FRG_CRYSTAL_TAX_PERCENTAGE);
+    setWithdrawFRGToken(nextTokenValue);
   };
 
   useEffect(() => {
@@ -128,8 +157,40 @@ const CrystalHub: React.FunctionComponent = () => {
             Mock FRG Crystal Exchange Tax Rate:{" "}
             {MOCK_FRG_CRYSTAL_TAX_PERCENTAGE * 100}%
           </Typography>
-          {/* TODO: Fields for FRG Crystal Exchange */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              marginY: 2,
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-around",
+              }}
+            >
+              <TextField
+                value={withdrawFRGCrystal}
+                label="FRG Crystal"
+                onChange={handleWithdrawFRGCrystalAmounts}
+              />
+              <ArrowRightAltIcon />
+              <TextField
+                value={withdrawFRGToken}
+                label="$FRG"
+                disabled
+                InputLabelProps={{ shrink: true }}
+              />
+            </Box>
+          </Box>
           {/* TODO: Sending of $FRG to wallet upon Mock Deposit */}
+          <InteractButton
+            text={t("crystal-hub:withdraw")}
+            method={() => null}
+            loading={loading}
+          />
         </StyledCard>
 
         <StyledCard variant="outlined">
@@ -139,8 +200,40 @@ const CrystalHub: React.FunctionComponent = () => {
               Mock $FRG to FRG Crystal Exchange Rate: 1:
               {MOCK_FRG_CRYSTAL_EXCHANGE_RATE}
             </Typography>
-            {/* TODO: Fields for FRG Crystal Exchange */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-around",
+                marginY: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-around",
+                }}
+              >
+                <TextField
+                  value={depositFRGToken}
+                  label="$FRG"
+                  onChange={handleDepositFRGTokenAmounts}
+                />
+                <ArrowRightAltIcon />
+                <TextField
+                  value={depositFRGCrystal}
+                  label="FRG Crystal"
+                  disabled
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Box>
+            </Box>
             {/* TODO: Sending of $FRG to company wallet, inducing listener to update mock FRG crystal value */}
+            <InteractButton
+              text={t("crystal-hub:deposit")}
+              method={() => null}
+              loading={loading}
+            />
           </Typography>
         </StyledCard>
       </StyledCard>
