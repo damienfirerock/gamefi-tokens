@@ -1,62 +1,61 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Typography } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "next-i18next";
-import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
 
 import Layout from "../layout/Layout";
-import AccountDetails from "../main/AccountDetails";
-import InteractButton from "../common/InteractButton";
 
 import { AppDispatch, RootState } from "../../store";
-import { setLoading } from "../../features/TransactionSlice";
-import useSignature from "../../utils/hooks/useSignature";
+import { setDialogOpen } from "../../features/AuthSlice";
 
 const CrystalHub: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { t } = useTranslation("common");
-  const { data: session } = useSession();
+  const { t } = useTranslation("crystal-hub");
 
-  const { checkSignature } = useSignature();
+  const { query } = useRouter();
+  const { email, server, type } = query;
 
-  const transactionSlice = useSelector((state: RootState) => state.transaction);
-  const { loading } = transactionSlice;
+  const authSlice = useSelector((state: RootState) => state.auth);
+  const { session, loading } = authSlice;
 
-  const [signStatus, setSignStatus] = useState<boolean>(false);
+  // TODO: Also need game server params, set server selection field below to server
 
-  const handleSignature = async () => {
-    if (!session) return;
-
-    dispatch(setLoading(true));
-
-    const response = await checkSignature(session!.user.email!);
-    setSignStatus(!!response);
-
-    dispatch(setLoading(false));
-    console.log({ handle: response });
+  const handleOpenLoginDialog = () => {
+    dispatch(setDialogOpen());
   };
+
+  useEffect(() => {
+    if (!loading && !session && email && server && type) {
+      handleOpenLoginDialog();
+    }
+  }, [email, server, type, session, loading]);
 
   return (
     <Layout>
       {/* Header */}
-      <AccountDetails />
-      {session && (
-        <Typography variant="h4">
-          Email Account: {session.user.email}
-        </Typography>
-      )}
+      <Typography variant="h3" sx={{ marginTop: 5, marginBottom: 2 }}>
+        {t("crystal-hub:crystal-hub")}
+      </Typography>
 
-      {session && (
-        <InteractButton
-          text={"Sign"}
-          method={handleSignature}
-          loading={loading}
-        />
-      )}
+      {/* TODO: Show Address */}
+      {/* TODO: Server Selection */}
+      {/* TODO: Mock FRG Crystal Balance */}
 
-      {session && (
-        <Typography variant="h4">Signed:{signStatus.toString()}</Typography>
-      )}
+      <Typography variant="h4" sx={{ marginTop: 5, marginBottom: 2 }}>
+        {t("crystal-hub:deposit")}
+
+        {/* TODO: Mock FRG Crystal to $FRG Exchange Rate */}
+        {/* TODO: Fields for FRG Crystal Exchange */}
+        {/* TODO: Sending of $FRG to wallet upon Mock Deposit */}
+      </Typography>
+
+      <Typography variant="h4" sx={{ marginTop: 5, marginBottom: 2 }}>
+        {t("crystal-hub:withdraw")}
+        {/* TODO: Mock $FRG to $FRG Crystal Exchange Rate */}
+        {/* TODO: Fields for FRG Crystal Exchange */}
+        {/* TODO: Sending of $FRG to company wallet, inducing listener to update mock FRG crystal value */}
+      </Typography>
     </Layout>
   );
 };

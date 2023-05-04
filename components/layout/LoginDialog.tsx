@@ -1,6 +1,7 @@
 import React from "react";
-import { DialogTitle, Dialog } from "@mui/material";
+import { DialogTitle, Dialog, Typography } from "@mui/material";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 
 import InteractButton from "../common/InteractButton";
@@ -16,6 +17,8 @@ export interface LoginDialogProps {
 
 const LoginDialog: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const { query } = useRouter();
+  const { email, type } = query;
 
   const authSlice = useSelector((state: RootState) => state.auth);
   const { dialogOpen, loading } = authSlice;
@@ -27,6 +30,11 @@ const LoginDialog: React.FunctionComponent = () => {
   return (
     <Dialog onClose={handleClose} open={dialogOpen}>
       <DialogTitle>Login</DialogTitle>
+      {email && type && (
+        <Typography variant="h4" sx={{ marginTop: 5, marginBottom: 2 }}>
+          Your game login was with email: {email} and type: {type}
+        </Typography>
+      )}
       {providers.map((provider) => (
         <InteractButton
           key={provider}
