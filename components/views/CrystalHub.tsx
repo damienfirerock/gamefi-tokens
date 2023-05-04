@@ -23,6 +23,8 @@ import useActiveWeb3React from "../../utils/hooks/web3React/useActiveWeb3React";
 import useCommonWeb3Transactions from "../../utils/hooks/useCommonTransactions";
 
 const MOCK_SERVERS = ["海洋", "正式服1", "测试服1", "YH1", "SG", "A1"];
+const MOCK_FRG_CRYSTAL_EXCHANGE_RATE = 10;
+const MOCK_FRG_CRYSTAL_TAX_PERCENTAGE = 0.03;
 
 export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   margin: theme.spacing(1),
@@ -45,7 +47,7 @@ const CrystalHub: React.FunctionComponent = () => {
   const { walletBalance } = accountSlice;
 
   const [selectedServer, selectServer] = useState<string>("");
-  const [mockCrystalBalance, setMockCrystalBalance] = useState<number>(0);
+  const [mockCrystalBalance, setMockCrystalBalance] = useState<number>(999);
   const [mockPendingCrystalBalance, setMockPendingCrystalBalance] =
     useState<number>(0);
 
@@ -108,22 +110,35 @@ const CrystalHub: React.FunctionComponent = () => {
         </FormControl>
       </Box>
 
-      {/* TODO: Mock FRG Crystal Balance */}
+      <Typography variant="h5">
+        Mock FRG Crystal Balance: {mockCrystalBalance}
+      </Typography>
+      <Typography variant="h5">
+        Mock Pending FRG Crystal Balance: {mockPendingCrystalBalance}
+      </Typography>
 
       <StyledCard variant="outlined">
         <StyledCard variant="outlined">
-          <Typography variant="h4">
-            {t("crystal-hub:deposit")}
-            {/* TODO: Mock FRG Crystal to $FRG Exchange Rate */}
-            {/* TODO: Fields for FRG Crystal Exchange */}
-            {/* TODO: Sending of $FRG to wallet upon Mock Deposit */}
+          <Typography variant="h4">{t("crystal-hub:withdraw")}</Typography>
+          <Typography variant="h5">
+            Mock FRG Crystal to $FRG Exchange Rate:{" "}
+            {MOCK_FRG_CRYSTAL_EXCHANGE_RATE}:1
           </Typography>
+          <Typography variant="h5">
+            Mock FRG Crystal Exchange Tax Rate:{" "}
+            {MOCK_FRG_CRYSTAL_TAX_PERCENTAGE * 100}%
+          </Typography>
+          {/* TODO: Fields for FRG Crystal Exchange */}
+          {/* TODO: Sending of $FRG to wallet upon Mock Deposit */}
         </StyledCard>
 
         <StyledCard variant="outlined">
           <Typography variant="h4">
-            {t("crystal-hub:withdraw")}
-            {/* TODO: Mock $FRG to $FRG Crystal Exchange Rate */}
+            {t("crystal-hub:deposit")}
+            <Typography variant="h5">
+              Mock $FRG to FRG Crystal Exchange Rate: 1:
+              {MOCK_FRG_CRYSTAL_EXCHANGE_RATE}
+            </Typography>
             {/* TODO: Fields for FRG Crystal Exchange */}
             {/* TODO: Sending of $FRG to company wallet, inducing listener to update mock FRG crystal value */}
           </Typography>
