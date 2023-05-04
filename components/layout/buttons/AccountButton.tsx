@@ -105,6 +105,13 @@ const AccountButton: React.FunctionComponent = () => {
                 text="Account"
                 // icon={<CelebrationIcon />}
               />
+
+              <AccountLink
+                href="/crystal-hub"
+                text="Crystal Hub"
+                // icon={<CelebrationIcon />}
+              />
+
               <MenuStyledButton variant="contained" onClick={deactivate}>
                 <Typography variant="h6" sx={{ marginLeft: 1 }}>
                   Disconnect
