@@ -57,7 +57,7 @@ const CrystalHub: React.FunctionComponent = () => {
   const { email, server, type } = query;
 
   const authSlice = useSelector((state: RootState) => state.auth);
-  const { session } = authSlice;
+  const { session, loading: authLoading } = authSlice;
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { loading } = transactionSlice;
@@ -196,7 +196,7 @@ const CrystalHub: React.FunctionComponent = () => {
     };
 
     // In the event of re-direct from game client
-    if (!loading && !session && email && type) {
+    if (!authLoading && !session && email && type) {
       handleOpenLoginDialog();
     }
   }, [email, type, session, loading]);
