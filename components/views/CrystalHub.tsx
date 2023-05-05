@@ -194,7 +194,7 @@ const CrystalHub: React.FunctionComponent = () => {
     const handleOpenLoginDialog = () => {
       dispatch(setDialogOpen());
     };
-    console.log({ authLoading, session, email, type });
+
     // In the event of re-direct from game client
     if (!authLoading && !session && email && type) {
       handleOpenLoginDialog();
@@ -212,6 +212,36 @@ const CrystalHub: React.FunctionComponent = () => {
       checkWalletBalance();
     }
   }, [account]);
+
+  useEffect(() => {
+    const NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS =
+      process.env.NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS;
+    const NEXT_PUBLIC_ALCHEMY_HTTPS_PROVIDER =
+      process.env.NEXT_PUBLIC_ALCHEMY_HTTPS_PROVIDER;
+
+    async function subscribeToTransferEvents() {
+      const provider = new ethers.providers.JsonRpcProvider(
+        NEXT_PUBLIC_ALCHEMY_HTTPS_PROVIDER
+      );
+      const tokenContract = new ethers.Contract(
+        NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS!,
+        FireRockGoldJson.abi,
+        provider
+      );
+
+      tokenContract.on("Transfer", (from, to, value, event) => {
+        dispatch(
+          setSuccess(`Transfer of ${value} $FRG from ${from} to ${to} `)
+        );
+      });
+
+      return () => {
+        tokenContract.removeAllListeners("Transfer");
+      };
+    }
+
+    subscribeToTransferEvents();
+  }, []);
 
   const withdrawFRGCrystalError = useMemo(() => {
     if (!selectedServer) return "Please select a server";

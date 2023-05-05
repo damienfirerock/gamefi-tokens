@@ -11,7 +11,7 @@ import { getContract } from "../web3";
 import { setWalletBalance } from "../../features/AccountSlice";
 import { setSuccess } from "../../features/TransactionSlice";
 
-const ERC20ABI = require("../../constants/abis/ERC20-ABI.json");
+const FireRockGoldJson = require("../../constants/abis/FireRockGold.json");
 
 const NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS =
   process.env.NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS;
@@ -39,7 +39,7 @@ const useCommonWeb3Transactions = () => {
 
     return getContract(
       NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS!,
-      ERC20ABI,
+      FireRockGoldJson.abi,
       library,
       account
     );
