@@ -194,12 +194,12 @@ const CrystalHub: React.FunctionComponent = () => {
     const handleOpenLoginDialog = () => {
       dispatch(setDialogOpen());
     };
-
+    console.log({ authLoading, session, email, type });
     // In the event of re-direct from game client
     if (!authLoading && !session && email && type) {
       handleOpenLoginDialog();
     }
-  }, [email, type, session, loading]);
+  }, [email, type, session, authLoading]);
 
   useEffect(() => {
     if (!!server) {
