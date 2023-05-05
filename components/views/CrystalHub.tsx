@@ -183,6 +183,8 @@ const CrystalHub: React.FunctionComponent = () => {
 
     await checkTransactionStatus(hash);
 
+    // TODO: Add Listener for FRG Crystal Balance Update
+
     setMockPendingCrystalBalance((prevState) => prevState - depositFRGCrystal);
 
     checkWalletBalance();

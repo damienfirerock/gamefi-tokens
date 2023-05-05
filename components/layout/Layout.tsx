@@ -69,7 +69,9 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
 
       try {
         await activate(connector);
-        await checkWalletBalance();
+        if (account) {
+          await checkWalletBalance();
+        }
       } catch (error) {
         console.error(error);
       }
