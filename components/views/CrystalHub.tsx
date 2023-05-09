@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import {
+  Alert,
   Box,
   Card,
   CardProps,
   FormControl,
   InputLabel,
+  Link,
   MenuItem,
   Typography,
 } from "@mui/material";
@@ -25,7 +27,8 @@ import useCommonWeb3Transactions from "../../utils/hooks/useCommonWeb3Transactio
 import { setSuccess } from "../../features/TransactionSlice";
 import WithdrawFRGCrystal from "../hub/WithdrawFRGCrystal";
 import DepositFRGToken from "../hub/DepositFRGToken";
-
+import { getEtherscanLink } from "../../utils/web3";
+import { truncateString } from "../../utils/common";
 const FireRockGoldJson = require("../../constants/abis/FireRockGold.json");
 
 const MOCK_SERVERS = ["海洋", "正式服1", "测试服1", "YH1", "SG", "A1"];
@@ -52,6 +55,13 @@ const CrystalHub: React.FunctionComponent = () => {
     accountSlice;
 
   const [selectedServer, selectServer] = useState<string>("");
+  const [transaction, setTransaction] = useState<{
+    transactionType: string;
+    hash: string;
+    amount: string;
+    status: string;
+    createdAt: string;
+  } | null>(null);
 
   const handleSelectServer = (event: SelectChangeEvent) => {
     selectServer(event.target.value as string);
@@ -115,12 +125,29 @@ const CrystalHub: React.FunctionComponent = () => {
     const subscribeToTransferEvents = async () => {
       tokenContract.on("Transfer", async (from, to, value, event) => {
         const nextValue = ethers.utils.formatUnits(value, 18);
+
+        setTransaction({
+          transactionType:
+            to === "0x2F8C6C5D12391F8D6AcE02A63a579f391F04b40f".toLowerCase()
+              ? "Withdraw FRG Crystal"
+              : "Deposit $FRG",
+          hash: event.transactionHash,
+          amount: nextValue,
+          status: "Pending",
+          createdAt: new Date().toDateString(),
+        });
+
         await waitForConfirmations(event.transactionHash, 10);
         dispatch(
           setSuccess(
             `Confirmed: Transfer of ${nextValue} $FRG from ${from} to ${to} `
           )
         );
+
+        setTransaction((prevState) => {
+          if (!prevState) return null;
+          return { ...prevState, status: "Success" };
+        });
       });
 
       return () => {
@@ -173,6 +200,24 @@ const CrystalHub: React.FunctionComponent = () => {
         <WithdrawFRGCrystal selectedServer={selectedServer} />
         <DepositFRGToken selectedServer={selectedServer} />
       </StyledCard>
+
+      {transaction && (
+        <Alert
+          severity={transaction.status === "Success" ? "success" : "info"}
+          sx={{ mb: 10 }}
+        >
+          {transaction.createdAt} |{" "}
+          <Link
+            href={getEtherscanLink(transaction.hash, "transaction")}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {truncateString(transaction.hash)}
+          </Link>{" "}
+          | {transaction.transactionType} | {transaction.amount} $FRG |{" "}
+          {transaction.status}
+        </Alert>
+      )}
     </Layout>
   );
 };
