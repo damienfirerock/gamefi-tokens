@@ -114,7 +114,6 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
     await checkTransactionStatus(txnHash);
 
     checkWalletBalance();
-    dispatch(setPendingFrgCrystalBalance(prevPendingFrgCrystalBalance));
   };
 
   const withdrawFRGCrystalError = useMemo(() => {
@@ -137,7 +136,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
           Mock FRG Crystal to $FRG Exchange Rate - {rate}:1
         </Typography>
         <Typography variant="h5">
-          Mock FRG Crystal Exchange Tax Rate: {tax * 100}%
+          Mock FRG Crystal Exchange Tax Rate: {tax}%
         </Typography>
         <Box
           sx={{

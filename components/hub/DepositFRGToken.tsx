@@ -50,6 +50,10 @@ const DepositFRGToken: React.FunctionComponent<{
   const accountSlice = useSelector((state: RootState) => state.account);
   const { walletBalance } = accountSlice;
 
+  const hubSlice = useSelector((state: RootState) => state.hub);
+  const { data } = hubSlice;
+  const { rate } = data!;
+
   const [depositFRGToken, setDepositFRGToken] = useState<number>(0);
   const [depositFRGCrystal, setDepositFRGCrystal] = useState<number>(0);
   const [confirmDepositFRGTokenDialog, setConfirmDepositFRGTokenDialog] =
@@ -68,7 +72,7 @@ const DepositFRGToken: React.FunctionComponent<{
   const handleDepositFRGToken = async () => {
     dispatch(setLoading(true));
     const nextDepositFRGToken = depositFRGToken;
-    dispatch(setPendingFrgCrystalBalance(nextDepositFRGToken));
+    dispatch(setPendingFrgCrystalBalance(nextDepositFRGToken * rate));
     const signer = library!.getSigner(account!);
 
     const fireRockGoldContract = new ethers.Contract(
@@ -98,10 +102,6 @@ const DepositFRGToken: React.FunctionComponent<{
     dispatch(setLoading(false));
 
     await checkTransactionStatus(hash);
-
-    // TODO: Add Listener for FRG Crystal Balance Update
-
-    dispatch(setPendingFrgCrystalBalance(0));
 
     // TODO: Once backend up, should check for account frgCrystal value again
 

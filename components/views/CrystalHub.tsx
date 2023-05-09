@@ -29,6 +29,10 @@ import WithdrawFRGCrystal from "../hub/WithdrawFRGCrystal";
 import DepositFRGToken from "../hub/DepositFRGToken";
 import { getEtherscanLink } from "../../utils/web3";
 import { truncateString } from "../../utils/common";
+import {
+  setFrgCrystalBalance,
+  setPendingFrgCrystalBalance,
+} from "../../features/AccountSlice";
 const FireRockGoldJson = require("../../constants/abis/FireRockGold.json");
 
 const MOCK_SERVERS = ["海洋", "正式服1", "测试服1", "YH1", "SG", "A1"];
@@ -53,6 +57,10 @@ const CrystalHub: React.FunctionComponent = () => {
   const accountSlice = useSelector((state: RootState) => state.account);
   const { walletBalance, frgCrystalBalance, pendingFrgCrystalBalance } =
     accountSlice;
+
+  const hubSlice = useSelector((state: RootState) => state.hub);
+  const { data } = hubSlice;
+  const { rate } = data!;
 
   const [selectedServer, selectServer] = useState<string>("");
   const [transaction, setTransaction] = useState<{
@@ -128,9 +136,9 @@ const CrystalHub: React.FunctionComponent = () => {
 
         setTransaction({
           transactionType:
-            to === "0x2F8C6C5D12391F8D6AcE02A63a579f391F04b40f".toLowerCase()
-              ? "Withdraw FRG Crystal"
-              : "Deposit $FRG",
+            to === "0x2F8C6C5D12391F8D6AcE02A63a579f391F04b40f"
+              ? "Deposit $FRG"
+              : "Withdraw FRG Crystal",
           hash: event.transactionHash,
           amount: nextValue,
           status: "Pending",
@@ -144,6 +152,16 @@ const CrystalHub: React.FunctionComponent = () => {
           )
         );
 
+        if (to === "0x2F8C6C5D12391F8D6AcE02A63a579f391F04b40f") {
+          dispatch(
+            setFrgCrystalBalance(
+              frgCrystalBalance! + parseInt(nextValue) * rate
+            )
+          );
+        }
+
+        dispatch(setPendingFrgCrystalBalance(0));
+
         setTransaction((prevState) => {
           if (!prevState) return null;
           return { ...prevState, status: "Success" };
@@ -156,7 +174,7 @@ const CrystalHub: React.FunctionComponent = () => {
     };
 
     subscribeToTransferEvents();
-  }, []);
+  }, [frgCrystalBalance, rate]);
 
   return (
     <Layout>
