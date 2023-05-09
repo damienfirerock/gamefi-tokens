@@ -1,0 +1,198 @@
+import React, { useState, useMemo } from "react";
+import { ethers } from "ethers";
+import {
+  Box,
+  Card,
+  CardProps,
+  Dialog,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useTranslation } from "next-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { styled } from "@mui/material/styles";
+import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
+
+import InteractButton from "../common/InteractButton";
+
+import { AppDispatch, RootState } from "../../store";
+import { setLoading } from "../../features/TransactionSlice";
+import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
+import useCommonWeb3Transactions from "../../utils/hooks/useCommonWeb3Transactions";
+import { setSuccess } from "../../features/TransactionSlice";
+import { setPendingFrgCrystalBalance } from "../../features/AccountSlice";
+import CONFIG from "../../config";
+
+const { FIRE_ROCK_TOKEN } = CONFIG;
+
+const FireRockGoldJson = require("../../constants/abis/FireRockGold.json");
+
+const MOCK_FRG_CRYSTAL_EXCHANGE_RATE = 10;
+
+export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
+  margin: theme.spacing(1),
+  padding: theme.spacing(2),
+}));
+
+const DepositFRGToken: React.FunctionComponent<{
+  selectedServer: string;
+}> = (props) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { t } = useTranslation("crystal-hub");
+  const { account, library } = useWeb3React();
+  const { checkWalletBalance, checkTransactionStatus } =
+    useCommonWeb3Transactions();
+  const { selectedServer } = props;
+
+  const transactionSlice = useSelector((state: RootState) => state.transaction);
+  const { loading } = transactionSlice;
+
+  const accountSlice = useSelector((state: RootState) => state.account);
+  const { walletBalance } = accountSlice;
+
+  const [depositFRGToken, setDepositFRGToken] = useState<number>(0);
+  const [depositFRGCrystal, setDepositFRGCrystal] = useState<number>(0);
+  const [confirmDepositFRGTokenDialog, setConfirmDepositFRGTokenDialog] =
+    useState<boolean>(false);
+
+  const handleDepositFRGTokenAmounts = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const nextTokenValue = Number(event.target.value);
+    setDepositFRGToken(nextTokenValue);
+
+    const nextCrystalValue = nextTokenValue * MOCK_FRG_CRYSTAL_EXCHANGE_RATE;
+    setDepositFRGCrystal(nextCrystalValue);
+  };
+
+  const handleDepositFRGToken = async () => {
+    dispatch(setLoading(true));
+    const nextDepositFRGToken = depositFRGToken;
+    dispatch(setPendingFrgCrystalBalance(nextDepositFRGToken));
+    const signer = library!.getSigner(account!);
+
+    const fireRockGoldContract = new ethers.Contract(
+      FIRE_ROCK_TOKEN!,
+      FireRockGoldJson.abi,
+      signer
+    );
+
+    const decimals = await fireRockGoldContract.decimals();
+    const value = await ethers.utils.parseUnits(
+      depositFRGToken.toString(),
+      decimals
+    );
+
+    const tx = await fireRockGoldContract.transfer(
+      "0x2F8C6C5D12391F8D6AcE02A63a579f391F04b40f",
+      value
+    );
+    const { hash } = tx;
+
+    // TODO: Error Handling
+
+    setConfirmDepositFRGTokenDialog(false);
+
+    dispatch(setSuccess(`Running Transaction: ${hash}`));
+
+    dispatch(setLoading(false));
+
+    await checkTransactionStatus(hash);
+
+    // TODO: Add Listener for FRG Crystal Balance Update
+
+    dispatch(setPendingFrgCrystalBalance(0));
+
+    // TODO: Once backend up, should check for account frgCrystal value again
+
+    checkWalletBalance();
+  };
+
+  const depositFRGTokenError = useMemo(() => {
+    if (!selectedServer) return "Please select a server";
+
+    if (!walletBalance || depositFRGToken > walletBalance)
+      return "You don't have that much $FRG";
+
+    return null;
+  }, [depositFRGToken, walletBalance, selectedServer]);
+
+  return (
+    <>
+      <StyledCard variant="outlined">
+        <Typography variant="h4">{t("crystal-hub:deposit")} </Typography>
+        <Typography variant="h5">
+          Mock $FRG to FRG Crystal Exchange Rate - 1:
+          {MOCK_FRG_CRYSTAL_EXCHANGE_RATE}
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+            marginY: 2,
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-around",
+            }}
+          >
+            <TextField
+              value={depositFRGToken}
+              label="$FRG"
+              onChange={handleDepositFRGTokenAmounts}
+            />
+            <ArrowRightAltIcon />
+            <TextField
+              value={depositFRGCrystal}
+              label="FRG Crystal"
+              disabled
+              InputLabelProps={{ shrink: true }}
+            />
+          </Box>
+        </Box>
+        {/* TODO: Sending of $FRG to company wallet, inducing listener to update mock FRG crystal value */}
+        <InteractButton
+          text={t("crystal-hub:deposit")}
+          method={() => {
+            setConfirmDepositFRGTokenDialog(true);
+          }}
+          loading={loading}
+          disabled={!!depositFRGTokenError}
+        />
+        {!!depositFRGTokenError && (
+          <Typography variant="h6" sx={{ color: "red" }}>
+            {depositFRGTokenError}
+          </Typography>
+        )}
+      </StyledCard>
+
+      <Dialog
+        open={confirmDepositFRGTokenDialog}
+        onClose={() => {
+          setConfirmDepositFRGTokenDialog(false);
+        }}
+      >
+        {`$FRG 将从您的钱包发送到官方游戏钱包：0x1234FIREROCK1234。
+如果 0x1234FIREROCK1234 不是交易的目标地址，请不要确认钱包交易。
+一旦您的转账被确认，我们将自动更新您的游戏帐户中的 FRG Crystal 余额.`}
+        <InteractButton
+          text={t("crystal-hub:deposit")}
+          method={handleDepositFRGToken}
+          loading={loading}
+        />
+        <InteractButton
+          text="Cancel"
+          method={() => {
+            setConfirmDepositFRGTokenDialog(false);
+          }}
+          loading={loading}
+        />
+      </Dialog>
+    </>
+  );
+};
+
+export default DepositFRGToken;
