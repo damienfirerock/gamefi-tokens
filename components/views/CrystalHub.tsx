@@ -86,26 +86,47 @@ const CrystalHub: React.FunctionComponent = () => {
     const NEXT_PUBLIC_ALCHEMY_HTTPS_PROVIDER =
       process.env.NEXT_PUBLIC_ALCHEMY_HTTPS_PROVIDER;
 
-    async function subscribeToTransferEvents() {
-      const provider = new ethers.providers.JsonRpcProvider(
-        NEXT_PUBLIC_ALCHEMY_HTTPS_PROVIDER
-      );
-      const tokenContract = new ethers.Contract(
-        NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS!,
-        FireRockGoldJson.abi,
-        provider
-      );
+    const provider = new ethers.providers.JsonRpcProvider(
+      NEXT_PUBLIC_ALCHEMY_HTTPS_PROVIDER
+    );
+    const tokenContract = new ethers.Contract(
+      NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS!,
+      FireRockGoldJson.abi,
+      provider
+    );
 
-      tokenContract.on("Transfer", (from, to, value, event) => {
+    const waitForConfirmations = async (
+      txHash: string,
+      confirmationsNeeded: number
+    ) => {
+      let receipt = await provider.getTransactionReceipt(txHash);
+      while (receipt === null || receipt.confirmations < confirmationsNeeded) {
         dispatch(
-          setSuccess(`Transfer of ${value} $FRG from ${from} to ${to} `)
+          setSuccess(
+            `Waiting 5 more seconds for Txn: ${txHash} as confirmations currently at [${receipt.confirmations}/${confirmationsNeeded}]`
+          )
+        );
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+        receipt = await provider.getTransactionReceipt(txHash);
+      }
+      return receipt.confirmations;
+    };
+
+    const subscribeToTransferEvents = async () => {
+      tokenContract.on("Transfer", async (from, to, value, event) => {
+        const nextValue = ethers.utils.formatUnits(value, 18);
+        await waitForConfirmations(event.transactionHash, 10);
+        dispatch(
+          setSuccess(
+            `Confirmed: Transfer of ${nextValue} $FRG from ${from} to ${to} `
+          )
         );
       });
 
       return () => {
         tokenContract.removeAllListeners("Transfer");
       };
-    }
+    };
 
     subscribeToTransferEvents();
   }, []);
