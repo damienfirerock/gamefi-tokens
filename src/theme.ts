@@ -7,25 +7,16 @@ declare module "@mui/material/Paper" {
   }
 }
 
-const headerFont = {
-  color: brown[600],
-};
-
-const SECONDARY_COLOR = yellow[200];
+const PRIMARY_COLOR = "#531EDC";
+const SECONDARY_COLOR = "#2A2638";
 
 const theme = createTheme({
   typography: {
-    h1: headerFont,
-    h2: headerFont,
-    h3: headerFont,
-    h4: headerFont,
-    h5: headerFont,
-    h6: headerFont,
     fontFamily: "Poppins, Roboto, monospace",
   },
   palette: {
     primary: {
-      main: yellow[900],
+      main: PRIMARY_COLOR,
     },
     secondary: {
       main: SECONDARY_COLOR,
