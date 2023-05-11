@@ -95,12 +95,6 @@ const AccountButton: React.FunctionComponent = () => {
               />
 
               <AccountLink
-                href="/marketplace"
-                text="Marketplace"
-                // icon={<CelebrationIcon />}
-              />
-
-              <AccountLink
                 href="/account"
                 text="Account"
                 // icon={<CelebrationIcon />}
