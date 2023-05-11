@@ -4,6 +4,7 @@ import {
   Card,
   CardProps,
   Dialog,
+  InputAdornment,
   TextField,
   Typography,
 } from "@mui/material";
@@ -160,9 +161,13 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
             <ArrowRightAltIcon />
             <TextField
               value={withdrawFRGToken}
-              label="$FRG"
               disabled
               InputLabelProps={{ shrink: true }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="start">$FRG</InputAdornment>
+                ),
+              }}
               // FIXME: Unable to change color from before and from createTheme
               // sx={{ input: { color: "#FFFFFF !important" } }}
             />

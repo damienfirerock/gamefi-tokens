@@ -5,6 +5,7 @@ import {
   Card,
   CardProps,
   Dialog,
+  InputAdornment,
   TextField,
   Typography,
 } from "@mui/material";
@@ -147,9 +148,18 @@ const DepositFRGToken: React.FunctionComponent<{
             <ArrowRightAltIcon />
             <TextField
               value={depositFRGCrystal}
-              label="FRG Crystal"
               disabled
               InputLabelProps={{ shrink: true }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment
+                    position="end"
+                    sx={{ adornedEnd: { color: "black !important" } }}
+                  >
+                    FRG Crystal
+                  </InputAdornment>
+                ),
+              }}
             />
           </Box>
         </Box>

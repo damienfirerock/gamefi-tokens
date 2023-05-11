@@ -31,7 +31,7 @@ const theme = createTheme({
     },
     text: {
       primary: WHITE,
-      secondary: WHITE,
+      secondary: SECONDARY_COLOR,
     },
     action: {
       disabledBackground: DISABLED_COLOUR,
@@ -60,6 +60,9 @@ const theme = createTheme({
           "& label.Mui-focused": {
             color: "var(--TextField-brandBorderFocusedColor)",
           },
+          "& label": {
+            color: WHITE,
+          },
           "& label.Mui-disabled": {
             color: DISABLED_COLOUR,
           },
@@ -69,10 +72,13 @@ const theme = createTheme({
     MuiInputBase: {
       styleOverrides: {
         root: {
-          // color: "black", works
+          // color: "black", // works
           "&.Mui-disabled": {
-            // backgroundColor: "#e4e4e4", // works
-            color: "red !important", // does not work
+            backgroundColor: "#e4e4e4", // works
+            // color: "red !important", // FIXME: does not work
+          },
+          ".MuiInputAdornment-positionEnd": {
+            color: "black",
           },
         },
       },
