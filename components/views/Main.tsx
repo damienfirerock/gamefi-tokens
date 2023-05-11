@@ -35,7 +35,7 @@ const Main: React.FunctionComponent = () => {
               }}
             >
               <Typography
-                variant="h4"
+                variant="h6"
                 sx={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -44,7 +44,7 @@ const Main: React.FunctionComponent = () => {
               >
                 {ADDRESS_NAMES[address]}:
               </Typography>
-              <Typography variant="h4">
+              <Typography variant="h6">
                 <Link
                   href={`${CONFIG.POLYGONSCAN_URL}${address}`}
                   target="_blank"

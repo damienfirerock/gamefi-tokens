@@ -36,14 +36,14 @@ const AccountDetails: React.FunctionComponent = () => {
           <Typography variant="h3" sx={{ marginTop: 5, marginBottom: 2 }}>
             {t("common:account-details")}
           </Typography>
-          <Typography variant="h4">
+          <Typography variant="h6">
             {t("common:address")}: {account}
           </Typography>
-          <Typography variant="h4">
+          <Typography variant="h6">
             {t("common:network")}:{" "}
             {!!chainId ? NETWORKS_INFO_CONFIG[chainId].name : "unknown"}
           </Typography>
-          {/* <Typography variant="h4">
+          {/* <Typography variant="h6">
             $FRG {t("airdrop:balance")}: {walletBalance}
           </Typography> */}
         </>

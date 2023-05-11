@@ -31,7 +31,7 @@ const LoginDialog: React.FunctionComponent = () => {
     <Dialog onClose={handleClose} open={dialogOpen}>
       <DialogTitle>Login</DialogTitle>
       {email && type && (
-        <Typography variant="h4" sx={{ marginTop: 5, marginBottom: 2 }}>
+        <Typography variant="h6" sx={{ marginTop: 5, marginBottom: 2 }}>
           Your game login was with email: {email} and type: {type}
         </Typography>
       )}

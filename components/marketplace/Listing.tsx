@@ -112,15 +112,15 @@ const Listing: React.FunctionComponent<IListing> = (props) => {
     <StyledCard variant="outlined">
       <StyledCardContent>
         {" "}
-        <Typography variant="h4">Token Id: {tokenId}</Typography>
-        <Typography variant="h5">{name}</Typography>
-        <Typography variant="h5">{description}</Typography>
-        <Typography variant="h5">Collection: {collection}</Typography>
+        <Typography variant="h6">Token Id: {tokenId}</Typography>
+        <Typography variant="h6">{name}</Typography>
+        <Typography variant="h6">{description}</Typography>
+        <Typography variant="h6">Collection: {collection}</Typography>
         <Box sx={{ position: "relative" }}>
           <Image src={image} alt={image} width={125} height={125} />
         </Box>
         {attributes.map(({ trait_type, value, display_type }) => (
-          <Typography variant="h5" key={trait_type}>
+          <Typography variant="h6" key={trait_type}>
             {trait_type}: {!!display_type && "+"}
             {value}
             {display_type === DisplayType.BoostPercentage && "%"}

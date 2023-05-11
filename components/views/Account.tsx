@@ -41,7 +41,7 @@ const Account: React.FunctionComponent = () => {
       {/* Header */}
       <AccountDetails />
       {session && (
-        <Typography variant="h4">
+        <Typography variant="h6">
           Email Account: {session.user.email}
         </Typography>
       )}
@@ -55,7 +55,7 @@ const Account: React.FunctionComponent = () => {
       )}
 
       {session && (
-        <Typography variant="h4">Signed:{signStatus.toString()}</Typography>
+        <Typography variant="h6">Signed:{signStatus.toString()}</Typography>
       )}
     </Layout>
   );

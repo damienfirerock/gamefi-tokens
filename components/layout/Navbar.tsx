@@ -23,7 +23,7 @@ const NavBar: React.FunctionComponent = () => {
     <AppBar position="fixed" color="secondary" elevation={5}>
       <Toolbar>
         <StyledBox>
-          <Header text={t("contracts-explorer")} variant="h4" />
+          <Header text={t("contracts-explorer")} variant="h6" />
         </StyledBox>
         <Link href="" locale={locale === "en" ? "zh" : "en"}>
           {t("language")}

@@ -30,7 +30,7 @@ const MyApp: React.FunctionComponent<MyAppProps> = ({
           <Web3ReactProvider getLibrary={getLibrary}>
             <SessionProvider session={session}>
               <CssBaseline />
-              <Component {...pageProps} />{" "}
+              <Component {...pageProps} />
             </SessionProvider>
           </Web3ReactProvider>
         </Provider>

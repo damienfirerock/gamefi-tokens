@@ -8,7 +8,6 @@ declare module "@mui/material/Paper" {
 }
 
 const headerFont = {
-  fontFamily: "VT323, Roboto, monospace",
   color: brown[600],
 };
 
@@ -22,6 +21,7 @@ const theme = createTheme({
     h4: headerFont,
     h5: headerFont,
     h6: headerFont,
+    fontFamily: "Poppins, Roboto, monospace",
   },
   palette: {
     primary: {
