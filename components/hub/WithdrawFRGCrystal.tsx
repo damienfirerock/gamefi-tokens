@@ -174,6 +174,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
           }}
           loading={loading}
           disabled={!!withdrawFRGCrystalError}
+          variant="contained"
         />
         {!!withdrawFRGCrystalError && (
           <Typography variant="h6" sx={{ color: "red" }}>
@@ -194,6 +195,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
           text={t("crystal-hub:withdraw")}
           method={handleWithdrawFRGCrystal}
           loading={loading}
+          variant="contained"
         />
         <InteractButton
           text="Cancel"
@@ -201,6 +203,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
             setConfirmWithdrawFRGCrystalDialog(false);
           }}
           loading={loading}
+          variant="contained"
         />
       </Dialog>
     </>

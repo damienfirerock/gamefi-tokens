@@ -39,6 +39,7 @@ const LoginDialog: React.FunctionComponent = () => {
         <InteractButton
           key={provider}
           text={provider}
+          variant="contained"
           method={() => signIn(provider)}
           loading={loading}
         />

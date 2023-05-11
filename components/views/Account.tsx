@@ -51,6 +51,7 @@ const Account: React.FunctionComponent = () => {
           text={"Sign"}
           method={handleSignature}
           loading={loading}
+          variant="contained"
         />
       )}
 

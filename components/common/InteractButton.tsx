@@ -1,17 +1,25 @@
 import React from "react";
-import { Button } from "@mui/material";
+import { Button, ButtonProps } from "@mui/material";
 
 import StyledCircularProgress from "../common/StyledCircularProgress";
 
-const InteractButton = (props: {
+interface InteractButtonProps extends ButtonProps {
   text: string;
   method: () => void;
   loading: boolean;
-  disabled?: boolean;
-}) => {
-  const { text, method, loading, disabled = false } = props;
+}
+
+const InteractButton: React.FunctionComponent<InteractButtonProps> = (
+  props
+) => {
+  const { text, method, loading, disabled = false, ...rest } = props;
   return (
-    <Button variant="outlined" onClick={method} disabled={loading || disabled}>
+    <Button
+      variant="outlined"
+      onClick={method}
+      disabled={loading || disabled}
+      {...rest}
+    >
       {text}
       {loading && <StyledCircularProgress size={24} />}
     </Button>

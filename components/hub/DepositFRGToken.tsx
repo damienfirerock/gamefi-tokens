@@ -161,6 +161,7 @@ const DepositFRGToken: React.FunctionComponent<{
           }}
           loading={loading}
           disabled={!!depositFRGTokenError}
+          variant="contained"
         />
         {!!depositFRGTokenError && (
           <Typography variant="h6" sx={{ color: "red" }}>
@@ -182,6 +183,7 @@ const DepositFRGToken: React.FunctionComponent<{
           text={t("crystal-hub:deposit")}
           method={handleDepositFRGToken}
           loading={loading}
+          variant="contained"
         />
         <InteractButton
           text="Cancel"
@@ -189,6 +191,7 @@ const DepositFRGToken: React.FunctionComponent<{
             setConfirmDepositFRGTokenDialog(false);
           }}
           loading={loading}
+          variant="contained"
         />
       </Dialog>
     </>
