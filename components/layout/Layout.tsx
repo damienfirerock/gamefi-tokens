@@ -5,6 +5,8 @@ import { Container, ContainerProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 import NavBar from "./Navbar";
 import AlertBar from "../common/AlertBar";
@@ -38,6 +40,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   const { t } = useTranslation("common");
   const dispatch = useDispatch<AppDispatch>();
   const { data: session, status } = useSession();
+  const { locale } = useRouter();
 
   const authSlice = useSelector((state: RootState) => state.auth);
   const { loading: authLoading } = authSlice;
@@ -110,6 +113,9 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
       <StyledContainer maxWidth="lg" sx={{ paddingTop: 8 }}>
         {children}
         <LoginDialog />
+        <Link href="" locale={locale === "en" ? "zh" : "en"}>
+          {t("language")}
+        </Link>
         <AlertBar
           severity="warning"
           text={error || accountError}
