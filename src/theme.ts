@@ -14,7 +14,9 @@ const SECONDARY_COLOR = "#2A2638";
 const DEFAULT_BACKGROUND = "#060111";
 const PAPER_BACKGROUND = "#1A1524";
 
-const DISABLED_OUTLINE = "#979797";
+const DISABLED_COLOUR = "#979797";
+
+const WHITE = "#FFFFFF";
 
 const theme = createTheme({
   typography: {
@@ -29,8 +31,13 @@ const theme = createTheme({
       main: SECONDARY_COLOR,
     },
     text: {
-      primary: "#ffffff",
-      secondary: "#ffffff",
+      primary: WHITE,
+      secondary: WHITE,
+    },
+    action: {
+      disabledBackground: DISABLED_COLOUR,
+      disabledOpacity: 0,
+      disabled: WHITE,
     },
   },
   components: {
@@ -48,14 +55,25 @@ const theme = createTheme({
     MuiTextField: {
       styleOverrides: {
         root: {
-          "--TextField-brandBorderColor": "#FFFFFF",
+          "--TextField-brandBorderColor": WHITE,
           "--TextField-brandBorderHoverColor": PRIMARY_COLOR,
           "--TextField-brandBorderFocusedColor": PRIMARY_COLOR,
           "& label.Mui-focused": {
             color: "var(--TextField-brandBorderFocusedColor)",
           },
           "& label.Mui-disabled": {
-            color: DISABLED_OUTLINE,
+            color: DISABLED_COLOUR,
+          },
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          // color: "black", works
+          "&.Mui-disabled": {
+            // backgroundColor: "#e4e4e4", // works
+            color: "red !important", // does not work
           },
         },
       },
@@ -73,22 +91,16 @@ const theme = createTheme({
             borderColor: "var(--TextField-brandBorderFocusedColor)",
           },
           [`&.Mui-disabled .${outlinedInputClasses.notchedOutline}`]: {
-            borderColor: DISABLED_OUTLINE,
+            borderColor: DISABLED_COLOUR,
+          },
+          [`&.Mui-disabled .${outlinedInputClasses.notchedOutline}`]: {
+            borderColor: DISABLED_COLOUR,
           },
         },
       },
     },
-    MuiInputBase: {
-      styleOverrides: {
-        root: {
-          color: "ffffff",
-          "&.Mui-disabled": {
-            color: "#FFFFFF",
-            // backgroundColor: "#FFFFFF",
-          },
-        },
-      },
-    },
+
+    // MuiButton: { disableElevation: true },
   },
 });
 
