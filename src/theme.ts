@@ -1,4 +1,5 @@
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
+import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import { yellow, brown } from "@mui/material/colors/";
 
 declare module "@mui/material/Paper" {
@@ -12,6 +13,8 @@ const SECONDARY_COLOR = "#2A2638";
 
 const DEFAULT_BACKGROUND = "#060111";
 const PAPER_BACKGROUND = "#1A1524";
+
+const DISABLED_OUTLINE = "#979797";
 
 const theme = createTheme({
   typography: {
@@ -41,6 +44,50 @@ const theme = createTheme({
           },
         },
       ],
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "--TextField-brandBorderColor": "#FFFFFF",
+          "--TextField-brandBorderHoverColor": PRIMARY_COLOR,
+          "--TextField-brandBorderFocusedColor": PRIMARY_COLOR,
+          "& label.Mui-focused": {
+            color: "var(--TextField-brandBorderFocusedColor)",
+          },
+          "& label.Mui-disabled": {
+            color: DISABLED_OUTLINE,
+          },
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        notchedOutline: {
+          borderColor: "var(--TextField-brandBorderColor)",
+        },
+        root: {
+          [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
+            borderColor: "var(--TextField-brandBorderHoverColor)",
+          },
+          [`&.Mui-focused .${outlinedInputClasses.notchedOutline}`]: {
+            borderColor: "var(--TextField-brandBorderFocusedColor)",
+          },
+          [`&.Mui-disabled .${outlinedInputClasses.notchedOutline}`]: {
+            borderColor: DISABLED_OUTLINE,
+          },
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          color: "ffffff",
+          "&.Mui-disabled": {
+            color: "#FFFFFF",
+            // backgroundColor: "#FFFFFF",
+          },
+        },
+      },
     },
   },
 });
