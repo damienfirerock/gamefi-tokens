@@ -1,6 +1,5 @@
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
-import { yellow, brown } from "@mui/material/colors/";
 
 declare module "@mui/material/Paper" {
   interface PaperPropsVariantOverrides {
@@ -99,8 +98,11 @@ const theme = createTheme({
         },
       },
     },
-
-    // MuiButton: { disableElevation: true },
+    MuiButton: {
+      defaultProps: {
+        disableElevation: true,
+      },
+    },
   },
 });
 

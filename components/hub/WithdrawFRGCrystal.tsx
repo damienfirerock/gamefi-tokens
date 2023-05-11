@@ -163,6 +163,8 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
               label="$FRG"
               disabled
               InputLabelProps={{ shrink: true }}
+              // FIXME: Unable to change color from before and from createTheme
+              // sx={{ input: { color: "#FFFFFF !important" } }}
             />
           </Box>
         </Box>
