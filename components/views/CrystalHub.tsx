@@ -24,7 +24,7 @@ import { AppDispatch, RootState } from "../../store";
 import { setDialogOpen } from "../../features/AuthSlice";
 import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
 import useCommonWeb3Transactions from "../../utils/hooks/useCommonWeb3Transactions";
-import { setSuccess } from "../../features/TransactionSlice";
+import { setSuccess, clearSuccess } from "../../features/TransactionSlice";
 import WithdrawFRGCrystal from "../hub/WithdrawFRGCrystal";
 import DepositFRGToken from "../hub/DepositFRGToken";
 import { getEtherscanLink } from "../../utils/web3";
@@ -173,6 +173,7 @@ const CrystalHub: React.FunctionComponent = () => {
 
     return () => {
       tokenContract.removeAllListeners("Transfer");
+      dispatch(clearSuccess()); // Clear any unclosed success messages so they won't re-appear on navigation
     };
   }, [frgCrystalBalance, rate]);
 
