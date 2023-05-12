@@ -78,7 +78,7 @@ export const TransactionSlice = createSlice({
       state.success = action.payload;
     },
     clearSuccess: (state) => {
-      state.error = null;
+      state.success = null;
     },
     setTxnCount: (state, action) => {
       state.txCount = action.payload;
