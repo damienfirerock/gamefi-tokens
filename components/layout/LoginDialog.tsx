@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import InteractButton from "../common/InteractButton";
 
 import { AppDispatch, RootState } from "../../store";
-import { setDialogClosed } from "../../features/AuthSlice";
+import { setDialogClosed, setLoading } from "../../features/AuthSlice";
 
 const providers = ["google", "facebook", "apple"];
 
@@ -22,6 +22,13 @@ const LoginDialog: React.FunctionComponent = () => {
 
   const authSlice = useSelector((state: RootState) => state.auth);
   const { dialogOpen, loading } = authSlice;
+
+  const handleSignIn = (provider: string) => {
+    dispatch(setLoading(true));
+    signIn(provider);
+    // NOTE: There is a useEffect in Layout which detects NextAuth Session Changes,
+    // and will set Auth Loading to False
+  };
 
   const handleClose = () => {
     dispatch(setDialogClosed());
@@ -40,7 +47,7 @@ const LoginDialog: React.FunctionComponent = () => {
           key={provider}
           text={provider}
           variant="contained"
-          method={() => signIn(provider)}
+          method={() => handleSignIn(provider)}
           loading={loading}
         />
       ))}
