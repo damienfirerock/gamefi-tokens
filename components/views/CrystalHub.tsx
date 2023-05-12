@@ -167,13 +167,13 @@ const CrystalHub: React.FunctionComponent = () => {
           return { ...prevState, status: "Success" };
         });
       });
-
-      return () => {
-        tokenContract.removeAllListeners("Transfer");
-      };
     };
 
     subscribeToTransferEvents();
+
+    return () => {
+      tokenContract.removeAllListeners("Transfer");
+    };
   }, [frgCrystalBalance, rate]);
 
   return (
