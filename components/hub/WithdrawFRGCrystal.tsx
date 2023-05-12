@@ -118,6 +118,8 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
   };
 
   const withdrawFRGCrystalError = useMemo(() => {
+    if (!account) return "Please connect your wallet";
+
     if (!selectedServer) return "Please select a server";
 
     if (!!frgCrystalBalance && withdrawFRGCrystal > frgCrystalBalance)

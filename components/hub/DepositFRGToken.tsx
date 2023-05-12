@@ -110,6 +110,8 @@ const DepositFRGToken: React.FunctionComponent<{
   };
 
   const depositFRGTokenError = useMemo(() => {
+    if (!account) return "Please connect your wallet";
+
     if (!selectedServer) return "Please select a server";
 
     if (!walletBalance || depositFRGToken > walletBalance)

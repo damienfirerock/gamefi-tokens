@@ -6,7 +6,6 @@ import { useDispatch } from "react-redux";
 import MenuStyledButton from "./common/MenuStyledButton";
 import ConnectWalletButtons from "./ConnectWalletButtons";
 import PopoverBox from "./common/PopoverBox";
-import AccountLink from "./common/AccountLink";
 
 import { truncateString } from "../../../utils/common";
 import useWeb3React from "../../../utils/hooks/web3React/useWeb3React";
@@ -81,37 +80,11 @@ const AccountButton: React.FunctionComponent = () => {
             {!!account && truncateString(account)}
           </Typography>
           {account ? (
-            <>
-              <AccountLink
-                href="/"
-                text="Main"
-                // icon={<HouseIcon />}
-              />
-
-              <AccountLink
-                href="/swap"
-                text="Swap"
-                // icon={<CelebrationIcon />}
-              />
-
-              <AccountLink
-                href="/account"
-                text="Account"
-                // icon={<CelebrationIcon />}
-              />
-
-              <AccountLink
-                href="/crystal-hub"
-                text="Crystal Hub"
-                // icon={<CelebrationIcon />}
-              />
-
-              <MenuStyledButton variant="contained" onClick={deactivate}>
-                <Typography variant="h6" sx={{ marginLeft: 1 }}>
-                  Disconnect
-                </Typography>
-              </MenuStyledButton>
-            </>
+            <MenuStyledButton variant="contained" onClick={deactivate}>
+              <Typography variant="h6" sx={{ marginLeft: 1 }}>
+                Disconnect
+              </Typography>
+            </MenuStyledButton>
           ) : (
             <ConnectWalletButtons />
           )}

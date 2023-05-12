@@ -1,13 +1,8 @@
 import React, { ReactElement } from "react";
-import { Box, BoxProps, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Box, Typography } from "@mui/material";
 import NextLink from "next/link";
 
 import MenuStyledButton from "./MenuStyledButton";
-
-const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
-  marginBottom: theme.spacing(2),
-}));
 
 interface IAccountLink {
   href: string;
@@ -21,7 +16,7 @@ const AccountLink: React.FunctionComponent<IAccountLink> = ({
   icon,
 }) => {
   return (
-    <StyledBox>
+    <Box sx={{ mx: 1 }}>
       <NextLink href={href} passHref>
         <MenuStyledButton variant="outlined">
           <>
@@ -32,7 +27,7 @@ const AccountLink: React.FunctionComponent<IAccountLink> = ({
           </>
         </MenuStyledButton>
       </NextLink>
-    </StyledBox>
+    </Box>
   );
 };
 
