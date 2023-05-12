@@ -9,6 +9,13 @@ import { useRouter } from "next/router";
 import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
 import { CONTRACT_LIST, NETWORKS_INFO_CONFIG } from "../../constants/networks";
 
+import {
+  PRIMARY_COLOR,
+  SECONDARY_COLOR,
+  TERTIARY_COLOR,
+  WHITE,
+} from "../../src/theme";
+
 // Causes errors if not dynamic import
 // Ref: https://github.com/Uniswap/widgets/issues/404
 const SwapWidget = dynamic(
@@ -18,6 +25,18 @@ const SwapWidget = dynamic(
   },
   { ssr: false }
 );
+
+const theme: Theme = {
+  primary: WHITE,
+  secondary: WHITE,
+  interactive: PRIMARY_COLOR,
+  container: TERTIARY_COLOR,
+  module: SECONDARY_COLOR,
+  onInteractive: WHITE,
+  accent: PRIMARY_COLOR,
+  dialog: SECONDARY_COLOR,
+  fontFamily: "Poppins",
+};
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
@@ -48,6 +67,7 @@ const AirdropInformation: React.FunctionComponent = () => {
         // Note: https://github.com/Uniswap/widgets/issues/465
         // Locale is currently not working
         locale={locale === "zh" ? "zh-CN" : "en-GB"}
+        theme={theme}
       />
     </StyledBox>
   );

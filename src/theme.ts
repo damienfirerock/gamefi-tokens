@@ -7,15 +7,16 @@ declare module "@mui/material/Paper" {
   }
 }
 
-const PRIMARY_COLOR = "#531EDC";
-const SECONDARY_COLOR = "#2A2638";
+export const PRIMARY_COLOR = "#531EDC";
+export const SECONDARY_COLOR = "#2A2638";
+export const TERTIARY_COLOR = "#1A1524";
 
 const DEFAULT_BACKGROUND = "#060111";
 const PAPER_BACKGROUND = "#1A1524";
 
 const DISABLED_COLOUR = "#979797";
 
-const WHITE = "#FFFFFF";
+export const WHITE = "#FFFFFF";
 
 const theme = createTheme({
   typography: {
