@@ -18,7 +18,6 @@ const DynamicAccountButton = dynamic(() => import("./buttons/AccountButton"));
 const NAVBAR_LINKS = [
   { href: "/", text: "Main" },
   { href: "/swap", text: "Swap" },
-  { href: "/account", text: "Account" },
   { href: "/crystal-hub", text: "Crystal Hub" },
 ];
 
