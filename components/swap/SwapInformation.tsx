@@ -68,6 +68,8 @@ const AirdropInformation: React.FunctionComponent = () => {
         // Locale is currently not working
         locale={locale === "zh" ? "zh-CN" : "en-GB"}
         theme={theme}
+        hideConnectionUI
+        onConnectWalletClick={() => false} // Prevents Uniswap's Default Connect Modal
       />
     </StyledBox>
   );
