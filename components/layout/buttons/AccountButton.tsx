@@ -102,9 +102,11 @@ const AccountButton: React.FunctionComponent = () => {
           <Typography variant="h6">
             {!!account && truncateString(account)}
           </Typography>
-          <Typography variant="h6">
-            Email Account: {session!.user.email}
-          </Typography>
+          {session && (
+            <Typography variant="h6">
+              Email Account: {session.user.email}
+            </Typography>
+          )}
           {account && (
             <>
               <InteractButton
