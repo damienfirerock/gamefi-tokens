@@ -4,17 +4,12 @@ import path from "path";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handleImage = async (req: NextApiRequest, res: NextApiResponse) => {
-  const id = req.query.id;
-
   try {
-    const filePath = path.join(
-      process.cwd(),
-      `/public/nft-images/skins/${id}.png`
-    );
+    const filePath = path.join(process.cwd(), `/public/logo/火元素LOGO.svg`);
     const imageBuffer = fs.createReadStream(filePath);
 
     await new Promise(function (resolve) {
-      res.setHeader("Content-Type", "image/png");
+      res.setHeader("Content-Type", "image/svg+xml");
       imageBuffer.pipe(res);
       imageBuffer.on("end", resolve);
       imageBuffer.on("error", function (err: any) {

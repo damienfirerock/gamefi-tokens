@@ -23,7 +23,7 @@ const NavBar: React.FunctionComponent = () => {
           <Box sx={{ position: "relative", height: "50px", width: "50px" }}>
             <Image
               alt="Fire Element Logo"
-              src="/火元素LOGO.svg"
+              src="/logo/火元素LOGO.svg"
               layout="fill"
             />
           </Box>
