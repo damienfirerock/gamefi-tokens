@@ -20,6 +20,9 @@ const WHITE = "#FFFFFF";
 const theme = createTheme({
   typography: {
     fontFamily: "Poppins, Roboto, monospace",
+    button: {
+      textTransform: "none",
+    },
   },
   palette: {
     background: { default: DEFAULT_BACKGROUND, paper: PAPER_BACKGROUND },
