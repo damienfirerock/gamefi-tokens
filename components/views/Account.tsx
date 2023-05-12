@@ -33,7 +33,6 @@ const Account: React.FunctionComponent = () => {
     setSignStatus(!!response);
 
     dispatch(setLoading(false));
-    console.log({ handle: response });
   };
 
   return (

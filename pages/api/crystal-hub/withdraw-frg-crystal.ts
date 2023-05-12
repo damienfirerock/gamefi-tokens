@@ -80,7 +80,6 @@ const handleWithdrawFRGCrystal = async (
       txnHash: approveReceipt.transactionHash,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ success: false, error: `Internal Server Error` });
   }
 };

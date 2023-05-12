@@ -78,16 +78,15 @@ const useCommonWeb3Transactions = () => {
 
       if (receipt) {
         if (receipt.status === 1) {
-          dispatch(setSuccess(`Transaction ${txHash} was successful`));
-          console.log("Transaction was successful");
+          dispatch(
+            setSuccess(`Transaction ${txHash} was successfully submitted`)
+          );
         } else if (receipt.status === 0) {
           sendTransactionError(`Transaction (${txHash}) failed`);
         } else {
-          console.log("Transaction is still pending");
           setTimeout(() => checkTransactionStatus(txHash, interval), interval);
         }
       } else {
-        console.log("Transaction not found or still pending");
         setTimeout(() => checkTransactionStatus(txHash, interval), interval);
       }
     } catch (error) {

@@ -66,7 +66,6 @@ export const useActivationWallet = () => {
           library,
           chainId
         );
-        console.log({ response });
 
         return response;
       } else {
