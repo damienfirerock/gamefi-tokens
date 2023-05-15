@@ -1,26 +1,17 @@
 import React, { useEffect } from "react";
 import Head from "next/head";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  BottomNavigation,
-  BottomNavigationAction,
-  BottomNavigationActionProps,
-  Container,
-  ContainerProps,
-  Paper,
-} from "@mui/material";
+import { Container, ContainerProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
-import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
-import GppGoodOutlinedIcon from "@mui/icons-material/GppGoodOutlined";
 
 import NavBar from "./Navbar";
 import AlertBar from "../common/AlertBar";
 import LoginDialog from "./LoginDialog";
+import BottomNavbar from "./BottomNavbar";
 
 import { AppDispatch, RootState } from "../../store";
 import { clearError, clearSuccess } from "../../features/TransactionSlice";
@@ -33,47 +24,14 @@ import {
 import { SUPPORTED_WALLETS } from "../../constants/wallets";
 import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
 import useCommonWeb3Transactions from "../../utils/hooks/useCommonWeb3Transactions";
-import {
-  WHITE,
-  DEFAULT_BACKGROUND,
-  PAPER_BACKGROUND,
-  PRIMARY_COLOR,
-} from "../../src/theme";
 
 type LayoutProps = {
   children: React.ReactNode;
 };
 
-const NAV_TEXT_COLOUR = "#8C8A9A";
-const SVG_BACKGROUND = "#2B2734";
-
 const StyledContainer = styled(Container)<ContainerProps>(() => ({
   textAlign: "center",
   wordWrap: "break-word",
-}));
-
-const StyledBottomNavigationAction = styled(
-  BottomNavigationAction
-)<BottomNavigationActionProps>(() => ({
-  color: NAV_TEXT_COLOUR,
-  height: "5rem",
-  span: { fontSize: "0.75rem" },
-  svg: {
-    background: SVG_BACKGROUND,
-    color: WHITE,
-    border: "0.3125rem",
-    fontSize: "2rem",
-    padding: "0.25rem",
-    borderRadius: "0.4375rem",
-  },
-  "&.Mui-selected": {
-    color: WHITE,
-    svg: {
-      background: PRIMARY_COLOR,
-      fontSize: "2rem",
-    },
-    span: { fontSize: "0.75rem" },
-  },
 }));
 
 const Layout: React.FunctionComponent<LayoutProps> = (props) => {
@@ -93,8 +51,6 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
 
   const accountSlice = useSelector((state: RootState) => state.account);
   const { error: accountError } = accountSlice;
-
-  const [value, setValue] = React.useState(0);
 
   const handleClearAlert = () => {
     if (accountError) {
@@ -172,44 +128,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
           handleClearAlertSource={() => dispatch(clearSuccess())}
         />
       </StyledContainer>
-      <Paper
-        sx={{
-          display: { xs: "block", sm: "block", md: "none" },
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          borderTop: `${SVG_BACKGROUND} 1px solid`,
-        }}
-      >
-        <BottomNavigation
-          showLabels
-          value={value}
-          onChange={(event, newValue) => {
-            setValue(newValue);
-          }}
-          sx={{
-            background: DEFAULT_BACKGROUND,
-            paddingBottom: "5rem",
-          }}
-        >
-          <StyledBottomNavigationAction
-            label="Crystal Hub"
-            icon={<MonetizationOnOutlinedIcon />}
-            disableRipple
-          />
-          <StyledBottomNavigationAction
-            label="Swap"
-            icon={<CurrencyExchangeIcon />}
-            disableRipple
-          />
-          <StyledBottomNavigationAction
-            label="About"
-            icon={<GppGoodOutlinedIcon />}
-            disableRipple
-          />
-        </BottomNavigation>
-      </Paper>
+      <BottomNavbar />
     </>
   );
 };

@@ -12,6 +12,8 @@ import Image from "next/image";
 
 import NavBarLink from "./buttons/common/NavBarLink";
 
+import { DEFAULT_BACKGROUND } from "../../src/theme";
+
 // Decreases First Load from 355kb to 214kb
 const DynamicAccountButton = dynamic(() => import("./buttons/AccountButton"));
 
@@ -35,7 +37,7 @@ const NavBar: React.FunctionComponent = () => {
   };
 
   return (
-    <AppBar position="fixed" color="secondary">
+    <AppBar position="fixed" sx={{ background: DEFAULT_BACKGROUND }}>
       <Toolbar>
         {/* Mobile Navigation */}
         <Box
