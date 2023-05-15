@@ -165,12 +165,12 @@ const LoginDialog: React.FunctionComponent = () => {
           loading={loading}
           variant="contained"
           fullWidth
-          sx={{ borderRadius: 5, marginBottom: "1.5rem" }}
+          sx={{ borderRadius: 5, marginBottom: "1.2rem" }}
           size="large"
         />
 
         {/* Social Login Divider */}
-        <Box sx={{ position: "relative", marginBottom: "1.5rem" }}>
+        <Box sx={{ position: "relative", marginBottom: "1.2rem" }}>
           <Divider light />
           <Typography
             variant="body2"
