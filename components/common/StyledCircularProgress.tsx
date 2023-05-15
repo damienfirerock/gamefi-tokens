@@ -7,8 +7,8 @@ const StyledCircularProgress = styled(CircularProgress)<CircularProgressProps>(
     position: "absolute",
     top: "50%",
     left: "50%",
-    marginTop: "-12px",
-    marginLeft: "-12px",
+    marginTop: "-13px",
+    marginLeft: "-13px",
   })
 );
 
