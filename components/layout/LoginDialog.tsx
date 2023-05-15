@@ -5,6 +5,8 @@ import {
   Dialog,
   DialogContent,
   IconButton,
+  TextField,
+  TextFieldProps,
   Typography,
 } from "@mui/material";
 import { signIn } from "next-auth/react";
@@ -13,16 +15,29 @@ import { useDispatch, useSelector } from "react-redux";
 import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
 import StyledCircularProgress from "../common/StyledCircularProgress";
+import { styled } from "@mui/material/styles";
 
 import InteractButton from "../common/InteractButton";
 
 import { AppDispatch, RootState } from "../../store";
 import { setDialogClosed, setLoading } from "../../features/AuthSlice";
-import { WHITE } from "../../src/theme";
+import { WHITE, PRIMARY_COLOR } from "../../src/theme";
 
 const providers = ["Google", "Facebook", "Apple"];
 
 const LOGIN_BUTTON_COLOUR = "#E6E6EE";
+
+const StyledTextField = styled(TextField)<TextFieldProps>({
+  "& label": {
+    color: "#D8D8D8",
+  },
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: "#D8D8D8",
+    },
+    marginBottom: "1.2rem",
+  },
+});
 
 export interface LoginDialogProps {
   onClose: () => void;
@@ -52,38 +67,74 @@ const LoginDialog: React.FunctionComponent = () => {
       onClose={handleClose}
       open={dialogOpen}
       PaperProps={{ sx: { background: WHITE } }}
-      maxWidth="md"
+      maxWidth="xs"
+      fullWidth
     >
       <DialogTitle sx={{ color: "black", position: "relative" }}>
-        <Box sx={{ width: "9rem", height: "4.5rem" }}>
-          <Image
-            src="/logo/火元素LOGO-with-words.svg"
-            alt="Fire Element Logo"
-            layout="fill"
-          />
-        </Box>
         <IconButton
           aria-label="close"
           onClick={handleClose}
           size="small"
           sx={{
             position: "absolute",
-            right: 10,
-            top: 10,
+            right: "1.2rem",
+            top: "1.2rem",
             width: "0.2rem",
             height: "0.2rem",
           }}
         >
-          <CloseIcon />
+          <CloseIcon fontSize="small" />
         </IconButton>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{ padding: "1rem" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "0.75rem",
+          }}
+        >
+          <Image
+            src="/logo/火元素LOGO-with-words.svg"
+            alt="Fire Element Logo"
+            width={145}
+            height={72}
+          />
+        </Box>
         {email && type && (
-          <Typography variant="h6" sx={{ marginTop: 5, marginBottom: 2 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              marginBottom: "1rem",
+              color: PRIMARY_COLOR,
+              textAlign: "center",
+            }}
+          >
             Your game login was with email: {email} and type: {type}
           </Typography>
         )}
-        <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <StyledTextField label="Email" />
+          <StyledTextField label="Password" />
+        </Box>
+        <InteractButton
+          text="Login"
+          method={() => {
+            return null;
+          }}
+          loading={loading}
+          variant="contained"
+          fullWidth
+          sx={{ borderRadius: 5, marginBottom: "1rem" }}
+          size="large"
+        />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            marginBottom: "2rem",
+          }}
+        >
           {providers.map((provider) => (
             <IconButton
               aria-label={`${provider} Login Button`}
