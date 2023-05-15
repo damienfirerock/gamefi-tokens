@@ -12,7 +12,7 @@ import { CONTRACT_LIST, NETWORKS_INFO_CONFIG } from "../../constants/networks";
 import {
   PRIMARY_COLOR,
   SECONDARY_COLOR,
-  TERTIARY_COLOR,
+  PAPER_BACKGROUND,
   WHITE,
 } from "../../src/theme";
 
@@ -30,7 +30,7 @@ const theme: Theme = {
   primary: WHITE,
   secondary: WHITE,
   interactive: PRIMARY_COLOR,
-  container: TERTIARY_COLOR,
+  container: PAPER_BACKGROUND,
   module: SECONDARY_COLOR,
   onInteractive: WHITE,
   accent: PRIMARY_COLOR,
