@@ -53,8 +53,10 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
   const { data: hubData } = hubSlice;
   const { rate, tax, minimum } = hubData!;
 
-  const [withdrawFRGCrystal, setWithdrawFRGCrystal] = useState<number>(0);
-  const [withdrawFRGToken, setWithdrawFRGToken] = useState<number>(0);
+  const [withdrawFRGCrystal, setWithdrawFRGCrystal] = useState<number | null>(
+    null
+  );
+  const [withdrawFRGToken, setWithdrawFRGToken] = useState<number | null>(null);
   const [confirmWithdrawFRGCrystalDialog, setConfirmWithdrawFRGCrystalDialog] =
     useState<boolean>(false);
 
@@ -73,7 +75,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
 
     const prevFrgCrystalBalance = frgCrystalBalance!;
     const prevPendingFrgCrystalBalance = pendingFrgCrystalBalance!;
-    const nextWithdrawFRGCrystal = withdrawFRGCrystal;
+    const nextWithdrawFRGCrystal = withdrawFRGCrystal!;
 
     dispatch(
       setFrgCrystalBalance(prevFrgCrystalBalance - nextWithdrawFRGCrystal)
@@ -122,14 +124,20 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
 
     if (!selectedServer) return "Please select a server";
 
-    if (!!frgCrystalBalance && withdrawFRGCrystal > frgCrystalBalance)
+    if (!withdrawFRGCrystal) return "Please enter a value";
+
+    if (
+      !!frgCrystalBalance &&
+      withdrawFRGCrystal &&
+      withdrawFRGCrystal > frgCrystalBalance
+    )
       return "You don't have that much FRG Crystal";
 
-    if (withdrawFRGCrystal < minimum)
+    if (withdrawFRGCrystal && withdrawFRGCrystal < minimum)
       return `Minimum withdrawal amount is ${minimum} FRG Crystal`;
 
     return null;
-  }, [withdrawFRGCrystal, frgCrystalBalance, selectedServer, minimum]);
+  }, [withdrawFRGCrystal, frgCrystalBalance, selectedServer, minimum, account]);
 
   return (
     <>

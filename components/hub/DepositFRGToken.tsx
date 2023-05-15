@@ -55,8 +55,10 @@ const DepositFRGToken: React.FunctionComponent<{
   const { data } = hubSlice;
   const { rate } = data!;
 
-  const [depositFRGToken, setDepositFRGToken] = useState<number>(0);
-  const [depositFRGCrystal, setDepositFRGCrystal] = useState<number>(0);
+  const [depositFRGToken, setDepositFRGToken] = useState<number | null>(null);
+  const [depositFRGCrystal, setDepositFRGCrystal] = useState<number | null>(
+    null
+  );
   const [confirmDepositFRGTokenDialog, setConfirmDepositFRGTokenDialog] =
     useState<boolean>(false);
 
@@ -73,7 +75,7 @@ const DepositFRGToken: React.FunctionComponent<{
   const handleDepositFRGToken = async () => {
     dispatch(setLoading(true));
     const nextDepositFRGToken = depositFRGToken;
-    dispatch(setPendingFrgCrystalBalance(nextDepositFRGToken * rate));
+    dispatch(setPendingFrgCrystalBalance(nextDepositFRGToken! * rate));
     const signer = library!.getSigner(account!);
 
     const fireRockGoldContract = new ethers.Contract(
@@ -84,7 +86,7 @@ const DepositFRGToken: React.FunctionComponent<{
 
     const decimals = await fireRockGoldContract.decimals();
     const value = await ethers.utils.parseUnits(
-      depositFRGToken.toString(),
+      depositFRGToken!.toString(),
       decimals
     );
 
@@ -114,11 +116,13 @@ const DepositFRGToken: React.FunctionComponent<{
 
     if (!selectedServer) return "Please select a server";
 
-    if (!walletBalance || depositFRGToken > walletBalance)
+    if (!depositFRGToken) return "Please enter a value";
+
+    if (!walletBalance || (depositFRGToken && depositFRGToken > walletBalance))
       return "You don't have that much $FRG";
 
     return null;
-  }, [depositFRGToken, walletBalance, selectedServer]);
+  }, [depositFRGToken, walletBalance, selectedServer, account]);
 
   return (
     <>
