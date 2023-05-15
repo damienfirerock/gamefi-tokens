@@ -11,7 +11,7 @@ import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import GppGoodOutlinedIcon from "@mui/icons-material/GppGoodOutlined";
 import { useRouter } from "next/router";
 
-import { NextLinkComposed } from "./buttons/common/NextLInkComposed";
+import { NextLinkComposed } from "./buttons/common/NextLinkComposed";
 
 import { WHITE, DEFAULT_BACKGROUND, PRIMARY_COLOR } from "../../src/theme";
 
