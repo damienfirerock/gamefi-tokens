@@ -4,6 +4,7 @@ import {
   DialogTitle,
   Dialog,
   DialogContent,
+  Divider,
   IconButton,
   TextField,
   TextFieldProps,
@@ -26,14 +27,15 @@ import { WHITE, PRIMARY_COLOR, NAV_TEXT_COLOUR } from "../../src/theme";
 const providers = ["Google", "Facebook", "Apple"];
 
 const LOGIN_BUTTON_COLOUR = "#E6E6EE";
+const ALTERNATE_TEXT_COLOR = "#D8D8D8";
 
 const StyledTextField = styled(TextField)<TextFieldProps>({
   "& label": {
-    color: "#D8D8D8",
+    color: ALTERNATE_TEXT_COLOR,
   },
   "& .MuiOutlinedInput-root": {
     "& fieldset": {
-      borderColor: "#D8D8D8",
+      borderColor: ALTERNATE_TEXT_COLOR,
     },
     marginBottom: "1.2rem",
   },
@@ -163,11 +165,32 @@ const LoginDialog: React.FunctionComponent = () => {
           loading={loading}
           variant="contained"
           fullWidth
-          sx={{ borderRadius: 5, marginBottom: "1rem" }}
+          sx={{ borderRadius: 5, marginBottom: "1.5rem" }}
           size="large"
         />
 
         {/* Social Login Divider */}
+        <Box sx={{ position: "relative", marginBottom: "1.5rem" }}>
+          <Divider light />
+          <Typography
+            variant="body2"
+            sx={{
+              color: ALTERNATE_TEXT_COLOR,
+              background: WHITE,
+              display: "inline",
+              position: "absolute",
+              marginTop: "-10px",
+              marginLeft: "auto",
+              marginRight: "auto",
+              left: 0,
+              right: 0,
+              width: "5rem",
+              textAlign: "center",
+            }}
+          >
+            其它方式
+          </Typography>
+        </Box>
 
         {/* Social Login Buttons */}
         <Box
