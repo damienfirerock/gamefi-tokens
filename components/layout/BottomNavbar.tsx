@@ -13,11 +13,15 @@ import { useRouter } from "next/router";
 
 import { NextLinkComposed } from "./buttons/common/NextLinkComposed";
 
-import { WHITE, DEFAULT_BACKGROUND, PRIMARY_COLOR } from "../../src/theme";
+import {
+  WHITE,
+  DEFAULT_BACKGROUND,
+  PRIMARY_COLOR,
+  NAV_TEXT_COLOUR,
+} from "../../src/theme";
 
 type BottomNavbarProps = {};
 
-const NAV_TEXT_COLOUR = "#8C8A9A";
 const SVG_BACKGROUND = "#2B2734";
 
 // Affects active Bottom Navigation highlight

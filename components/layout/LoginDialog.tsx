@@ -21,7 +21,7 @@ import InteractButton from "../common/InteractButton";
 
 import { AppDispatch, RootState } from "../../store";
 import { setDialogClosed, setLoading } from "../../features/AuthSlice";
-import { WHITE, PRIMARY_COLOR } from "../../src/theme";
+import { WHITE, PRIMARY_COLOR, NAV_TEXT_COLOUR } from "../../src/theme";
 
 const providers = ["Google", "Facebook", "Apple"];
 
@@ -87,6 +87,7 @@ const LoginDialog: React.FunctionComponent = () => {
         </IconButton>
       </DialogTitle>
       <DialogContent sx={{ padding: "1rem" }}>
+        {/* Logo */}
         <Box
           sx={{
             display: "flex",
@@ -101,6 +102,8 @@ const LoginDialog: React.FunctionComponent = () => {
             height={72}
           />
         </Box>
+
+        {/* Possible Notification if redirect from Game Client */}
         {email && type && (
           <Typography
             variant="body2"
@@ -113,10 +116,45 @@ const LoginDialog: React.FunctionComponent = () => {
             Your game login was with email: {email} and type: {type}
           </Typography>
         )}
+
+        {/* TextFields */}
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <StyledTextField label="Email" />
           <StyledTextField label="Password" />
         </Box>
+
+        {/* Additional Player Options */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginBottom: "1rem",
+          }}
+        >
+          <InteractButton
+            text="注册新账户"
+            method={() => {
+              return null;
+            }}
+            loading={loading}
+            variant="text"
+            size="small"
+            sx={{ color: NAV_TEXT_COLOUR }}
+          />
+          <InteractButton
+            text="忘记密码？"
+            method={() => {
+              return null;
+            }}
+            loading={loading}
+            variant="text"
+            size="small"
+            sx={{ color: NAV_TEXT_COLOUR }}
+          />
+        </Box>
+
+        {/* Login Button */}
         <InteractButton
           text="Login"
           method={() => {
@@ -128,6 +166,10 @@ const LoginDialog: React.FunctionComponent = () => {
           sx={{ borderRadius: 5, marginBottom: "1rem" }}
           size="large"
         />
+
+        {/* Social Login Divider */}
+
+        {/* Social Login Buttons */}
         <Box
           sx={{
             display: "flex",
