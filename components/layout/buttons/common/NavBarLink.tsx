@@ -19,7 +19,7 @@ const AccountLink: React.FunctionComponent<IAccountLink> = ({
         <Button variant="outlined">
           <>
             {!!icon && icon}
-            <Typography variant="h6" sx={{ marginLeft: 1 }}>
+            <Typography variant="body2" sx={{ marginLeft: 1 }}>
               {text}
             </Typography>
           </>

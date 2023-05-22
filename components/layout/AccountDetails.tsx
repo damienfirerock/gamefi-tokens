@@ -50,7 +50,9 @@ const AccountDetails: React.FunctionComponent = () => {
         ref={buttonRef}
         onClick={isLoggedIn ? handleClick : handleOpenLoginDialog}
       >
-        <Typography variant="h6">{session?.user.email ?? "Login"}</Typography>
+        <Typography variant="body2">
+          {session?.user.email ?? "Login"}
+        </Typography>
       </Button>
       {/* Popover should only show on Medium Screen and Above */}
       <Popover

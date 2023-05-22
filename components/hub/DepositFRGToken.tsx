@@ -127,8 +127,8 @@ const DepositFRGToken: React.FunctionComponent<{
   return (
     <>
       <StyledCard variant="outlined">
-        <Typography variant="h6">{t("crystal-hub:deposit")} </Typography>
-        <Typography variant="h6">
+        <Typography variant="body2">{t("crystal-hub:deposit")} </Typography>
+        <Typography variant="body2">
           Mock $FRG to FRG Crystal Exchange Rate - 1:
           {MOCK_FRG_CRYSTAL_EXCHANGE_RATE}
         </Typography>
@@ -180,7 +180,7 @@ const DepositFRGToken: React.FunctionComponent<{
           variant="contained"
         />
         {!!depositFRGTokenError && (
-          <Typography variant="h6" sx={{ color: "red" }}>
+          <Typography variant="body2" sx={{ color: "red" }}>
             {depositFRGTokenError}
           </Typography>
         )}

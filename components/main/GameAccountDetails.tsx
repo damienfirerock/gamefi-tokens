@@ -46,7 +46,7 @@ const GameAccountDetails: React.FunctionComponent = () => {
     <>
       {session && (
         <>
-          <Typography variant="h6">{t("common:account-details")}</Typography>
+          <Typography variant="body2">{t("common:account-details")}</Typography>
           <Box
             sx={{
               display: "flex",
@@ -73,21 +73,29 @@ const GameAccountDetails: React.FunctionComponent = () => {
             </Avatar>
             <table>
               <tr>
-                <td>{t("common:address")}:</td>
                 <td>
-                  <Detail variant="body1">{session?.user?.email}</Detail>
+                  <Typography variant="body2">
+                    {t("common:address")}:
+                  </Typography>
+                </td>
+                <td>
+                  <Detail variant="body2">{session?.user?.email}</Detail>
                 </td>
               </tr>
               <tr>
-                <td>{t("common:id")}:</td>
                 <td>
-                  <Detail variant="body1">960630 (Mock)</Detail>
+                  <Typography variant="body2">{t("common:id")}:</Typography>
+                </td>
+                <td>
+                  <Detail variant="body2">960630 (Mock)</Detail>
                 </td>
               </tr>
               <tr>
-                <td>{t("common:grade")}:</td>
                 <td>
-                  <Detail variant="body1">15 (Mock)</Detail>
+                  <Typography variant="body2">{t("common:grade")}:</Typography>
+                </td>
+                <td>
+                  <Detail variant="body2">15 (Mock)</Detail>
                 </td>
               </tr>
             </table>

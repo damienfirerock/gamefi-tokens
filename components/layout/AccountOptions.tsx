@@ -67,13 +67,13 @@ const AccountOptions: React.FunctionComponent = () => {
         {isLoggedIn ? "Log Out" : "Log In"}
       </Button>
 
-      <Typography variant="h6">Connect Wallet</Typography>
-      <Typography variant="body1">
+      <Typography variant="body2">Connect Wallet</Typography>
+      <Typography variant="body2">
         {!!account && truncateString(account)}
       </Typography>
       {account && (
         <>
-          <Typography variant="body1">
+          <Typography variant="body2">
             Signed:{signStatus.toString()}
           </Typography>
           <InteractButton

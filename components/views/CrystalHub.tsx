@@ -184,12 +184,12 @@ const CrystalHub: React.FunctionComponent = () => {
       </Typography>
 
       {session?.user?.email && (
-        <Typography variant="h6">{session.user.email}</Typography>
+        <Typography variant="body2">{session.user.email}</Typography>
       )}
       {/* TODO: Eventually will need to check against account bound wallet from server account details */}
-      {!!account && <Typography variant="h6">Wallet: {account}</Typography>}
+      {!!account && <Typography variant="body2">Wallet: {account}</Typography>}
       {!!walletBalance && (
-        <Typography variant="h6">$FRG: {walletBalance}</Typography>
+        <Typography variant="body2">$FRG: {walletBalance}</Typography>
       )}
 
       {/* Server Selection */}
@@ -210,10 +210,10 @@ const CrystalHub: React.FunctionComponent = () => {
         </FormControl>
       </Box>
 
-      <Typography variant="h6">
+      <Typography variant="body2">
         Mock FRG Crystal Balance: {frgCrystalBalance}
       </Typography>
-      <Typography variant="h6">
+      <Typography variant="body2">
         Mock Pending FRG Crystal Balance: {pendingFrgCrystalBalance}
       </Typography>
 

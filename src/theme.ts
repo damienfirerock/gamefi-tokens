@@ -25,6 +25,7 @@ const theme = createTheme({
     button: {
       textTransform: "none",
     },
+    fontSize: 16,
   },
   palette: {
     background: { default: DEFAULT_BACKGROUND, paper: PAPER_BACKGROUND },

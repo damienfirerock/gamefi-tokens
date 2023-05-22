@@ -142,11 +142,11 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
   return (
     <>
       <StyledCard variant="outlined">
-        <Typography variant="h6">{t("crystal-hub:withdraw")}</Typography>
-        <Typography variant="h6">
+        <Typography variant="body2">{t("crystal-hub:withdraw")}</Typography>
+        <Typography variant="body2">
           Mock FRG Crystal to $FRG Exchange Rate - {rate}:1
         </Typography>
-        <Typography variant="h6">
+        <Typography variant="body2">
           Mock FRG Crystal Exchange Tax Rate: {tax}%
         </Typography>
         <Box
@@ -194,7 +194,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
           variant="contained"
         />
         {!!withdrawFRGCrystalError && (
-          <Typography variant="h6" sx={{ color: "red" }}>
+          <Typography variant="body2" sx={{ color: "red" }}>
             {withdrawFRGCrystalError}
           </Typography>
         )}

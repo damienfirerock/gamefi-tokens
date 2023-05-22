@@ -24,7 +24,7 @@ const ConnectWalletButton: React.FunctionComponent<IConnectWalletButton> = (
       sx={{ minWidth: 255, justifyContent: "start" }}
     >
       <Image src={src} alt={src} width="28" height="28" />
-      <Typography variant="h6" sx={{ marginLeft: 2 }}>
+      <Typography variant="body2" sx={{ marginLeft: 2 }}>
         {text}
       </Typography>
     </Button>
