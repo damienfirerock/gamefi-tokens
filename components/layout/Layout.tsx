@@ -110,6 +110,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
         <title>{t("contracts-explorer")}</title>
         <meta property="og:title" content="Airdrop" key="title" />
       </Head>
+      {/* Mavbar Men */}
       <NavBar />
       <StyledContainer maxWidth="lg" sx={{ paddingTop: 8 }}>
         {children}
@@ -128,6 +129,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
           handleClearAlertSource={() => dispatch(clearSuccess())}
         />
       </StyledContainer>
+      {/* BottomNavbar only shows on Mobile */}
       <BottomNavbar />
     </>
   );

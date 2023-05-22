@@ -18,7 +18,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 
 import Layout from "../layout/Layout";
-import AccountButton from "../layout/buttons/AccountButton";
+import AccountDetails from "../layout/AccountDetails";
 
 import { AppDispatch, RootState } from "../../store";
 import { setDialogOpen } from "../../features/AuthSlice";
@@ -183,7 +183,7 @@ const CrystalHub: React.FunctionComponent = () => {
         {t("crystal-hub:crystal-hub")}
       </Typography>
 
-      {session && !account && <AccountButton />}
+      {session && !account && <AccountDetails />}
       {/* TODO: Eventually will need to check against account bound wallet from server account details */}
       {!!account && <Typography variant="h6">Wallet: {account}</Typography>}
       {!!walletBalance && (

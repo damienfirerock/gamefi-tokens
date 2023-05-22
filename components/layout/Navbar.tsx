@@ -15,7 +15,7 @@ import NavBarLink from "./buttons/common/NavBarLink";
 import { DEFAULT_BACKGROUND } from "../../src/theme";
 
 // Decreases First Load from 355kb to 214kb
-const DynamicAccountButton = dynamic(() => import("./buttons/AccountButton"));
+const DynamicAccountDetails = dynamic(() => import("./AccountDetails"));
 
 const NAVBAR_LINKS = [
   { href: "/", text: "Main" },
@@ -103,7 +103,7 @@ const NavBar: React.FunctionComponent = () => {
             <NavBarLink key={text} href={href} text={text} />
           ))}
         </Box>
-        <DynamicAccountButton />
+        <DynamicAccountDetails />
       </Toolbar>
     </AppBar>
   );

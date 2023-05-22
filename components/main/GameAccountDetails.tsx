@@ -9,7 +9,7 @@ import { setLoading } from "../../features/TransactionSlice";
 
 import { NETWORKS_INFO_CONFIG } from "../../constants/networks";
 
-const AccountDetails: React.FunctionComponent = () => {
+const GameAccountDetails: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation(["common", "airdrop"]);
 
@@ -52,4 +52,4 @@ const AccountDetails: React.FunctionComponent = () => {
   );
 };
 
-export default AccountDetails;
+export default GameAccountDetails;
