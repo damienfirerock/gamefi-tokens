@@ -114,6 +114,9 @@ const theme = createTheme({
       defaultProps: {
         disableElevation: true,
       },
+      styleOverrides: {
+        root: { borderRadius: "2rem" },
+      },
     },
   },
 });

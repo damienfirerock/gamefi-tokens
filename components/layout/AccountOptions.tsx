@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { useSession, signOut } from "next-auth/react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -55,7 +55,7 @@ const AccountOptions: React.FunctionComponent = () => {
   const isLoggedIn = !!session;
 
   return (
-    <Box sx={{ textAlign: "center" }}>
+    <>
       <GameAccountDetails />
 
       <Typography variant="h6">
@@ -95,7 +95,7 @@ const AccountOptions: React.FunctionComponent = () => {
           {isLoggedIn ? "Log Out" : "Log In"}
         </Typography>
       </MenuStyledButton>
-    </Box>
+    </>
   );
 };
 
