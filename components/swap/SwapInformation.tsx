@@ -50,6 +50,7 @@ const theme: Theme = {
   accent: PRIMARY_COLOR,
   dialog: TERTIARY_COLOR,
   fontFamily: "Poppins",
+  borderRadius: { small: 1, medium: 1, large: 1 },
 };
 
 const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({

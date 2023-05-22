@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useSession, signOut } from "next-auth/react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -67,25 +67,27 @@ const AccountOptions: React.FunctionComponent = () => {
         {isLoggedIn ? "Log Out" : "Log In"}
       </Button>
 
-      <Typography variant="body2">Connect Wallet</Typography>
-      <Typography variant="body2">
-        {!!account && truncateString(account)}
-      </Typography>
-      {account && (
-        <>
-          <Typography variant="body2">
-            Signed:{signStatus.toString()}
-          </Typography>
-          <InteractButton
-            text={"Sign"}
-            method={handleSignature}
-            loading={loading}
-            variant="contained"
-            sx={{ marginY: "0.25rem" }}
-            fullWidth
-          />
-        </>
-      )}
+      <Box sx={{ marginY: "1rem" }}>
+        <Typography variant="body2">Connect Wallet</Typography>
+        <Typography variant="body2">
+          {!!account && truncateString(account)}
+        </Typography>
+        {account && (
+          <>
+            <Typography variant="body2">
+              Signed:{signStatus.toString()}
+            </Typography>
+            <InteractButton
+              text={"Sign"}
+              method={handleSignature}
+              loading={loading}
+              variant="contained"
+              sx={{ marginY: "0.25rem" }}
+              fullWidth
+            />
+          </>
+        )}
+      </Box>
       {account ? (
         <Button
           variant="contained"

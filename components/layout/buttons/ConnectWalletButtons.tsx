@@ -27,8 +27,9 @@ import { SUPPORTED_WALLETS, WalletKeys } from "../../../constants/wallets";
 // Mobile: Show 1) Sequence, 2) Metamask* 3) WalletConnect
 // * If provider is detected, which only happens in the rare scenario where user is accessing from Metamask mobile browser
 
-const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
-  marginBottom: theme.spacing(2),
+const StyledBox = styled(Box)<BoxProps>(() => ({
+  display: "flex",
+  justifyContent: "space-between",
 }));
 
 const ConnectWalletButtons: React.FunctionComponent = () => {
@@ -49,39 +50,39 @@ const ConnectWalletButtons: React.FunctionComponent = () => {
   const isMetamask = detectMetamask() === WalletReadyState.Installed;
 
   return (
-    <>
-      <StyledBox>
+    <StyledBox>
+      <ConnectWalletButton
+        handleClick={() => {
+          handleConnectWallet(WalletKeys.Sequence);
+        }}
+        src={SUPPORTED_WALLETS[WalletKeys.Sequence].icon}
+        text={SUPPORTED_WALLETS[WalletKeys.Sequence].name}
+        supplementaryText="(Recommended)"
+        additionalStyles={{
+          background:
+            "linear-gradient(41.73deg, #7425A3 0%, #4150C7 49.48%, #29B1CF 100%)",
+        }}
+      />
+      {isMetamask && (
         <ConnectWalletButton
           handleClick={() => {
-            handleConnectWallet(WalletKeys.Sequence);
+            handleConnectWallet(WalletKeys.Metamask);
           }}
-          src={SUPPORTED_WALLETS[WalletKeys.Sequence].icon}
-          text={`${SUPPORTED_WALLETS[WalletKeys.Sequence].name} (Recommended)`}
+          src={SUPPORTED_WALLETS[WalletKeys.Metamask].icon}
+          text={SUPPORTED_WALLETS[WalletKeys.Metamask].name}
+          additionalStyles={{ background: "#F5BA03" }}
         />
-      </StyledBox>
-      {isMetamask && (
-        <StyledBox>
-          <ConnectWalletButton
-            handleClick={() => {
-              handleConnectWallet(WalletKeys.Metamask);
-            }}
-            src={SUPPORTED_WALLETS[WalletKeys.Metamask].icon}
-            text={`${SUPPORTED_WALLETS[WalletKeys.Metamask].name}`}
-          />
-        </StyledBox>
       )}
       {isMobile && (
-        <StyledBox>
-          <ConnectWalletButton
-            handleClick={() => {
-              handleConnectWallet(WalletKeys.WalletConnect);
-            }}
-            src={SUPPORTED_WALLETS[WalletKeys.WalletConnect].icon}
-            text={`${SUPPORTED_WALLETS[WalletKeys.WalletConnect].name}`}
-          />
-        </StyledBox>
+        <ConnectWalletButton
+          handleClick={() => {
+            handleConnectWallet(WalletKeys.WalletConnect);
+          }}
+          src={SUPPORTED_WALLETS[WalletKeys.WalletConnect].icon}
+          text={SUPPORTED_WALLETS[WalletKeys.WalletConnect].name}
+        />
       )}
-    </>
+    </StyledBox>
   );
 };
 
