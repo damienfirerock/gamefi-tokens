@@ -5,12 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 import AccountOptions from "./AccountOptions";
 
-import { AppDispatch, RootState } from "../../store";
+import { AppDispatch, RootState } from "../../../store";
 import {
   setDialogOpen,
   setAccountDetailsOpen,
   setAccountDetailsButtonRef,
-} from "../../features/AuthSlice";
+} from "../../../features/AuthSlice";
 
 const AccountDetails: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();

@@ -18,7 +18,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 
 import Layout from "../layout/Layout";
-import AccountDetails from "../layout/AccountDetails";
+import AccountDetails from "../layout/AccountDetails/AccountDetails";
 
 import { AppDispatch, RootState } from "../../store";
 import { setDialogOpen } from "../../features/AuthSlice";

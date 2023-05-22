@@ -4,9 +4,9 @@ import { useTranslation } from "next-i18next";
 import { useSession } from "next-auth/react";
 import { styled } from "@mui/material/styles";
 
-import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
+import useWeb3React from "../../../utils/hooks/web3React/useWeb3React";
 
-import { NAV_TEXT_COLOUR, DETAILS_COLOUR } from "../../src/theme";
+import { NAV_TEXT_COLOUR, DETAILS_COLOUR } from "../../../src/theme";
 
 const stringToColour = (string: string) => {
   let hash = 0;
