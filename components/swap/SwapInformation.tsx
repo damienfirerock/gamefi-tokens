@@ -14,7 +14,7 @@ import { CONTRACT_LIST, NETWORKS_INFO_CONFIG } from "../../constants/networks";
 import { AppDispatch, RootState } from "../../store";
 import {
   PRIMARY_COLOR,
-  SECONDARY_COLOR,
+  TERTIARY_COLOR,
   PAPER_BACKGROUND,
   WHITE,
 } from "../../src/theme";
@@ -45,10 +45,10 @@ const theme: Theme = {
   secondary: WHITE,
   interactive: PRIMARY_COLOR,
   container: PAPER_BACKGROUND,
-  module: SECONDARY_COLOR,
+  module: TERTIARY_COLOR,
   onInteractive: WHITE,
   accent: PRIMARY_COLOR,
-  dialog: SECONDARY_COLOR,
+  dialog: TERTIARY_COLOR,
   fontFamily: "Poppins",
 };
 

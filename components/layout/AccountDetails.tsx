@@ -1,9 +1,8 @@
 import React, { useEffect, useRef } from "react";
-import { Drawer, Popover, Typography } from "@mui/material";
+import { Button, Drawer, Popover, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useDispatch, useSelector } from "react-redux";
 
-import MenuStyledButton from "./buttons/common/MenuStyledButton";
 import AccountOptions from "./AccountOptions";
 
 import { AppDispatch, RootState } from "../../store";
@@ -46,13 +45,13 @@ const AccountDetails: React.FunctionComponent = () => {
 
   return (
     <>
-      <MenuStyledButton
+      <Button
         variant="contained"
         ref={buttonRef}
         onClick={isLoggedIn ? handleClick : handleOpenLoginDialog}
       >
         <Typography variant="h6">{session?.user.email ?? "Login"}</Typography>
-      </MenuStyledButton>
+      </Button>
       {/* Popover should only show on Medium Screen and Above */}
       <Popover
         id={id}

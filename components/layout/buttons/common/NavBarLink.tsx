@@ -1,8 +1,6 @@
 import React, { ReactElement } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import NextLink from "next/link";
-
-import MenuStyledButton from "./MenuStyledButton";
 
 interface IAccountLink {
   href: string;
@@ -18,14 +16,14 @@ const AccountLink: React.FunctionComponent<IAccountLink> = ({
   return (
     <Box sx={{ mx: 1 }}>
       <NextLink href={href} passHref>
-        <MenuStyledButton variant="outlined">
+        <Button variant="outlined">
           <>
             {!!icon && icon}
             <Typography variant="h6" sx={{ marginLeft: 1 }}>
               {text}
             </Typography>
           </>
-        </MenuStyledButton>
+        </Button>
       </NextLink>
     </Box>
   );

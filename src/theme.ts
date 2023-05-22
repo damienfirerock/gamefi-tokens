@@ -8,12 +8,13 @@ declare module "@mui/material/Paper" {
 }
 
 export const PRIMARY_COLOR = "#531EDC";
-export const SECONDARY_COLOR = "#2A2638";
+export const SECONDARY_COLOR = "#8484A933";
+export const TERTIARY_COLOR = "#2A2638";
 
 export const DEFAULT_BACKGROUND = "#060111";
 export const PAPER_BACKGROUND = "#1A1524";
 export const NAV_TEXT_COLOUR = "#8C8A9A";
-
+export const DETAILS_COLOUR = "#0B0320";
 const DISABLED_COLOUR = "#979797";
 
 export const WHITE = "#FFFFFF";
@@ -29,13 +30,15 @@ const theme = createTheme({
     background: { default: DEFAULT_BACKGROUND, paper: PAPER_BACKGROUND },
     primary: {
       main: PRIMARY_COLOR,
+      contrastText: WHITE,
     },
     secondary: {
       main: SECONDARY_COLOR,
+      contrastText: PRIMARY_COLOR,
     },
     text: {
       primary: WHITE,
-      secondary: SECONDARY_COLOR,
+      secondary: PRIMARY_COLOR,
     },
     action: {
       disabledBackground: DISABLED_COLOUR,

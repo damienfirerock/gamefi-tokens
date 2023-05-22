@@ -6,9 +6,7 @@ import { styled } from "@mui/material/styles";
 
 import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
 
-import { NAV_TEXT_COLOUR } from "../../src/theme";
-
-const DETAILS_COLOUR = "#0B0320";
+import { NAV_TEXT_COLOUR, DETAILS_COLOUR } from "../../src/theme";
 
 const stringToColour = (string: string) => {
   let hash = 0;

@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useSession, signOut } from "next-auth/react";
 import { useDispatch, useSelector } from "react-redux";
 
-import MenuStyledButton from "./buttons/common/MenuStyledButton";
 import ConnectWalletButtons from "./buttons/ConnectWalletButtons";
 import GameAccountDetails from "../main/GameAccountDetails";
 import InteractButton from "../common/InteractButton";
@@ -57,12 +56,21 @@ const AccountOptions: React.FunctionComponent = () => {
   return (
     <>
       <GameAccountDetails />
+      <Button
+        variant="contained"
+        onClick={isLoggedIn ? handleLogOut : handleOpenLoginDialog}
+        disabled={status === "loading"}
+        fullWidth
+      >
+        {isLoggedIn ? "Log Out" : "Log In"}
+      </Button>
 
-      <Typography variant="h6">
+      <Typography variant="h6">Connect Wallet</Typography>
+      <Typography variant="body1">
         {!!account && truncateString(account)}
       </Typography>
       {session && (
-        <Typography variant="h6">
+        <Typography variant="body1">
           Email Account: {session.user.email}
         </Typography>
       )}
@@ -73,28 +81,23 @@ const AccountOptions: React.FunctionComponent = () => {
             method={handleSignature}
             loading={loading}
             variant="contained"
+            fullWidth
           />
           <Typography variant="h6">Signed:{signStatus.toString()}</Typography>
         </>
       )}
       {account ? (
-        <MenuStyledButton variant="contained" onClick={deactivate}>
-          <Typography variant="h6" sx={{ marginLeft: 1 }}>
-            Disconnect
-          </Typography>
-        </MenuStyledButton>
+        <Button
+          variant="contained"
+          onClick={deactivate}
+          color="secondary"
+          fullWidth
+        >
+          Disconnect
+        </Button>
       ) : (
         <ConnectWalletButtons />
       )}
-      <MenuStyledButton
-        variant="contained"
-        onClick={isLoggedIn ? handleLogOut : handleOpenLoginDialog}
-        disabled={status === "loading"}
-      >
-        <Typography variant="h6" sx={{ marginLeft: 1 }}>
-          {isLoggedIn ? "Log Out" : "Log In"}
-        </Typography>
-      </MenuStyledButton>
     </>
   );
 };
