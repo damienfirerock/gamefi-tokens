@@ -59,6 +59,7 @@ const ConnectWalletButtons: React.FunctionComponent = () => {
         text={SUPPORTED_WALLETS[WalletKeys.Sequence].name}
         supplementaryText="(Recommended)"
         additionalStyles={{
+          // No quick way to do transitions for linear gradient onhover
           background:
             "linear-gradient(41.73deg, #7425A3 0%, #4150C7 49.48%, #29B1CF 100%)",
         }}
@@ -70,7 +71,12 @@ const ConnectWalletButtons: React.FunctionComponent = () => {
           }}
           src={SUPPORTED_WALLETS[WalletKeys.Metamask].icon}
           text={SUPPORTED_WALLETS[WalletKeys.Metamask].name}
-          additionalStyles={{ background: "#F5BA03" }}
+          additionalStyles={{
+            background: "#F5BA03",
+            "&:hover": {
+              backgroundColor: "#F5BA03",
+            },
+          }}
         />
       )}
       {isMobile && (
@@ -80,6 +86,12 @@ const ConnectWalletButtons: React.FunctionComponent = () => {
           }}
           src={SUPPORTED_WALLETS[WalletKeys.WalletConnect].icon}
           text={SUPPORTED_WALLETS[WalletKeys.WalletConnect].name}
+          additionalStyles={{
+            background: "black",
+            "&:hover": {
+              backgroundColor: "black",
+            },
+          }}
         />
       )}
     </StyledBox>

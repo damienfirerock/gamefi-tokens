@@ -6,7 +6,10 @@ interface IConnectWalletButton {
   text: string;
   supplementaryText?: string;
   src?: string;
-  additionalStyles?: Record<string, string | number>;
+  additionalStyles?: Record<
+    string,
+    string | number | Record<string, string | number>
+  >;
   handleClick: () => void;
 }
 
