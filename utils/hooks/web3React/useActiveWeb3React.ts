@@ -34,7 +34,6 @@ export function useActiveWeb3React(): {
     if (!isConnectedEVM) return undefined;
     // TODO: Detect sequence wallet
     const detectedWallet = detectInjectedType();
-
     if (connectedConnectorEVM === walletconnect) {
       return "WALLET_CONNECT";
     }

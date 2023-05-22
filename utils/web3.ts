@@ -32,7 +32,15 @@ export const getEtherscanLink = (
 
 // https://docs.cloud.coinbase.com/wallet-sdk/docs/injected-provider#properties
 // Coin98 and Brave wallet is overriding Metamask. So at a time, there is only 1 exists
-export const detectInjectedType = (): "BRAVE" | "METAMASK" | null => {
+export const detectInjectedType = ():
+  | "BRAVE"
+  | "METAMASK"
+  | "SEQUENCE"
+  | null => {
+  // Only way to verify if it is connected via Sequence Wallet at the moment
+  const walletKey = localStorage?.getItem("isWalletConnected");
+  if (walletKey === "SEQUENCE") return "SEQUENCE";
+
   const { ethereum } = window;
   // When Coinbase wallet connected will inject selectedProvider property and some others props
   if (ethereum?.selectedProvider) {

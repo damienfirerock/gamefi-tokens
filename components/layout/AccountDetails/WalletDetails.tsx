@@ -13,7 +13,7 @@ import useSignature from "../../../utils/hooks/useSignature";
 
 const WalletDetails: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { account } = useActiveWeb3React();
+  const { account, walletKey } = useActiveWeb3React();
   const { checkSignature } = useSignature();
 
   const { data: session } = useSession();
