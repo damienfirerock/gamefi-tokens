@@ -67,7 +67,7 @@ const AccountOptions: React.FunctionComponent = () => {
         {isLoggedIn ? "Log Out" : "Log In"}
       </Button>
 
-      <Box sx={{ marginY: "1rem" }}>
+      <Box sx={{ marginY: "0.5rem" }}>
         <Typography variant="body2">Connect Wallet</Typography>
         <Typography variant="body2">
           {!!account && truncateString(account)}

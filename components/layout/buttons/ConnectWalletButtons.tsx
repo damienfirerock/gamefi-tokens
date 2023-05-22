@@ -57,7 +57,7 @@ const ConnectWalletButtons: React.FunctionComponent = () => {
         }}
         src={SUPPORTED_WALLETS[WalletKeys.Sequence].icon}
         text={SUPPORTED_WALLETS[WalletKeys.Sequence].name}
-        supplementaryText="(Recommended)"
+        // supplementaryText="(Recommended)"
         additionalStyles={{
           // No quick way to do transitions for linear gradient onhover
           background:

@@ -36,10 +36,22 @@ const ConnectWalletButton: React.FunctionComponent<IConnectWalletButton> = (
         justifyContent: "space-around",
         alignItems: "flex-start",
         paddingLeft: "1.75rem",
+        borderRadius: "1rem",
         ...additionalStyles,
       }}
     >
-      <Image src={src} alt={src} width="28" height="28" />
+      <Box
+        sx={{
+          background: "rgba(0, 0, 0, 0.3)",
+          borderRadius: "0.5rem",
+          height: "2.5rem",
+          width: "2.5rem",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <Image src={src} alt={src} width="28" height="28" />
+      </Box>
       <Box sx={{ textAlign: "left" }}>
         <Typography variant="body2">{text}</Typography>
         {supplementaryText && (
