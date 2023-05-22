@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, BoxProps } from "@mui/material";
+import { Box, BoxProps, Skeleton, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import { Theme } from "@uniswap/widgets";
@@ -27,7 +27,17 @@ const SwapWidget = dynamic(
     const res = await import("@uniswap/widgets");
     return res.SwapWidget;
   },
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => (
+      <Stack spacing={1}>
+        <p>Loading...</p>
+        <Skeleton variant="rectangular" width="358px" height="125px" />
+        <Skeleton variant="rectangular" width="358px" height="125px" />
+        <Skeleton variant="rectangular" width="358px" height="125px" />
+      </Stack>
+    ),
+  }
 );
 
 const theme: Theme = {
