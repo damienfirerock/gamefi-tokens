@@ -44,13 +44,14 @@ const GameAccountDetails: React.FunctionComponent = () => {
 
   return (
     <>
-      {account && (
+      {session && (
         <>
           <Typography variant="h6">{t("common:account-details")}</Typography>
           <Box
             sx={{
               display: "flex",
               flexDirection: "row",
+              alignItems: "center",
               boxShadow: "0px 0px 20px 0.5px #d3d3d3",
               background: "white",
               marginY: "1rem",

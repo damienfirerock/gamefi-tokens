@@ -60,6 +60,8 @@ const AccountOptions: React.FunctionComponent = () => {
         variant="contained"
         onClick={isLoggedIn ? handleLogOut : handleOpenLoginDialog}
         disabled={status === "loading"}
+        sx={{ marginY: "0.25rem" }}
+        color="secondary"
         fullWidth
       >
         {isLoggedIn ? "Log Out" : "Log In"}
@@ -69,21 +71,19 @@ const AccountOptions: React.FunctionComponent = () => {
       <Typography variant="body1">
         {!!account && truncateString(account)}
       </Typography>
-      {session && (
-        <Typography variant="body1">
-          Email Account: {session.user.email}
-        </Typography>
-      )}
       {account && (
         <>
+          <Typography variant="body1">
+            Signed:{signStatus.toString()}
+          </Typography>
           <InteractButton
             text={"Sign"}
             method={handleSignature}
             loading={loading}
             variant="contained"
+            sx={{ marginY: "0.25rem" }}
             fullWidth
           />
-          <Typography variant="h6">Signed:{signStatus.toString()}</Typography>
         </>
       )}
       {account ? (
@@ -91,9 +91,10 @@ const AccountOptions: React.FunctionComponent = () => {
           variant="contained"
           onClick={deactivate}
           color="secondary"
+          sx={{ marginY: "0.25rem" }}
           fullWidth
         >
-          Disconnect
+          Disconnect Wallet
         </Button>
       ) : (
         <ConnectWalletButtons />
