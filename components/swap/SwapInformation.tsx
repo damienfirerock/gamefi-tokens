@@ -5,16 +5,20 @@ import dynamic from "next/dynamic";
 import { Theme } from "@uniswap/widgets";
 import "@uniswap/widgets/fonts.css";
 import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+import { useSession } from "next-auth/react";
 
 import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
 import { CONTRACT_LIST, NETWORKS_INFO_CONFIG } from "../../constants/networks";
 
+import { AppDispatch, RootState } from "../../store";
 import {
   PRIMARY_COLOR,
   SECONDARY_COLOR,
   PAPER_BACKGROUND,
   WHITE,
 } from "../../src/theme";
+import { setAccountDetailsOpen, setDialogOpen } from "../../features/AuthSlice";
 
 // Causes errors if not dynamic import
 // Ref: https://github.com/Uniswap/widgets/issues/404
@@ -46,8 +50,23 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
 }));
 
 const AirdropInformation: React.FunctionComponent = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const { chainId, library } = useWeb3React();
   const { locale } = useRouter();
+  const { data: session } = useSession();
+
+  const authSlice = useSelector((state: RootState) => state.auth);
+  const { accountDetailsButtonRef } = authSlice;
+
+  const handConnectWallet = () => {
+    if (!session) {
+      dispatch(setDialogOpen());
+    } else {
+      dispatch(setAccountDetailsOpen(accountDetailsButtonRef));
+    }
+
+    return false; // Prevents Uniswap's Default Connect Modal
+  };
 
   return (
     <StyledBox>
@@ -69,7 +88,7 @@ const AirdropInformation: React.FunctionComponent = () => {
         locale={locale === "zh" ? "zh-CN" : "en-GB"}
         theme={theme}
         hideConnectionUI
-        onConnectWalletClick={() => false} // Prevents Uniswap's Default Connect Modal
+        onConnectWalletClick={handConnectWallet}
       />
     </StyledBox>
   );
