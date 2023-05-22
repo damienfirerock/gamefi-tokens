@@ -183,7 +183,9 @@ const CrystalHub: React.FunctionComponent = () => {
         {t("crystal-hub:crystal-hub")}
       </Typography>
 
-      {session && !account && <AccountDetails />}
+      {session?.user?.email && (
+        <Typography variant="h6">{session.user.email}</Typography>
+      )}
       {/* TODO: Eventually will need to check against account bound wallet from server account details */}
       {!!account && <Typography variant="h6">Wallet: {account}</Typography>}
       {!!walletBalance && (

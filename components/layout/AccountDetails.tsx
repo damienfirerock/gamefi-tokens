@@ -1,36 +1,45 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Drawer, Popover, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import MenuStyledButton from "./buttons/common/MenuStyledButton";
 import AccountOptions from "./AccountOptions";
 
-import { AppDispatch } from "../../store";
-import { setDialogOpen } from "../../features/AuthSlice";
+import { AppDispatch, RootState } from "../../store";
+import {
+  setDialogOpen,
+  setAccountDetailsOpen,
+  setAccountDetailsButtonRef,
+} from "../../features/AuthSlice";
 
 const AccountDetails: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
-
+  const buttonRef = useRef(null);
   const { data: session } = useSession();
 
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
-    null
-  );
+  const authSlice = useSelector((state: RootState) => state.auth);
+  const { accountDetailsOpen, accountDetailsButtonRef } = authSlice;
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+    dispatch(setAccountDetailsOpen(event.currentTarget));
   };
 
   const handleClose = () => {
-    setAnchorEl(null);
+    dispatch(setAccountDetailsOpen(null));
   };
 
   const handleOpenLoginDialog = () => {
     dispatch(setDialogOpen());
   };
 
-  const open = Boolean(anchorEl);
+  // Uses buttonRef as an anchor if Popover is opened from other parts of the webapp
+  useEffect(() => {
+    if (buttonRef.current)
+      dispatch(setAccountDetailsButtonRef(buttonRef.current));
+  }, [buttonRef]);
+
+  const open = Boolean(accountDetailsOpen);
   const id = open ? "simple-popover" : undefined;
 
   const isLoggedIn = !!session;
@@ -39,6 +48,7 @@ const AccountDetails: React.FunctionComponent = () => {
     <>
       <MenuStyledButton
         variant="contained"
+        ref={buttonRef}
         onClick={isLoggedIn ? handleClick : handleOpenLoginDialog}
       >
         <Typography variant="h6">{session?.user.email ?? "Login"}</Typography>
@@ -47,7 +57,7 @@ const AccountDetails: React.FunctionComponent = () => {
       <Popover
         id={id}
         open={open}
-        anchorEl={anchorEl}
+        anchorEl={accountDetailsButtonRef}
         onClose={handleClose}
         anchorOrigin={{
           horizontal: "center",
