@@ -33,9 +33,7 @@ const GameAccountDetails: React.FunctionComponent = () => {
     <>
       {account && (
         <>
-          <Typography variant="h3" sx={{ marginTop: 5, marginBottom: 2 }}>
-            {t("common:account-details")}
-          </Typography>
+          <Typography variant="h3">{t("common:account-details")}</Typography>
           <Typography variant="h6">
             {t("common:address")}: {account}
           </Typography>

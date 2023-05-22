@@ -55,7 +55,7 @@ const AccountOptions: React.FunctionComponent = () => {
   const isLoggedIn = !!session;
 
   return (
-    <Box sx={{ padding: "1.5rem", textAlign: "center" }}>
+    <Box sx={{ textAlign: "center" }}>
       <GameAccountDetails />
 
       <Typography variant="h6">

@@ -49,8 +49,10 @@ const theme = createTheme({
         {
           props: { variant: "popup" },
           style: {
-            border: `4px solid ${SECONDARY_COLOR}`,
-            borderStyle: "dotted",
+            background: WHITE,
+            color: NAV_TEXT_COLOUR,
+            padding: "1rem",
+            borderRadius: "1rem",
           },
         },
       ],

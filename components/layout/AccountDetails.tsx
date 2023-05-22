@@ -82,6 +82,10 @@ const AccountDetails: React.FunctionComponent = () => {
         open={open}
         onClose={handleClose}
         sx={{ display: { xs: "block", sm: "block", md: "none" } }}
+        PaperProps={{
+          elevation: 0,
+          variant: "popup",
+        }}
       >
         <AccountOptions />
       </Drawer>
