@@ -91,8 +91,8 @@ const WalletDetails: React.FunctionComponent = () => {
           variant="caption"
           sx={{ color: "red", display: "inline-block", marginY: "0.25rem" }}
         >
-          [Mock] The connection wallet address is different from the binding
-          address
+          [Mock] This connected wallet is different from the wallet address
+          bound to your game account.
         </Typography>
       )}
       {!!account && (

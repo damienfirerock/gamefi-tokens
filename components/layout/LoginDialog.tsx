@@ -17,8 +17,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
 import StyledCircularProgress from "../common/StyledCircularProgress";
 import { styled } from "@mui/material/styles";
+import { useForm } from "react-hook-form";
 
 import InteractButton from "../common/InteractButton";
+import PasswordTextField from "../common/fields/PasswordField";
 
 import { AppDispatch, RootState } from "../../store";
 import { setDialogClosed, setLoading } from "../../features/AuthSlice";
@@ -41,6 +43,10 @@ const StyledTextField = styled(TextField)<TextFieldProps>({
   },
 });
 
+interface FormFields {
+  password: string;
+}
+
 export interface LoginDialogProps {
   onClose: () => void;
 }
@@ -49,6 +55,7 @@ const LoginDialog: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { query } = useRouter();
   const { email, type } = query;
+  const { handleSubmit, control } = useForm<FormFields>();
 
   const authSlice = useSelector((state: RootState) => state.auth);
   const { dialogOpen, loading } = authSlice;
@@ -122,7 +129,11 @@ const LoginDialog: React.FunctionComponent = () => {
         {/* TextFields */}
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <StyledTextField label="Email" />
-          <StyledTextField label="Password" />
+          <PasswordTextField
+            name="password"
+            label="password"
+            control={control}
+          />
         </Box>
 
         {/* Additional Player Options */}

@@ -83,7 +83,7 @@ const theme = createTheme({
     MuiInputBase: {
       styleOverrides: {
         root: {
-          // color: "black", // works
+          color: "black",
           "&.Mui-disabled": {
             backgroundColor: "#e4e4e4", // works
             // color: "red !important", // FIXME: does not work
