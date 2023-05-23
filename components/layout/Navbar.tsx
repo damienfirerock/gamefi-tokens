@@ -15,9 +15,7 @@ import NavBarLink from "./buttons/common/NavBarLink";
 import { DEFAULT_BACKGROUND } from "../../src/theme";
 
 // Decreases First Load from 355kb to 214kb
-const DynamicAccountDetails = dynamic(
-  () => import("./AccountDetails/AccountDetails")
-);
+const DynamicAccountDetails = dynamic(() => import("./account/AccountDetails"));
 
 const NAVBAR_LINKS = [
   { href: "/", text: "Main" },

@@ -6,8 +6,6 @@ import {
   DialogContent,
   Divider,
   IconButton,
-  TextField,
-  TextFieldProps,
   Typography,
 } from "@mui/material";
 import { signIn } from "next-auth/react";
@@ -15,38 +13,17 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
-import StyledCircularProgress from "../common/StyledCircularProgress";
-import { styled } from "@mui/material/styles";
-import { useForm } from "react-hook-form";
+import StyledCircularProgress from "../../common/StyledCircularProgress";
 
-import InteractButton from "../common/InteractButton";
-import PasswordField from "../common/fields/PasswordField";
-import DefaultField from "../common/fields/DefaultField";
+import LoginDialogForm from "./LoginDialogForm";
 
-import { AppDispatch, RootState } from "../../store";
-import { setDialogClosed, setLoading } from "../../features/AuthSlice";
-import { WHITE, PRIMARY_COLOR, NAV_TEXT_COLOUR } from "../../src/theme";
+import { AppDispatch, RootState } from "../../../store";
+import { setDialogClosed, setLoading } from "../../../features/AuthSlice";
+import { WHITE, PRIMARY_COLOR, ALTERNATE_TEXT_COLOR } from "../../../src/theme";
 
 const providers = ["Google", "Facebook", "Apple"];
 
 const LOGIN_BUTTON_COLOUR = "#E6E6EE";
-const ALTERNATE_TEXT_COLOR = "#D8D8D8";
-
-const StyledTextField = styled(TextField)<TextFieldProps>({
-  "& label": {
-    color: ALTERNATE_TEXT_COLOR,
-  },
-  "& .MuiOutlinedInput-root": {
-    "& fieldset": {
-      borderColor: ALTERNATE_TEXT_COLOR,
-    },
-    marginBottom: "1.2rem",
-  },
-});
-
-interface FormFields {
-  password: string;
-}
 
 export interface LoginDialogProps {
   onClose: () => void;
@@ -56,7 +33,6 @@ const LoginDialog: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { query } = useRouter();
   const { email, type } = query;
-  const { handleSubmit, control } = useForm<FormFields>();
 
   const authSlice = useSelector((state: RootState) => state.auth);
   const { dialogOpen, loading } = authSlice;
@@ -127,55 +103,7 @@ const LoginDialog: React.FunctionComponent = () => {
           </Typography>
         )}
 
-        {/* TextFields */}
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <DefaultField name="email" label="Email" control={control} />
-          <PasswordField name="password" label="password" control={control} />
-        </Box>
-
-        {/* Additional Player Options */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginBottom: "1rem",
-          }}
-        >
-          <InteractButton
-            text="注册新账户"
-            method={() => {
-              return null;
-            }}
-            loading={loading}
-            variant="text"
-            size="small"
-            sx={{ color: NAV_TEXT_COLOUR }}
-          />
-          <InteractButton
-            text="忘记密码？"
-            method={() => {
-              return null;
-            }}
-            loading={loading}
-            variant="text"
-            size="small"
-            sx={{ color: NAV_TEXT_COLOUR }}
-          />
-        </Box>
-
-        {/* Login Button */}
-        <InteractButton
-          text="Login"
-          method={() => {
-            return null;
-          }}
-          loading={loading}
-          variant="contained"
-          fullWidth
-          sx={{ borderRadius: 5, marginBottom: "1.2rem" }}
-          size="large"
-        />
+        <LoginDialogForm />
 
         {/* Social Login Divider */}
         <Box sx={{ position: "relative", marginBottom: "1.2rem" }}>

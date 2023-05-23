@@ -6,7 +6,7 @@ import { useTranslation } from "next-i18next";
 import Layout from "../layout/Layout";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
 
-import AccountDetails from "../layout/AccountDetails/GameAccountDetails";
+import AccountDetails from "../layout/account/GameAccountDetails";
 
 const addresses = Object.values(CONTRACT_ADDRESSES);
 

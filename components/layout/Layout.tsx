@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 
 import NavBar from "./Navbar";
 import AlertBar from "../common/AlertBar";
-import LoginDialog from "./LoginDialog";
+import LoginDialog from "./login/LoginDialog";
 import BottomNavbar from "./BottomNavbar";
 
 import { AppDispatch, RootState } from "../../store";
