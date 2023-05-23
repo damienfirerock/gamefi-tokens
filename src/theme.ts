@@ -121,7 +121,7 @@ const theme = createTheme({
         disableElevation: true,
       },
       styleOverrides: {
-        root: { borderRadius: "2rem" },
+        root: { borderRadius: "3rem", height: "2.5rem" },
       },
     },
   },

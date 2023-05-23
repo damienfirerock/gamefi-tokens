@@ -8,6 +8,7 @@ import ChevronLeftOutlinedIcon from "@mui/icons-material/ChevronLeftOutlined";
 import InteractButton from "../../common/InteractButton";
 import PasswordField from "../../common/fields/PasswordField";
 import DefaultField from "../../common/fields/DefaultField";
+import SocialLogin from "./SocialLogin";
 
 import { RootState } from "../../../store";
 import { NAV_TEXT_COLOUR } from "../../../src/theme";
@@ -56,11 +57,32 @@ const LoginDialogForm: React.FunctionComponent = () => {
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <DefaultField name="email" label="Email" control={control} />
         {currentForm !== FormType.Login && (
-          <DefaultField
-            name="verificationCode"
-            label="Verification Code"
-            control={control}
-          />
+          <Box
+            sx={{ display: "flex", alignItems: "flex-start", height: "100%" }}
+          >
+            <DefaultField
+              name="verificationCode"
+              label="Verification Code"
+              control={control}
+            />
+            <InteractButton
+              text="Verification Code"
+              method={() => {
+                return null;
+              }}
+              loading={loading}
+              variant="contained"
+              sx={{
+                borderRadius: 10,
+                width: "50%",
+                marginTop: "0.3rem",
+                marginLeft: "0.6rem",
+                height: "3rem",
+                fontSize: "0.75rem",
+              }}
+              // size="small"
+            />
+          </Box>
         )}
         <PasswordField name="password" label="password" control={control} />
         {currentForm !== FormType.Login && (
@@ -119,6 +141,8 @@ const LoginDialogForm: React.FunctionComponent = () => {
         sx={{ borderRadius: 5, marginBottom: "1.2rem" }}
         size="large"
       />
+
+      {currentForm === FormType.Login && <SocialLogin />}
     </>
   );
 };

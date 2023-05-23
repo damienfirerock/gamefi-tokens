@@ -4,7 +4,6 @@ import {
   DialogTitle,
   Dialog,
   DialogContent,
-  Divider,
   IconButton,
   Typography,
 } from "@mui/material";
@@ -13,17 +12,12 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
-import StyledCircularProgress from "../../common/StyledCircularProgress";
 
 import LoginDialogForm from "./LoginDialogForm";
 
 import { AppDispatch, RootState } from "../../../store";
 import { setDialogClosed, setLoading } from "../../../features/AuthSlice";
-import { WHITE, PRIMARY_COLOR, ALTERNATE_TEXT_COLOR } from "../../../src/theme";
-
-const providers = ["Google", "Facebook", "Apple"];
-
-const LOGIN_BUTTON_COLOUR = "#E6E6EE";
+import { WHITE, PRIMARY_COLOR } from "../../../src/theme";
 
 export interface LoginDialogProps {
   onClose: () => void;
@@ -104,63 +98,6 @@ const LoginDialog: React.FunctionComponent = () => {
         )}
 
         <LoginDialogForm />
-
-        {/* Social Login Divider */}
-        <Box sx={{ position: "relative", marginBottom: "1.2rem" }}>
-          <Divider light />
-          <Typography
-            variant="body2"
-            sx={{
-              color: ALTERNATE_TEXT_COLOR,
-              background: WHITE,
-              display: "inline",
-              position: "absolute",
-              marginTop: "-10px",
-              marginLeft: "auto",
-              marginRight: "auto",
-              left: 0,
-              right: 0,
-              width: "5rem",
-              textAlign: "center",
-            }}
-          >
-            其它方式
-          </Typography>
-        </Box>
-
-        {/* Social Login Buttons */}
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-evenly",
-            marginBottom: "2rem",
-          }}
-        >
-          {providers.map((provider) => (
-            <IconButton
-              aria-label={`${provider} Login Button`}
-              size="small"
-              key={provider}
-              onClick={() => handleSignIn(provider.toLowerCase())}
-              disabled={loading}
-              sx={{
-                background: LOGIN_BUTTON_COLOUR,
-                borderRadius: 1,
-              }}
-            >
-              <Box
-                sx={{ width: "1.1rem", height: "1.1rem", position: "relative" }}
-              >
-                <Image
-                  src={`/login-icons/${provider}-Login-Icon.svg`}
-                  alt={`${provider} Logo`}
-                  layout="fill"
-                />
-                {loading && <StyledCircularProgress size={26} />}
-              </Box>
-            </IconButton>
-          ))}
-        </Box>
       </DialogContent>
     </Dialog>
   );
