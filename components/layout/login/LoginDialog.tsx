@@ -7,7 +7,6 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import CloseIcon from "@mui/icons-material/Close";
@@ -16,7 +15,7 @@ import Image from "next/image";
 import LoginDialogForm from "./LoginDialogForm";
 
 import { AppDispatch, RootState } from "../../../store";
-import { setDialogClosed, setLoading } from "../../../features/AuthSlice";
+import { setDialogClosed } from "../../../features/AuthSlice";
 import { WHITE, PRIMARY_COLOR } from "../../../src/theme";
 
 export interface LoginDialogProps {
@@ -29,14 +28,7 @@ const LoginDialog: React.FunctionComponent = () => {
   const { email, type } = query;
 
   const authSlice = useSelector((state: RootState) => state.auth);
-  const { dialogOpen, loading } = authSlice;
-
-  const handleSignIn = (provider: string) => {
-    dispatch(setLoading(true));
-    signIn(provider);
-    // NOTE: There is a useEffect in Layout which detects NextAuth Session Changes,
-    // and will set Auth Loading to False
-  };
+  const { dialogOpen } = authSlice;
 
   const handleClose = () => {
     dispatch(setDialogClosed());
