@@ -47,17 +47,19 @@ const AccountOptions: React.FunctionComponent = () => {
         {isLoggedIn ? "Log Out" : "Log In"}
       </Button>
 
-      <WalletDetails />
       {account ? (
-        <Button
-          variant="contained"
-          onClick={deactivate}
-          color="secondary"
-          sx={{ marginY: "0.25rem" }}
-          fullWidth
-        >
-          Disconnect Wallet
-        </Button>
+        <>
+          <WalletDetails />
+          <Button
+            variant="contained"
+            onClick={deactivate}
+            color="secondary"
+            sx={{ marginY: "0.25rem" }}
+            fullWidth
+          >
+            Disconnect Wallet
+          </Button>
+        </>
       ) : (
         <ConnectWalletButtons />
       )}

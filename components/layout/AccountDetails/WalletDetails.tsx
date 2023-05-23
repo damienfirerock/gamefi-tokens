@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, TypographyProps } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
+import { styled } from "@mui/material/styles";
 
 import InteractButton from "../../common/InteractButton";
 
@@ -13,6 +14,15 @@ import useCommonWeb3Transactions from "../../../utils/hooks/useCommonWeb3Transac
 import { setLoading } from "../../../features/AccountSlice";
 import useSignature from "../../../utils/hooks/useSignature";
 import { SUPPORTED_WALLETS } from "../../../constants/wallets";
+import { DETAILS_COLOUR } from "../../../src/theme";
+
+const Detail = styled(Typography)<TypographyProps>(() => ({
+  display: "inline-block",
+  color: DETAILS_COLOUR,
+  overflowWrap: "break-word",
+  hyphens: "auto",
+  maxWidth: "170px",
+}));
 
 const WalletDetails: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -51,7 +61,15 @@ const WalletDetails: React.FunctionComponent = () => {
   }, [account]);
 
   return (
-    <Box sx={{ marginY: "0.5rem", maxWidth: 400 }}>
+    <Box
+      sx={{
+        marginY: "0.5rem",
+        maxWidth: 400,
+        padding: "1rem",
+        borderRadius: "0.5rem",
+        border: "1.6px solid #D8D8D8",
+      }}
+    >
       <Box sx={{ display: "flex", textAlign: "center" }}>
         {walletKey && (
           <Image
@@ -65,40 +83,55 @@ const WalletDetails: React.FunctionComponent = () => {
           variant="body2"
           sx={{ lineHeight: "2rem", marginLeft: "0.5rem" }}
         >
-          {account ? <>Wallet: {truncateString(account)} </> : "Connect Wallet"}
+          {truncateString(account || "")}
         </Typography>
       </Box>
-      <Typography
-        variant="caption"
-        sx={{ color: "red", display: "inline-block" }}
-      >
-        [Mock] The connection wallet address is different from the binding
-        address
-      </Typography>
-      {!loading && account && (
-        <>
-          <Typography variant="body2">
-            MATIC: {formatNumberValue(walletMaticBalance || 0)}
-          </Typography>
-          <Typography variant="body2">
-            $FRG: {formatNumberValue(walletFRGBalance || 0)}
-          </Typography>
-        </>
+      {!!account && (
+        <Typography
+          variant="caption"
+          sx={{ color: "red", display: "inline-block", marginY: "0.25rem" }}
+        >
+          [Mock] The connection wallet address is different from the binding
+          address
+        </Typography>
+      )}
+      {!!account && (
+        <Box
+          sx={{ display: "flex", justifyContent: "center", marginY: "0.5rem" }}
+        >
+          <table>
+            <tr>
+              <td>
+                <Typography variant="body2">MATIC:</Typography>
+              </td>
+              <td>
+                <Detail variant="body2">
+                  {formatNumberValue(walletMaticBalance || 0)}
+                </Detail>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <Typography variant="body2">$FRG:</Typography>
+              </td>
+              <td>
+                <Detail variant="body2">
+                  {formatNumberValue(walletFRGBalance || 0)}
+                </Detail>
+              </td>
+            </tr>
+          </table>
+        </Box>
       )}
       {account && (
-        <>
-          <Typography variant="body2">
-            Signed:{signStatus.toString()}
-          </Typography>
-          <InteractButton
-            text={"Sign"}
-            method={handleSignature}
-            loading={loading}
-            variant="contained"
-            sx={{ marginY: "0.25rem" }}
-            fullWidth
-          />
-        </>
+        <InteractButton
+          text={signStatus ? "Bind New Wallet" : "Bind to Account"}
+          method={handleSignature}
+          loading={loading}
+          variant="contained"
+          sx={{ marginY: "0.25rem" }}
+          fullWidth
+        />
       )}
     </Box>
   );

@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { Box, BoxProps } from "@mui/material";
+import { Box, BoxProps, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { isMobile } from "react-device-detect";
 
@@ -7,7 +7,6 @@ import ConnectWalletButton from "./common/ConnectWalletButton";
 
 import useActivationWallet from "../../../utils/hooks/web3React/useActivationWallet";
 import useDispatchErrors from "../../../utils/hooks/useDispatchErrors";
-import useWeb3React from "../../../utils/hooks/web3React/useWeb3React";
 import { detectMetamask, WalletReadyState } from "../../../constants/wallets";
 import { SUPPORTED_WALLETS, WalletKeys } from "../../../constants/wallets";
 
@@ -29,12 +28,12 @@ import { SUPPORTED_WALLETS, WalletKeys } from "../../../constants/wallets";
 const StyledBox = styled(Box)<BoxProps>(() => ({
   display: "flex",
   justifyContent: "space-between",
+  flexWrap: "wrap",
 }));
 
 const ConnectWalletButtons: React.FunctionComponent = () => {
   const { sendTransactionError } = useDispatchErrors();
   const { tryActivationEVM } = useActivationWallet();
-  const { account } = useWeb3React();
 
   const handleConnectWallet = useCallback(async (walletKey: WalletKeys) => {
     try {
@@ -47,51 +46,56 @@ const ConnectWalletButtons: React.FunctionComponent = () => {
   const isMetamask = detectMetamask() === WalletReadyState.Installed;
 
   return (
-    <StyledBox>
-      <ConnectWalletButton
-        handleClick={() => {
-          handleConnectWallet(WalletKeys.Sequence);
-        }}
-        src={SUPPORTED_WALLETS[WalletKeys.Sequence].icon}
-        text={SUPPORTED_WALLETS[WalletKeys.Sequence].name}
-        // supplementaryText="(Recommended)"
-        additionalStyles={{
-          // No quick way to do transitions for linear gradient onhover
-          background:
-            "linear-gradient(41.73deg, #7425A3 0%, #4150C7 49.48%, #29B1CF 100%)",
-        }}
-      />
-      {isMetamask && (
+    <>
+      <Typography variant="body2" sx={{ marginY: "0.5rem" }}>
+        Connect Wallet
+      </Typography>
+      <StyledBox>
         <ConnectWalletButton
           handleClick={() => {
-            handleConnectWallet(WalletKeys.Metamask);
+            handleConnectWallet(WalletKeys.Sequence);
           }}
-          src={SUPPORTED_WALLETS[WalletKeys.Metamask].icon}
-          text={SUPPORTED_WALLETS[WalletKeys.Metamask].name}
+          src={SUPPORTED_WALLETS[WalletKeys.Sequence].icon}
+          text={SUPPORTED_WALLETS[WalletKeys.Sequence].name}
+          // supplementaryText="(Recommended)"
           additionalStyles={{
-            background: "#F5BA03",
-            "&:hover": {
-              backgroundColor: "#F5BA03",
-            },
+            // No quick way to do transitions for linear gradient onhover
+            background:
+              "linear-gradient(41.73deg, #7425A3 0%, #4150C7 49.48%, #29B1CF 100%)",
           }}
         />
-      )}
-      {isMobile && (
-        <ConnectWalletButton
-          handleClick={() => {
-            handleConnectWallet(WalletKeys.WalletConnect);
-          }}
-          src={SUPPORTED_WALLETS[WalletKeys.WalletConnect].icon}
-          text={SUPPORTED_WALLETS[WalletKeys.WalletConnect].name}
-          additionalStyles={{
-            background: "black",
-            "&:hover": {
-              backgroundColor: "black",
-            },
-          }}
-        />
-      )}
-    </StyledBox>
+        {isMetamask && (
+          <ConnectWalletButton
+            handleClick={() => {
+              handleConnectWallet(WalletKeys.Metamask);
+            }}
+            src={SUPPORTED_WALLETS[WalletKeys.Metamask].icon}
+            text={SUPPORTED_WALLETS[WalletKeys.Metamask].name}
+            additionalStyles={{
+              background: "#F5BA03",
+              "&:hover": {
+                backgroundColor: "#F5BA03",
+              },
+            }}
+          />
+        )}
+        {isMobile && (
+          <ConnectWalletButton
+            handleClick={() => {
+              handleConnectWallet(WalletKeys.WalletConnect);
+            }}
+            src={SUPPORTED_WALLETS[WalletKeys.WalletConnect].icon}
+            text={SUPPORTED_WALLETS[WalletKeys.WalletConnect].name}
+            additionalStyles={{
+              background: "black",
+              "&:hover": {
+                backgroundColor: "black",
+              },
+            }}
+          />
+        )}
+      </StyledBox>
+    </>
   );
 };
 
