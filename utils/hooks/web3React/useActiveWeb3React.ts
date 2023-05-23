@@ -32,11 +32,13 @@ export function useActiveWeb3React(): {
 
   const walletKeyEVM = useMemo(() => {
     if (!isConnectedEVM) return undefined;
-    // TODO: Detect sequence wallet
+
     const detectedWallet = detectInjectedType();
+
     if (connectedConnectorEVM === walletconnect) {
       return "WALLET_CONNECT";
     }
+
     return (
       detectedWallet ??
       (Object.keys(SUPPORTED_WALLETS) as SUPPORTED_WALLET[]).find(

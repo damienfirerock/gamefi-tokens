@@ -37,7 +37,7 @@ const StyledContainer = styled(Container)<ContainerProps>(() => ({
 const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   const { children } = props;
   const { account, activate } = useWeb3React();
-  const { checkWalletBalance } = useCommonWeb3Transactions();
+  const { checkFRGBalance } = useCommonWeb3Transactions();
   const { t } = useTranslation("common");
   const dispatch = useDispatch<AppDispatch>();
   const { data: session, status } = useSession();
@@ -74,7 +74,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
       try {
         await activate(connector);
         if (account) {
-          await checkWalletBalance();
+          await checkFRGBalance();
         }
       } catch (error) {
         console.error(error);

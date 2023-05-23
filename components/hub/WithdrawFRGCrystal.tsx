@@ -37,7 +37,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
   const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation("crystal-hub");
   const { account } = useWeb3React();
-  const { checkWalletBalance, checkTransactionStatus } =
+  const { checkFRGBalance, checkTransactionStatus } =
     useCommonWeb3Transactions();
   const { sendTransactionErrorOnMetaMaskRequest } = useDispatchErrors();
 
@@ -116,7 +116,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
 
     await checkTransactionStatus(txnHash);
 
-    checkWalletBalance();
+    checkFRGBalance();
   };
 
   const withdrawFRGCrystalError = useMemo(() => {

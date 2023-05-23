@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 type SliceState = {
-  walletBalance: number | null;
+  walletFRGBalance: number | null;
+  walletMaticBalance: number | null;
   frgCrystalBalance: number | null;
   pendingFrgCrystalBalance: number | null;
   error?: null | string;
@@ -11,7 +12,8 @@ type SliceState = {
 
 // First approach: define the initial state using that type
 const initialState: SliceState = {
-  walletBalance: null,
+  walletFRGBalance: null,
+  walletMaticBalance: null,
   frgCrystalBalance: 99999,
   pendingFrgCrystalBalance: 0,
   error: null,
@@ -26,9 +28,14 @@ export const AccountSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
-
-    setWalletBalance: (state, action) => {
-      state.walletBalance = action.payload;
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+    setWalletMaticBalance: (state, action) => {
+      state.walletMaticBalance = action.payload;
+    },
+    setWalletFRGBalance: (state, action) => {
+      state.walletFRGBalance = action.payload;
     },
     setFrgCrystalBalance: (state, action) => {
       state.frgCrystalBalance = action.payload;
@@ -42,7 +49,9 @@ export const AccountSlice = createSlice({
 
 export const {
   clearError,
-  setWalletBalance,
+  setLoading,
+  setWalletMaticBalance,
+  setWalletFRGBalance,
   setFrgCrystalBalance,
   setPendingFrgCrystalBalance,
 } = AccountSlice.actions;

@@ -8,7 +8,10 @@ import useDispatchErrors from "./useDispatchErrors";
 import { formatTokenValue } from "../common";
 import useWeb3React from "./web3React/useWeb3React";
 import { getContract } from "../web3";
-import { setWalletBalance } from "../../features/AccountSlice";
+import {
+  setWalletFRGBalance,
+  setWalletMaticBalance,
+} from "../../features/AccountSlice";
 import { setSuccess } from "../../features/TransactionSlice";
 
 const FireRockGoldJson = require("../../constants/abis/FireRockGold.json");
@@ -45,7 +48,7 @@ const useCommonWeb3Transactions = () => {
     );
   }, [library, account]);
 
-  const checkWalletBalance = async (): Promise<boolean> => {
+  const checkFRGBalance = async (): Promise<boolean> => {
     let result;
 
     try {
@@ -56,14 +59,29 @@ const useCommonWeb3Transactions = () => {
       result = await fireRockGoldContract.balanceOf(account);
 
       const nextValue = formatValue(result);
-
-      dispatch(setWalletBalance(Number(nextValue)));
+      dispatch(setWalletFRGBalance(Number(nextValue)));
     } catch (error: any) {
       sendTransactionErrorOnMetaMaskRequest(error);
       return false;
     }
 
     return result;
+  };
+
+  const checkMaticBalance = async () => {
+    try {
+      if (!library || !account) throw Error("Not Connected");
+
+      const balance = await library.getBalance(account);
+      // Since ethers.js gives the result in Wei, we need to convert it to MATIC.
+      const nextBalance = ethers.utils.formatEther(balance);
+
+      dispatch(setWalletMaticBalance(Number(nextBalance)));
+      return nextBalance;
+    } catch (err) {
+      sendTransactionErrorOnMetaMaskRequest(err);
+      return false;
+    }
   };
 
   async function checkTransactionStatus(
@@ -95,7 +113,8 @@ const useCommonWeb3Transactions = () => {
   }
 
   return {
-    checkWalletBalance,
+    checkFRGBalance,
+    checkMaticBalance,
     checkTransactionStatus,
   };
 };

@@ -18,12 +18,10 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 
 import Layout from "../layout/Layout";
-import AccountDetails from "../layout/AccountDetails/AccountDetails";
 
 import { AppDispatch, RootState } from "../../store";
 import { setDialogOpen } from "../../features/AuthSlice";
 import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
-import useCommonWeb3Transactions from "../../utils/hooks/useCommonWeb3Transactions";
 import { setSuccess, clearSuccess } from "../../features/TransactionSlice";
 import WithdrawFRGCrystal from "../hub/WithdrawFRGCrystal";
 import DepositFRGToken from "../hub/DepositFRGToken";
@@ -46,7 +44,6 @@ const CrystalHub: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation("crystal-hub");
   const { account } = useWeb3React();
-  const { checkWalletBalance } = useCommonWeb3Transactions();
 
   const { query } = useRouter();
   const { email, server, type } = query;
@@ -55,7 +52,7 @@ const CrystalHub: React.FunctionComponent = () => {
   const { session, loading: authLoading } = authSlice;
 
   const accountSlice = useSelector((state: RootState) => state.account);
-  const { walletBalance, frgCrystalBalance, pendingFrgCrystalBalance } =
+  const { walletFRGBalance, frgCrystalBalance, pendingFrgCrystalBalance } =
     accountSlice;
 
   const hubSlice = useSelector((state: RootState) => state.hub);
@@ -91,12 +88,6 @@ const CrystalHub: React.FunctionComponent = () => {
       selectServer(server.toString());
     }
   }, [server]);
-
-  useEffect(() => {
-    if (!!account) {
-      checkWalletBalance();
-    }
-  }, [account]);
 
   useEffect(() => {
     const NEXT_PUBLIC_FIRE_ROCK_GOLD_ADDRESS =
@@ -188,8 +179,8 @@ const CrystalHub: React.FunctionComponent = () => {
       )}
       {/* TODO: Eventually will need to check against account bound wallet from server account details */}
       {!!account && <Typography variant="body2">Wallet: {account}</Typography>}
-      {!!walletBalance && (
-        <Typography variant="body2">$FRG: {walletBalance}</Typography>
+      {!!walletFRGBalance && (
+        <Typography variant="body2">$FRG: {walletFRGBalance}</Typography>
       )}
 
       {/* Server Selection */}

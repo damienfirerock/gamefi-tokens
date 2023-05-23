@@ -20,6 +20,16 @@ export const formatTokenValue = (value: string, decimals: number) => {
   return ethers.utils.formatUnits(value, decimals);
 };
 
+export const formatNumberValue = (value: number): string => {
+  if (value >= 1_000_000) {
+    return (value / 1_000_000).toFixed(2) + "MM";
+  } else if (value >= 1_000) {
+    return (value / 1_000).toFixed(2) + "K";
+  } else {
+    return value.toFixed(4);
+  }
+};
+
 export const parseTokenValue = (value: string, decimals: number) => {
   return ethers.utils.parseUnits(value, decimals);
 };

@@ -41,7 +41,7 @@ const DepositFRGToken: React.FunctionComponent<{
   const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation("crystal-hub");
   const { account, library } = useWeb3React();
-  const { checkWalletBalance, checkTransactionStatus } =
+  const { checkFRGBalance, checkTransactionStatus } =
     useCommonWeb3Transactions();
   const { selectedServer } = props;
 
@@ -49,7 +49,7 @@ const DepositFRGToken: React.FunctionComponent<{
   const { loading } = transactionSlice;
 
   const accountSlice = useSelector((state: RootState) => state.account);
-  const { walletBalance } = accountSlice;
+  const { walletFRGBalance } = accountSlice;
 
   const hubSlice = useSelector((state: RootState) => state.hub);
   const { data } = hubSlice;
@@ -108,7 +108,7 @@ const DepositFRGToken: React.FunctionComponent<{
 
     // TODO: Once backend up, should check for account frgCrystal value again
 
-    checkWalletBalance();
+    checkFRGBalance();
   };
 
   const depositFRGTokenError = useMemo(() => {
@@ -118,11 +118,14 @@ const DepositFRGToken: React.FunctionComponent<{
 
     if (!depositFRGToken) return "Please enter a value";
 
-    if (!walletBalance || (depositFRGToken && depositFRGToken > walletBalance))
+    if (
+      !walletFRGBalance ||
+      (depositFRGToken && depositFRGToken > walletFRGBalance)
+    )
       return "You don't have that much $FRG";
 
     return null;
-  }, [depositFRGToken, walletBalance, selectedServer, account]);
+  }, [depositFRGToken, walletFRGBalance, selectedServer, account]);
 
   return (
     <>
