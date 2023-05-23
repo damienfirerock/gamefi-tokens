@@ -20,7 +20,8 @@ import { styled } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 
 import InteractButton from "../common/InteractButton";
-import PasswordTextField from "../common/fields/PasswordField";
+import PasswordField from "../common/fields/PasswordField";
+import DefaultField from "../common/fields/DefaultField";
 
 import { AppDispatch, RootState } from "../../store";
 import { setDialogClosed, setLoading } from "../../features/AuthSlice";
@@ -128,12 +129,8 @@ const LoginDialog: React.FunctionComponent = () => {
 
         {/* TextFields */}
         <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <StyledTextField label="Email" />
-          <PasswordTextField
-            name="password"
-            label="password"
-            control={control}
-          />
+          <DefaultField name="email" label="Email" control={control} />
+          <PasswordField name="password" label="password" control={control} />
         </Box>
 
         {/* Additional Player Options */}

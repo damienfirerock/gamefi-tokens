@@ -6,13 +6,13 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 import StyledTextField from "./StyledField";
 
-interface PasswordTextFieldProps {
+interface PasswordFieldProps {
   control: Control<any, any>;
   name: string;
   label: string;
 }
 
-const PasswordTextField: React.FunctionComponent<PasswordTextFieldProps> = ({
+const PasswordField: React.FunctionComponent<PasswordFieldProps> = ({
   control,
   name,
   label,
@@ -52,4 +52,4 @@ const PasswordTextField: React.FunctionComponent<PasswordTextFieldProps> = ({
   );
 };
 
-export default PasswordTextField;
+export default PasswordField;
