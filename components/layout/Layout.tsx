@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import Head from "next/head";
 import { useDispatch, useSelector } from "react-redux";
-import { Container, ContainerProps } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Container, ContainerProps, useMediaQuery } from "@mui/material";
+import { styled, useTheme } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -32,6 +32,7 @@ type LayoutProps = {
 const StyledContainer = styled(Container)<ContainerProps>(() => ({
   textAlign: "center",
   wordWrap: "break-word",
+  paddingTop: "4rem",
 }));
 
 const Layout: React.FunctionComponent<LayoutProps> = (props) => {
@@ -42,6 +43,8 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   const dispatch = useDispatch<AppDispatch>();
   const { data: session, status } = useSession();
   const { locale } = useRouter();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const authSlice = useSelector((state: RootState) => state.auth);
   const { loading: authLoading } = authSlice;
@@ -112,7 +115,10 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
       </Head>
       {/* Mavbar Men */}
       <NavBar />
-      <StyledContainer maxWidth="lg" sx={{ paddingTop: 8 }}>
+      <StyledContainer
+        maxWidth="lg"
+        sx={{ paddingBottom: isMobile ? "6rem" : "1rem" }}
+      >
         {children}
         <LoginDialog />
         <Link href="" locale={locale === "en" ? "zh" : "en"}>

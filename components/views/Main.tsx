@@ -1,26 +1,23 @@
 import React from "react";
 import {
   Box,
-  BoxProps,
   Button,
   Card,
   Container,
+  IconButton,
   Link,
   Typography,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 import Image from "next/image";
 
 import Layout from "../layout/Layout";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
-import { NAV_TEXT_COLOUR } from "../../src/theme";
+import { NAV_TEXT_COLOUR, WHITE } from "../../src/theme";
 
 const addresses = Object.values(CONTRACT_ADDRESSES);
 
-const ContractsBox = styled(Box)<BoxProps>(({ theme }) => ({
-  margin: theme.spacing(2, 0),
-}));
+const DISCORD_LOGO_BACKGROUND = "#5865F2";
 
 const Main: React.FunctionComponent = () => {
   const { t } = useTranslation("common");
@@ -72,34 +69,94 @@ const Main: React.FunctionComponent = () => {
 
         {/* social links */}
 
-        <Card sx={{ marginY: "0.5rem", padding: "0.5rem" }}>
+        <Card
+          sx={{
+            marginY: "0.5rem",
+            paddingTop: "0.5rem",
+            paddingBottom: "1.0rem",
+          }}
+        >
           <Typography
             variant="body2"
             sx={{ marginBottom: "1rem", color: NAV_TEXT_COLOUR }}
           >
             Social Links
           </Typography>
-          <Link href="/" target="_blank" rel="noopener noreferrer">
-            <Image
-              alt="XY3 Banner"
-              src="/main-page/google-play-badge.png"
-              width={154}
-              height={44}
-              style={{ objectFit: "fill" }}
-            />
-          </Link>
 
-          <Link href="/" target="_blank" rel="noopener noreferrer">
-            <Image
-              alt="XY3 Banner"
-              src="/main-page/apple-download-badge.svg"
-              width={154}
-              height={44}
-            />
-          </Link>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <IconButton
+              aria-label={`Discord Social Link`}
+              size="small"
+              LinkComponent="a"
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                background: DISCORD_LOGO_BACKGROUND,
+                borderRadius: 1,
+                marginX: "1rem",
+                "&:hover": {
+                  background: DISCORD_LOGO_BACKGROUND + "99",
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  width: "2.5rem",
+                  height: "2.5rem",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  sx={{
+                    width: "2.2rem",
+                    height: "2.2rem",
+                    position: "relative",
+                  }}
+                >
+                  <Image
+                    src={`/main-page/discord-mark-white.svg`}
+                    alt={`Discord Logo`}
+                    layout="fill"
+                  />
+                </Box>
+              </Box>
+            </IconButton>
+
+            <IconButton
+              aria-label={`Discord Social Link`}
+              size="small"
+              LinkComponent="a"
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                background: WHITE,
+                borderRadius: 1,
+                marginX: "1rem",
+                "&:hover": {
+                  background: WHITE + "99",
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  width: "2.5rem",
+                  height: "2.5rem",
+                  position: "relative",
+                }}
+              >
+                <Image
+                  src={`/main-page/telegram-logo.svg`}
+                  alt={`Discord Logo`}
+                  layout="fill"
+                />
+              </Box>
+            </IconButton>
+          </Box>
         </Card>
-        {/* Add paper background like in crystal hub */}
-        {/* Add social links buttons */}
 
         <Button variant="contained" fullWidth sx={{ marginY: "1rem" }}>
           <Typography variant="body2">Help Center</Typography>
@@ -109,41 +166,39 @@ const Main: React.FunctionComponent = () => {
           <Typography variant="body2">Legal and Privacy</Typography>
         </Button>
 
-        <ContractsBox>
-          {addresses.map((address) => {
-            if (!address) return;
-            return (
-              <Box
-                key={address}
+        {addresses.map((address) => {
+          if (!address) return;
+          return (
+            <Box
+              key={address}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                marginY: 3,
+              }}
+            >
+              <Typography
+                variant="body2"
                 sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  marginY: 3,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <Typography
-                  variant="body2"
-                  sx={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
+                {ADDRESS_NAMES[address]} Address:
+              </Typography>
+              <Typography variant="body2">
+                <Link
+                  href={`${CONFIG.POLYGONSCAN_URL}${address}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  {ADDRESS_NAMES[address]}:
-                </Typography>
-                <Typography variant="body2">
-                  <Link
-                    href={`${CONFIG.POLYGONSCAN_URL}${address}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {address}
-                  </Link>
-                </Typography>
-              </Box>
-            );
-          })}
-        </ContractsBox>
+                  {address}
+                </Link>
+              </Typography>
+            </Box>
+          );
+        })}
       </Container>
     </Layout>
   );
