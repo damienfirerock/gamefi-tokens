@@ -18,9 +18,9 @@ import { DEFAULT_BACKGROUND } from "../../src/theme";
 const DynamicAccountDetails = dynamic(() => import("./account/AccountDetails"));
 
 const NAVBAR_LINKS = [
-  { href: "/", text: "Main" },
-  { href: "/swap", text: "Swap" },
   { href: "/crystal-hub", text: "Crystal Hub" },
+  { href: "/swap", text: "Swap" },
+  { href: "/", text: "Main" },
 ];
 
 const NavBar: React.FunctionComponent = () => {

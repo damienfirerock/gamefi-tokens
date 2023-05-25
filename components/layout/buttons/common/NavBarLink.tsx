@@ -1,6 +1,7 @@
 import React, { ReactElement } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import NextLink from "next/link";
+import { isMobile } from "react-device-detect";
 
 interface IAccountLink {
   href: string;
@@ -14,7 +15,7 @@ const AccountLink: React.FunctionComponent<IAccountLink> = ({
   icon,
 }) => {
   return (
-    <Box sx={{ mx: 1 }}>
+    <Box sx={{ mx: isMobile ? 0 : 1 }}>
       <NextLink href={href} passHref>
         <Button variant="outlined">
           <>
