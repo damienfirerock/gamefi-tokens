@@ -34,7 +34,7 @@ const Main: React.FunctionComponent = () => {
           layout="responsive"
           objectFit="contain"
           width="100%"
-          height="50%"
+          height="58%"
         />
 
         <Typography
