@@ -46,12 +46,12 @@ const Main: React.FunctionComponent = () => {
         </Typography>
 
         {/* Install buttons */}
-        <Box>
+        <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
           <a href="/" target="_blank" rel="noopener noreferrer">
             <Image
               alt="Google Play Store Link"
               src="/main-page/google-play-badge.png"
-              width={154}
+              width={147.4}
               height={44}
               style={{ objectFit: "fill" }}
             />
@@ -61,7 +61,7 @@ const Main: React.FunctionComponent = () => {
             <Image
               alt="Apple App Store Link"
               src="/main-page/apple-download-badge.svg"
-              width={154}
+              width={132}
               height={44}
             />
           </a>
