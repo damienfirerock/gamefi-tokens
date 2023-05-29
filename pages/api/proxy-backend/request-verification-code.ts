@@ -27,17 +27,20 @@ const handleRequestVerificationCode = async (
   try {
     const { body } = req;
     const url = `${XY3_BACKEND_URL}${PLATFORM_ROUTE}${GET_VERIFY_TOKEN_PATH}`;
-    const response: {
-      success: boolean;
-      txnHash?: string;
-      error?: any;
-    } = await fetch(url, {
+
+    const request: any = fetch(url, {
       method: "POST",
       headers: { Accept: "*/*", "content-type": "application/json" },
       body,
     }).then((res) => res.json());
 
-    console.log({ response, body, url });
+    const response: {
+      success: boolean;
+      txnHash?: string;
+      error?: any;
+    } = await request;
+
+    console.log({ request, response, body, url });
 
     res.status(200).json({
       success: true,
