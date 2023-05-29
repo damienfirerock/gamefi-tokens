@@ -7,13 +7,13 @@ import { makeFetchRequestToXY3Backend } from "../../../utils/api";
 
 const { XY3_BACKEND_URL } = CONFIG;
 
-const GET_VERIFY_TOKEN_PATH = "/GetVerifyCode";
+const GET_UNION_ACCT_PATH = "/GetUnionAccount";
 
 const handleRequestVerificationCode = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  const url = `${XY3_BACKEND_URL}${PLATFORM_ROUTE}${GET_VERIFY_TOKEN_PATH}`;
+  const url = `${XY3_BACKEND_URL}${PLATFORM_ROUTE}${GET_UNION_ACCT_PATH}`;
 
   const { status, result } = await makeFetchRequestToXY3Backend(url, req.body);
 

@@ -5,6 +5,11 @@ import { Session } from "next-auth/core/types";
 // Site is loaded over https and won't allow mixed loading
 const URL_ENDPOINT = "api/proxy-backend";
 const REQUEST_VERIFY_TOKEN_PATH = "/request-verification-code";
+const REGISTER_EMAIL_PATH = "/register-by-email";
+const CHANGE_PASSWORD_PATH = "/change-password";
+const EMAIL_LOGIN_PATH = "/email-login";
+const SOCIAL_LOGIN_PATH = "/social-login";
+const GET_ACCOUNT_PATH = "/get-union-account";
 
 // Endpoint is the same regardless of whether verification code is requested for registration or password change
 export const requestVerificationCode = createAsyncThunk(
@@ -14,7 +19,6 @@ export const requestVerificationCode = createAsyncThunk(
 
     const response: {
       success: boolean;
-      txnHash?: string;
       error?: any;
     } = await fetch(`${URL_ENDPOINT}${REQUEST_VERIFY_TOKEN_PATH}`, {
       method: "POST",
@@ -28,7 +32,107 @@ export const requestVerificationCode = createAsyncThunk(
     // In other words, the Promise isn't rejected even when the response has an HTTP 400 or 500 status code.
     if (response.error) return Promise.reject(response.error);
 
-    return response.txnHash || null;
+    return response || null;
+  }
+);
+
+export const registerViaEmail = createAsyncThunk(
+  "get/registerViaEmail",
+  async (props: { email: string; password: string; verifyCode: string }) => {
+    const body = JSON.stringify({ ...props });
+
+    const response: {
+      success: boolean;
+      error?: any;
+    } = await fetch(`${URL_ENDPOINT}${REGISTER_EMAIL_PATH}`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body,
+    }).then((res) => res.json());
+
+    if (response.error) return Promise.reject(response.error);
+
+    return response || null;
+  }
+);
+
+export const changePassword = createAsyncThunk(
+  "get/changePassword",
+  async (props: { email: string; password: string; verifyCode: string }) => {
+    const body = JSON.stringify({ ...props });
+
+    const response: {
+      success: boolean;
+      error?: any;
+    } = await fetch(`${URL_ENDPOINT}${CHANGE_PASSWORD_PATH}`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body,
+    }).then((res) => res.json());
+
+    if (response.error) return Promise.reject(response.error);
+
+    return response || null;
+  }
+);
+
+export const loginViaEmail = createAsyncThunk(
+  "get/loginViaEmail",
+  async (props: { email: string; password: string }) => {
+    const body = JSON.stringify({ ...props });
+
+    const response: {
+      success: boolean;
+      error?: any;
+    } = await fetch(`${URL_ENDPOINT}${EMAIL_LOGIN_PATH}`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body,
+    }).then((res) => res.json());
+
+    if (response.error) return Promise.reject(response.error);
+
+    return response || null;
+  }
+);
+
+export const loginViaSocial = createAsyncThunk(
+  "get/loginViaSocial",
+  async (props: { thirdToken: string; loginType: string }) => {
+    const body = JSON.stringify({ ...props });
+
+    const response: {
+      success: boolean;
+      error?: any;
+    } = await fetch(`${URL_ENDPOINT}${SOCIAL_LOGIN_PATH}`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body,
+    }).then((res) => res.json());
+
+    if (response.error) return Promise.reject(response.error);
+
+    return response || null;
+  }
+);
+
+export const getUnionAccount = createAsyncThunk(
+  "get/loginViaSocial",
+  async (props: { accessToken: string }) => {
+    const body = JSON.stringify({ ...props });
+
+    const response: {
+      success: boolean;
+      error?: any;
+    } = await fetch(`${URL_ENDPOINT}${GET_ACCOUNT_PATH}`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body,
+    }).then((res) => res.json());
+
+    if (response.error) return Promise.reject(response.error);
+
+    return response || null;
   }
 );
 
@@ -77,6 +181,7 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // Get Verification Code
     builder.addCase(requestVerificationCode.pending, (state, action) => {
       state.loading = true;
       state.error = null;
@@ -85,6 +190,66 @@ const authSlice = createSlice({
       state.loading = false;
     });
     builder.addCase(requestVerificationCode.rejected, (state, action) => {
+      // If abortController.abort(), error name will be 'AbortError'
+      if (action.error.name !== "AbortError") {
+        state.loading = false;
+        state.error = action.error.message;
+      }
+    });
+    //Register via Email
+    builder.addCase(registerViaEmail.pending, (state, action) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(registerViaEmail.fulfilled, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(registerViaEmail.rejected, (state, action) => {
+      // If abortController.abort(), error name will be 'AbortError'
+      if (action.error.name !== "AbortError") {
+        state.loading = false;
+        state.error = action.error.message;
+      }
+    });
+    //Change Password
+    builder.addCase(changePassword.pending, (state, action) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(changePassword.fulfilled, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(changePassword.rejected, (state, action) => {
+      // If abortController.abort(), error name will be 'AbortError'
+      if (action.error.name !== "AbortError") {
+        state.loading = false;
+        state.error = action.error.message;
+      }
+    });
+    //Login via Email
+    builder.addCase(loginViaEmail.pending, (state, action) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(loginViaEmail.fulfilled, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(loginViaEmail.rejected, (state, action) => {
+      // If abortController.abort(), error name will be 'AbortError'
+      if (action.error.name !== "AbortError") {
+        state.loading = false;
+        state.error = action.error.message;
+      }
+    });
+    //Login via Social
+    builder.addCase(loginViaSocial.pending, (state, action) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(loginViaSocial.fulfilled, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(loginViaSocial.rejected, (state, action) => {
       // If abortController.abort(), error name will be 'AbortError'
       if (action.error.name !== "AbortError") {
         state.loading = false;
