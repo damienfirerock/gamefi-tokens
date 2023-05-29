@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Box, Typography } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { IconButton } from "@mui/material";
 import ChevronLeftOutlinedIcon from "@mui/icons-material/ChevronLeftOutlined";
@@ -10,8 +10,9 @@ import PasswordField from "../../common/fields/PasswordField";
 import DefaultField from "../../common/fields/DefaultField";
 import SocialLogin from "./SocialLogin";
 
-import { RootState } from "../../../store";
+import { AppDispatch, RootState } from "../../../store";
 import { NAV_TEXT_COLOUR } from "../../../src/theme";
+import { requestVerificationCode } from "../../../features/AuthSlice";
 
 // TODO: Update when localisation is done
 enum FormType {
@@ -28,16 +29,24 @@ interface FormFields {
 }
 
 const LoginDialogForm: React.FunctionComponent = () => {
-  const { handleSubmit, control } = useForm<FormFields>();
+  const dispatch = useDispatch<AppDispatch>();
+  const { handleSubmit, control, watch } = useForm<FormFields>();
 
   const authSlice = useSelector((state: RootState) => state.auth);
   const { loading } = authSlice;
 
   const [currentForm, setCurrentForm] = useState<FormType>(FormType.Login);
 
+  const emailValue = watch("email");
+  console.log({ emailValue, disabled: !emailValue });
+
   const handleChangeOption = (option: FormType) => {
     setCurrentForm(option);
   };
+
+  const handleRequestVerificationCode = useCallback(() => {
+    dispatch(requestVerificationCode({ email: emailValue }));
+  }, [dispatch, emailValue]);
 
   return (
     <>
@@ -67,10 +76,9 @@ const LoginDialogForm: React.FunctionComponent = () => {
             />
             <InteractButton
               text="Verification Code"
-              method={() => {
-                return null;
-              }}
+              method={handleRequestVerificationCode}
               loading={loading}
+              disabled={!emailValue}
               variant="contained"
               sx={{
                 borderRadius: 10,
