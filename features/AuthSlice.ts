@@ -17,7 +17,7 @@ const REQUEST_VERIFY_TOKEN_PATH = "/request-verification-code";
 // Endpoint is the same regardless of whether verification code is requested for registration or password change
 export const requestVerificationCode = createAsyncThunk(
   "get/requestVerificationCode",
-  async (props: { email: string }) => {
+  async (props: { context: string }) => {
     const body = JSON.stringify({ ...props, verifycodetype: "VCT_Email" });
 
     const response: {

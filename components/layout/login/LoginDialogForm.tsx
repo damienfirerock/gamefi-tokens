@@ -44,7 +44,7 @@ const LoginDialogForm: React.FunctionComponent = () => {
   };
 
   const handleRequestVerificationCode = useCallback(() => {
-    dispatch(requestVerificationCode({ email: emailValue }));
+    dispatch(requestVerificationCode({ context: emailValue }));
   }, [dispatch, emailValue]);
 
   return (
