@@ -17,38 +17,37 @@ const RESET_PASSWORD_PATH = "/ResetAccountPassword";
 
 const GET_UNION_ACCT_PATH = "/GetUnionAccount";
 
-type Override<T1, T2> = Omit<T1, keyof T2> & T2;
-
 const handleRequestVerificationCode = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  console.log("trying");
   try {
     const { body } = req;
     const url = `${XY3_BACKEND_URL}${PLATFORM_ROUTE}${GET_VERIFY_TOKEN_PATH}`;
 
     const request: any = fetch(url, {
       method: "POST",
-      headers: { Accept: "*/*", "content-type": "application/json" },
-      body,
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
     }).then((res) => res.json());
 
     const response: {
-      success: boolean;
-      txnHash?: string;
-      error?: any;
+      code?: number;
+      reason?: string;
+      message?: string;
+      metadata: any;
     } = await request;
 
-    console.log({ request, response, body, url });
+    if (response?.code === 500)
+      throw Error(response.reason || response.message);
 
     res.status(200).json({
       success: true,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({
       success: false,
-      error: "Approve Transaction Failed",
+      error: error.message || "Request Failed",
     });
   }
 };

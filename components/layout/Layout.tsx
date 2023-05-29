@@ -20,6 +20,7 @@ import {
   setSession,
   setLoading,
   setDialogOpen,
+  clearError as clearAuthError,
 } from "../../features/AuthSlice";
 import { SUPPORTED_WALLETS } from "../../constants/wallets";
 import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
@@ -47,7 +48,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const authSlice = useSelector((state: RootState) => state.auth);
-  const { loading: authLoading } = authSlice;
+  const { loading: authLoading, error: authError } = authSlice;
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { error, success } = transactionSlice;
@@ -58,6 +59,9 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   const handleClearAlert = () => {
     if (accountError) {
       dispatch(clearAccountError());
+    }
+    if (authError) {
+      dispatch(clearAuthError());
     } else if (error) {
       dispatch(clearError());
     }
@@ -126,7 +130,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
         </Link>
         <AlertBar
           severity="warning"
-          text={error || accountError}
+          text={error || accountError || authError}
           handleClearAlertSource={handleClearAlert}
         />
         <AlertBar

@@ -1,14 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Session } from "next-auth/core/types";
 
-import CONFIG from "../config";
-
-const { XY3_BACKEND_URL } = CONFIG;
-
-const PLATFORM_ROUTE = "/auth/platform";
-
-const GET_VERIFY_TOKEN_PATH = "/GetVerifyCode";
-
 // Hides http endpoint as proxy
 // Site is loaded over https and won't allow mixed loading
 const URL_ENDPOINT = "api/proxy-backend";
@@ -26,7 +18,7 @@ export const requestVerificationCode = createAsyncThunk(
       error?: any;
     } = await fetch(`${URL_ENDPOINT}${REQUEST_VERIFY_TOKEN_PATH}`, {
       method: "POST",
-      headers: { Accept: "", "content-type": "application/json" },
+      headers: { "content-type": "application/json" },
       body,
     }).then((res) => res.json());
 
@@ -68,6 +60,9 @@ const authSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
+    clearError: (state) => {
+      state.error = null;
+    },
     setDialogOpen: (state) => {
       state.dialogOpen = true;
     },
@@ -100,6 +95,7 @@ const authSlice = createSlice({
 });
 
 export const {
+  clearError,
   setSession,
   setLoading,
   setDialogOpen,
