@@ -78,6 +78,7 @@ const theme = createTheme({
           "& label.Mui-disabled": {
             color: DISABLED_COLOUR,
           },
+          marginBottom: "0.2rem",
         },
       },
     },
@@ -85,6 +86,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           color: "black",
+          marginBottom: 0,
           "&.Mui-disabled": {
             backgroundColor: "#e4e4e4", // works
             // color: "red !important", // FIXME: does not work
@@ -101,6 +103,7 @@ const theme = createTheme({
           borderColor: "var(--TextField-brandBorderColor)",
         },
         root: {
+          marginBottom: 0,
           [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
             borderColor: "var(--TextField-brandBorderHoverColor)",
           },

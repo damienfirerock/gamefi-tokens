@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { IconButton } from "@mui/material";
 import ChevronLeftOutlinedIcon from "@mui/icons-material/ChevronLeftOutlined";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 import InteractButton from "../../common/InteractButton";
 import PasswordField from "../../common/fields/PasswordField";
@@ -30,12 +32,28 @@ interface FormFields {
 
 const LoginDialogForm: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { handleSubmit, control, watch } = useForm<FormFields>();
-
   const authSlice = useSelector((state: RootState) => state.auth);
   const { loading } = authSlice;
 
   const [currentForm, setCurrentForm] = useState<FormType>(FormType.Login);
+  const areAdditionalFieldsRequired =
+    currentForm !== FormType.Login ? yup.string().required() : yup.string();
+
+  const schema = yup.object().shape({
+    email: yup.string().required(),
+    verificationCode: areAdditionalFieldsRequired,
+    password: yup.string().required(),
+    repeatPassword: areAdditionalFieldsRequired,
+  });
+
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    watch,
+  } = useForm<FormFields>({
+    resolver: yupResolver(schema),
+  });
 
   const emailValue = watch("email");
 
@@ -46,6 +64,8 @@ const LoginDialogForm: React.FunctionComponent = () => {
   const handleRequestVerificationCode = useCallback(() => {
     dispatch(requestVerificationCode({ context: emailValue }));
   }, [dispatch, emailValue]);
+
+  const onSubmit = (data: any) => console.log(data);
 
   return (
     <>
@@ -61,95 +81,110 @@ const LoginDialogForm: React.FunctionComponent = () => {
         </Box>
       )}
 
-      {/* TextFields */}
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
-        <DefaultField name="email" label="Email" control={control} />
-        {currentForm !== FormType.Login && (
-          <Box
-            sx={{ display: "flex", alignItems: "flex-start", height: "100%" }}
-          >
-            <DefaultField
-              name="verificationCode"
-              label="Verification Code"
+      <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+        {/* TextFields */}
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <DefaultField
+            name="email"
+            label="Email"
+            control={control}
+            error={errors.email?.message}
+          />
+          {currentForm !== FormType.Login && (
+            <Box
+              sx={{ display: "flex", alignItems: "flex-start", height: "100%" }}
+            >
+              <DefaultField
+                name="verificationCode"
+                label="Verification Code"
+                control={control}
+                error={errors.verificationCode?.message}
+              />
+              <InteractButton
+                text="Verification Code"
+                method={handleRequestVerificationCode}
+                loading={loading}
+                disabled={!emailValue}
+                variant="contained"
+                sx={{
+                  borderRadius: 10,
+                  width: "50%",
+                  marginTop: "0.3rem",
+                  marginLeft: "0.6rem",
+                  height: "3rem",
+                  fontSize: "0.75rem",
+                }}
+                // size="small"
+              />
+            </Box>
+          )}
+          <PasswordField
+            name="password"
+            label="password"
+            control={control}
+            error={errors.password?.message}
+          />
+          {currentForm !== FormType.Login && (
+            <PasswordField
+              name="repeatPassword"
+              label="password (repeat)"
               control={control}
+              error={errors.repeatPassword?.message}
+            />
+          )}
+        </Box>
+
+        {/* Options to Register or Change Password */}
+        {currentForm === FormType.Login && (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginBottom: "1rem",
+            }}
+          >
+            <InteractButton
+              text="注册新账户"
+              method={() => handleChangeOption(FormType.Register)}
+              loading={loading}
+              variant="text"
+              size="small"
+              sx={{ color: NAV_TEXT_COLOUR }}
             />
             <InteractButton
-              text="Verification Code"
-              method={handleRequestVerificationCode}
+              text="忘记密码？"
+              method={() => handleChangeOption(FormType.ChangePassword)}
               loading={loading}
-              disabled={!emailValue}
-              variant="contained"
-              sx={{
-                borderRadius: 10,
-                width: "50%",
-                marginTop: "0.3rem",
-                marginLeft: "0.6rem",
-                height: "3rem",
-                fontSize: "0.75rem",
-              }}
-              // size="small"
+              variant="text"
+              size="small"
+              sx={{ color: NAV_TEXT_COLOUR }}
             />
           </Box>
         )}
-        <PasswordField name="password" label="password" control={control} />
-        {currentForm !== FormType.Login && (
-          <PasswordField
-            name="repeatPassword"
-            label="password (repeat)"
-            control={control}
-          />
+
+        {currentForm === FormType.Register && (
+          <Typography variant="caption" sx={{ color: NAV_TEXT_COLOUR }}>
+            By signing up, you agree to the user policy.
+          </Typography>
         )}
-      </Box>
 
-      {/* Options to Register or Change Password */}
-      {currentForm === FormType.Login && (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginBottom: "1rem",
+        {/* Submission Button */}
+        <InteractButton
+          text={currentForm}
+          method={() => {
+            return null;
           }}
-        >
-          <InteractButton
-            text="注册新账户"
-            method={() => handleChangeOption(FormType.Register)}
-            loading={loading}
-            variant="text"
-            size="small"
-            sx={{ color: NAV_TEXT_COLOUR }}
-          />
-          <InteractButton
-            text="忘记密码？"
-            method={() => handleChangeOption(FormType.ChangePassword)}
-            loading={loading}
-            variant="text"
-            size="small"
-            sx={{ color: NAV_TEXT_COLOUR }}
-          />
-        </Box>
-      )}
+          loading={loading}
+          variant="contained"
+          fullWidth
+          sx={{ borderRadius: 5, marginBottom: "1.2rem" }}
+          size="large"
+          type="submit"
+        />
 
-      {currentForm === FormType.Register && (
-        <Typography variant="caption" sx={{ color: NAV_TEXT_COLOUR }}>
-          By signing up, you agree to the user policy.
-        </Typography>
-      )}
-
-      {/* Submission Button */}
-      <InteractButton
-        text={currentForm}
-        method={() => {
-          return null;
-        }}
-        loading={loading}
-        variant="contained"
-        fullWidth
-        sx={{ borderRadius: 5, marginBottom: "1.2rem" }}
-        size="large"
-      />
-
-      {currentForm === FormType.Login && <SocialLogin />}
+        {currentForm === FormType.Login && <SocialLogin />}
+      </Box>
     </>
   );
 };

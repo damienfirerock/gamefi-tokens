@@ -12,7 +12,6 @@ const StyledTextField = styled(TextField)<TextFieldProps>({
     "& fieldset": {
       borderColor: ALTERNATE_TEXT_COLOR,
     },
-    marginBottom: "1.2rem",
   },
 });
 

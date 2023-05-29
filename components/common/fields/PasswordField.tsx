@@ -10,12 +10,14 @@ interface PasswordFieldProps {
   control: Control<any, any>;
   name: string;
   label: string;
+  error?: string | null;
 }
 
 const PasswordField: React.FunctionComponent<PasswordFieldProps> = ({
   control,
   name,
   label,
+  error = null,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -34,6 +36,8 @@ const PasswordField: React.FunctionComponent<PasswordFieldProps> = ({
           name={name}
           label={label}
           type={showPassword ? "text" : "password"}
+          error={Boolean(error)}
+          helperText={error || " "}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">

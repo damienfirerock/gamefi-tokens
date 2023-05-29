@@ -8,6 +8,7 @@ interface DefaultFieldProps {
   name: string;
   label: string;
   type?: string;
+  error?: string | null;
 }
 
 const DefaultField: React.FunctionComponent<DefaultFieldProps> = ({
@@ -15,6 +16,7 @@ const DefaultField: React.FunctionComponent<DefaultFieldProps> = ({
   name,
   label,
   type = "text",
+  error = null,
 }) => {
   return (
     <Controller
@@ -22,7 +24,14 @@ const DefaultField: React.FunctionComponent<DefaultFieldProps> = ({
       control={control}
       defaultValue=""
       render={({ field }) => (
-        <StyledTextField {...field} name={name} label={label} type={type} />
+        <StyledTextField
+          {...field}
+          name={name}
+          label={label}
+          type={type}
+          error={Boolean(error)}
+          helperText={error || " "}
+        />
       )}
     />
   );
