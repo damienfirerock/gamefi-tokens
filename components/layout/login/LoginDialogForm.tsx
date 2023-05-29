@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 import { Box, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
@@ -14,7 +14,12 @@ import SocialLogin from "./SocialLogin";
 
 import { AppDispatch, RootState } from "../../../store";
 import { NAV_TEXT_COLOUR } from "../../../src/theme";
-import { requestVerificationCode } from "../../../features/AuthSlice";
+import {
+  requestVerificationCode,
+  loginViaEmail,
+  registerViaEmail,
+  changePassword,
+} from "../../../features/AuthSlice";
 
 // TODO: Update when localisation is done
 enum FormType {
@@ -25,7 +30,7 @@ enum FormType {
 
 interface FormFields {
   email: string;
-  verificationCode: string;
+  verifyCode: string;
   password: string;
   repeatPassword: string;
 }
@@ -36,15 +41,29 @@ const LoginDialogForm: React.FunctionComponent = () => {
   const { loading } = authSlice;
 
   const [currentForm, setCurrentForm] = useState<FormType>(FormType.Login);
-  const areAdditionalFieldsRequired =
-    currentForm !== FormType.Login ? yup.string().required() : yup.string();
+  const areAdditionalFieldsRequired = currentForm !== FormType.Login;
 
-  const schema = yup.object().shape({
-    email: yup.string().required(),
-    verificationCode: areAdditionalFieldsRequired,
-    password: yup.string().required(),
-    repeatPassword: areAdditionalFieldsRequired,
-  });
+  const schema = useMemo(
+    () =>
+      yup.object().shape({
+        email: yup.string().required(),
+        verifyCode: areAdditionalFieldsRequired
+          ? yup.string().required()
+          : yup.string(),
+        password: yup.string().required(),
+        repeatPassword: yup
+          .string()
+          .test("match", "Passwords must match", function (value) {
+            return areAdditionalFieldsRequired
+              ? value === this.parent.password
+              : true;
+          })
+          .when([], () =>
+            areAdditionalFieldsRequired ? yup.string().required() : yup.string()
+          ),
+      }),
+    [areAdditionalFieldsRequired]
+  );
 
   const {
     control,
@@ -65,7 +84,19 @@ const LoginDialogForm: React.FunctionComponent = () => {
     dispatch(requestVerificationCode({ context: emailValue }));
   }, [dispatch, emailValue]);
 
-  const onSubmit = (data: any) => console.log(data);
+  const onSubmit = (data: any) => {
+    const { email, verifyCode, password } = data;
+    // Repeat password is only for comparison on client,
+    // not sent to server
+
+    if (currentForm === FormType.Login) {
+      dispatch(loginViaEmail({ email, password }));
+    } else if (currentForm === FormType.Register) {
+      dispatch(registerViaEmail({ email, verifyCode, password }));
+    } else if (currentForm === FormType.ChangePassword) {
+      dispatch(changePassword({ email, verifyCode, password }));
+    }
+  };
 
   return (
     <>
@@ -95,10 +126,10 @@ const LoginDialogForm: React.FunctionComponent = () => {
               sx={{ display: "flex", alignItems: "flex-start", height: "100%" }}
             >
               <DefaultField
-                name="verificationCode"
+                name="verifyCode"
                 label="Verification Code"
                 control={control}
-                error={errors.verificationCode?.message}
+                error={errors.verifyCode?.message}
               />
               <InteractButton
                 text="Verification Code"

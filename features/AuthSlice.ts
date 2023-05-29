@@ -5,7 +5,7 @@ import { Session } from "next-auth/core/types";
 // Site is loaded over https and won't allow mixed loading
 const URL_ENDPOINT = "api/proxy-backend";
 const REQUEST_VERIFY_TOKEN_PATH = "/request-verification-code";
-const REGISTER_EMAIL_PATH = "/register-by-email";
+const REGISTER_EMAIL_PATH = "/email-register";
 const CHANGE_PASSWORD_PATH = "/change-password";
 const EMAIL_LOGIN_PATH = "/email-login";
 const SOCIAL_LOGIN_PATH = "/social-login";
