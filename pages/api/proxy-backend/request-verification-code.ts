@@ -19,7 +19,7 @@ const GET_UNION_ACCT_PATH = "/GetUnionAccount";
 
 type Override<T1, T2> = Omit<T1, keyof T2> & T2;
 
-const handleWithdrawFRGCrystal = async (
+const handleRequestVerificationCode = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
@@ -50,4 +50,4 @@ const handleWithdrawFRGCrystal = async (
   }
 };
 
-export default handleWithdrawFRGCrystal;
+export default handleRequestVerificationCode;

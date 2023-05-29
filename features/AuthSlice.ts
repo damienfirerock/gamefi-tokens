@@ -26,7 +26,7 @@ export const requestVerificationCode = createAsyncThunk(
       error?: any;
     } = await fetch(`${URL_ENDPOINT}${REQUEST_VERIFY_TOKEN_PATH}`, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: { Accept: "", "content-type": "application/json" },
       body,
     }).then((res) => res.json());
 
