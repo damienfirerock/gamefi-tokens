@@ -38,7 +38,6 @@ const LoginDialogForm: React.FunctionComponent = () => {
   const [currentForm, setCurrentForm] = useState<FormType>(FormType.Login);
 
   const emailValue = watch("email");
-  console.log({ emailValue, disabled: !emailValue });
 
   const handleChangeOption = (option: FormType) => {
     setCurrentForm(option);

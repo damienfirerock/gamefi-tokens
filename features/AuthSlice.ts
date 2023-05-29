@@ -9,13 +9,10 @@ const PLATFORM_ROUTE = "/auth/platform";
 
 const GET_VERIFY_TOKEN_PATH = "/GetVerifyCode";
 
-const SOCIAL_LOGIN_PATH = "/ThirdLogin";
-
-const EMAIL_LOGIN_PATH = "/EmailLogin";
-const EMAIL_REGISTER_PATH = "/EmailRegister";
-const RESET_PASSWORD_PATH = "/ResetAccountPassword";
-
-const GET_UNION_ACCT_PATH = "/GetUnionAccount";
+// Hides http endpoint as proxy
+// Site is loaded over https and won't allow mixed loading
+const URL_ENDPOINT = "api/proxy-backend";
+const REQUEST_VERIFY_TOKEN_PATH = "/request-verification-code";
 
 // Endpoint is the same regardless of whether verification code is requested for registration or password change
 export const requestVerificationCode = createAsyncThunk(
@@ -27,14 +24,11 @@ export const requestVerificationCode = createAsyncThunk(
       success: boolean;
       txnHash?: string;
       error?: any;
-    } = await fetch(
-      `${XY3_BACKEND_URL}${PLATFORM_ROUTE}${GET_VERIFY_TOKEN_PATH}`,
-      {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body,
-      }
-    ).then((res) => res.json());
+    } = await fetch(`${URL_ENDPOINT}${REQUEST_VERIFY_TOKEN_PATH}`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body,
+    }).then((res) => res.json());
 
     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
     //The fetch() method returns a Promise that resolves regardless of whether the request is successful,
@@ -94,18 +88,8 @@ const authSlice = createSlice({
     });
     builder.addCase(requestVerificationCode.fulfilled, (state, action) => {
       state.loading = false;
-      // Success returns Code 200 and empty object ({})
     });
     builder.addCase(requestVerificationCode.rejected, (state, action) => {
-      //In the case of a typical error in which endpoint is requested too many times,
-      // Object returned is as follows:
-      //   {
-      //     "code": 500,
-      //     "reason": "",
-      //     "message": "BeyondVerifyCodeMaxSendCount",
-      //     "metadata": {}
-      // }
-
       // If abortController.abort(), error name will be 'AbortError'
       if (action.error.name !== "AbortError") {
         state.loading = false;
