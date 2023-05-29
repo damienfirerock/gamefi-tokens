@@ -33,7 +33,7 @@ const handleRequestVerificationCode = async (
       error?: any;
     } = await fetch(url, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: { Accept: "*/*", "content-type": "application/json" },
       body,
     }).then((res) => res.json());
 
