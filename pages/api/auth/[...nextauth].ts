@@ -102,13 +102,13 @@ export const authOptions = {
     },
   },
   callbacks: {
-    async signIn(props: { account: any }) {
-      const { account } = props;
+    async signIn(props: { account: any; user: any }) {
+      const { account, user } = props;
 
       if (SOCIAL_LOGIN_PROVIDERS.includes(account?.provider)) {
         const body = JSON.stringify({
-          thirdToken: account.access_token,
-          loginType: SOCIAL_LOGIN_TYPES[account?.provider],
+          thirdtoken: account.access_token,
+          logintype: SOCIAL_LOGIN_TYPES[account?.provider],
         });
         const response: {
           success: boolean;
@@ -123,9 +123,16 @@ export const authOptions = {
           }
         ).then((res) => res.json());
 
-        if (response.error) return false;
+        const { data, error } = response;
 
-        if (response.data) return true;
+        if (error) return false;
+
+        if (isXY3BackendLoginSuccess(data)) {
+          user.id = data.unionid;
+          user.accessToken = data.accesstoken;
+          user.refreshToken = data.refreshtoken;
+          user.loginType = data.logintype;
+        }
       }
 
       return true;
