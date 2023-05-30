@@ -10,6 +10,11 @@ export enum AuthSuccessMessage {
   SocialLoginSuccess = "SocialLoginSuccess",
 }
 
+export enum AuthFailureMessage {
+  SendVerifyCodeFailed = "SendVerifyCodeFailed",
+  BeyondVerifyCodeMaxSendCount = "BeyondVerifyCodeMaxSendCount",
+}
+
 // Hides http endpoint as proxy
 // Site is loaded over https and won't allow mixed loading
 const URL_ENDPOINT = "api/proxy-backend";

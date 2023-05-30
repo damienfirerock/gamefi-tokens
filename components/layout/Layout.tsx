@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import Head from "next/head";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, ContainerProps, useMediaQuery } from "@mui/material";
@@ -123,6 +123,13 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
     }
   }, [dispatch, session, authLoading]);
 
+  const successText = useMemo(() => {
+    return success || (authSuccess && t(`success:${authSuccess}`));
+    // && guard required as
+    // useTranslation will attempt to show 'null'
+    // even if authSuccess is just null
+  }, [success, authSuccess]);
+
   return (
     <>
       <Head>
@@ -147,7 +154,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
         />
         <AlertBar
           severity="success"
-          text={success || t(`success:${authSuccess}`)}
+          text={successText}
           handleClearAlertSource={handleClearSuccess}
         />
       </StyledContainer>
