@@ -9,7 +9,7 @@ const { XY3_BACKEND_URL } = CONFIG;
 
 const EMAIL_LOGIN_PATH = "/EmailLogin";
 
-const handleRequestVerificationCode = async (
+const handleRequestLoginByEmail = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
@@ -20,4 +20,4 @@ const handleRequestVerificationCode = async (
   res.status(status).json(result);
 };
 
-export default handleRequestVerificationCode;
+export default handleRequestLoginByEmail;

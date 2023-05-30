@@ -9,7 +9,7 @@ const { XY3_BACKEND_URL } = CONFIG;
 
 const GET_UNION_ACCT_PATH = "/GetUnionAccount";
 
-const handleRequestVerificationCode = async (
+const handleRequestUnionAccount = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
@@ -20,4 +20,4 @@ const handleRequestVerificationCode = async (
   res.status(status).json(result);
 };
 
-export default handleRequestVerificationCode;
+export default handleRequestUnionAccount;

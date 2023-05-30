@@ -12,7 +12,7 @@ const { XY3_BACKEND_URL } = CONFIG;
 
 const SOCIAL_LOGIN_PATH = "/ThirdLogin";
 
-const handleRequestVerificationCode = async (
+const handleRequestSocialLogin = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
@@ -23,4 +23,4 @@ const handleRequestVerificationCode = async (
   res.status(status).json(result);
 };
 
-export default handleRequestVerificationCode;
+export default handleRequestSocialLogin;
