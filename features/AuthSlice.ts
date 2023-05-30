@@ -17,11 +17,11 @@ export enum AuthFailureMessage {
 
 // Hides http endpoint as proxy
 // Site is loaded over https and won't allow mixed loading
-const URL_ENDPOINT = "api/proxy-backend";
+export const PROXY_AUTH_ENDPOINT = "api/proxy-backend";
 const REQUEST_VERIFY_TOKEN_PATH = "/request-verification-code";
 const REGISTER_EMAIL_PATH = "/email-register";
 const CHANGE_PASSWORD_PATH = "/change-password";
-const EMAIL_LOGIN_PATH = "/email-login";
+export const EMAIL_LOGIN_PATH = "/email-login";
 const SOCIAL_LOGIN_PATH = "/social-login";
 const GET_ACCOUNT_PATH = "/get-union-account";
 
@@ -34,7 +34,7 @@ export const requestVerificationCode = createAsyncThunk(
     const response: {
       success: boolean;
       error?: any;
-    } = await fetch(`${URL_ENDPOINT}${REQUEST_VERIFY_TOKEN_PATH}`, {
+    } = await fetch(`${PROXY_AUTH_ENDPOINT}${REQUEST_VERIFY_TOKEN_PATH}`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body,
@@ -58,7 +58,7 @@ export const registerViaEmail = createAsyncThunk(
     const response: {
       success: boolean;
       error?: any;
-    } = await fetch(`${URL_ENDPOINT}${REGISTER_EMAIL_PATH}`, {
+    } = await fetch(`${PROXY_AUTH_ENDPOINT}${REGISTER_EMAIL_PATH}`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body,
@@ -78,7 +78,7 @@ export const changePassword = createAsyncThunk(
     const response: {
       success: boolean;
       error?: any;
-    } = await fetch(`${URL_ENDPOINT}${CHANGE_PASSWORD_PATH}`, {
+    } = await fetch(`${PROXY_AUTH_ENDPOINT}${CHANGE_PASSWORD_PATH}`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body,
@@ -90,6 +90,8 @@ export const changePassword = createAsyncThunk(
   }
 );
 
+// The following has been integrated into next-auth signin,
+// And can be removed in the future
 export const loginViaEmail = createAsyncThunk(
   "get/loginViaEmail",
   async (props: { email: string; password: string }) => {
@@ -98,7 +100,7 @@ export const loginViaEmail = createAsyncThunk(
     const response: {
       success: boolean;
       error?: any;
-    } = await fetch(`${URL_ENDPOINT}${EMAIL_LOGIN_PATH}`, {
+    } = await fetch(`${PROXY_AUTH_ENDPOINT}${EMAIL_LOGIN_PATH}`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body,
@@ -118,7 +120,7 @@ export const loginViaSocial = createAsyncThunk(
     const response: {
       success: boolean;
       error?: any;
-    } = await fetch(`${URL_ENDPOINT}${SOCIAL_LOGIN_PATH}`, {
+    } = await fetch(`${PROXY_AUTH_ENDPOINT}${SOCIAL_LOGIN_PATH}`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body,
@@ -138,7 +140,7 @@ export const getUnionAccount = createAsyncThunk(
     const response: {
       success: boolean;
       error?: any;
-    } = await fetch(`${URL_ENDPOINT}${GET_ACCOUNT_PATH}`, {
+    } = await fetch(`${PROXY_AUTH_ENDPOINT}${GET_ACCOUNT_PATH}`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body,

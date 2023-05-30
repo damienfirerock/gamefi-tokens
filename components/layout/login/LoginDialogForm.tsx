@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { IconButton } from "@mui/material";
 import ChevronLeftOutlinedIcon from "@mui/icons-material/ChevronLeftOutlined";
+import { signIn } from "next-auth/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
@@ -16,9 +17,9 @@ import { AppDispatch, RootState } from "../../../store";
 import { NAV_TEXT_COLOUR } from "../../../src/theme";
 import {
   requestVerificationCode,
-  loginViaEmail,
   registerViaEmail,
   changePassword,
+  setLoading,
 } from "../../../features/AuthSlice";
 
 // TODO: Update when localisation is done
@@ -84,13 +85,18 @@ const LoginDialogForm: React.FunctionComponent = () => {
     dispatch(requestVerificationCode({ context: emailValue }));
   }, [dispatch, emailValue]);
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: FormFields) => {
     const { email, verifyCode, password } = data;
     // Repeat password is only for comparison on client,
     // not sent to server
 
     if (currentForm === FormType.Login) {
-      dispatch(loginViaEmail({ email, password }));
+      dispatch(setLoading(true));
+      signIn("credentials", { email, password });
+      // NOTE: There is a useEffect in Layout which detects NextAuth Session Changes and should update session in AuthSLice,
+      // and will set Auth Loading to False
+
+      // dispatch(loginViaEmail({ email, password }));
     } else if (currentForm === FormType.Register) {
       dispatch(registerViaEmail({ email, verifyCode, password }));
     } else if (currentForm === FormType.ChangePassword) {
