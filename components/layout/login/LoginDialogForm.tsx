@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 import { Box, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
@@ -41,6 +41,8 @@ const LoginDialogForm: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const authSlice = useSelector((state: RootState) => state.auth);
   const { loading } = authSlice;
+
+  const [countdown, setCountdown] = useState(0);
 
   const [currentForm, setCurrentForm] = useState<FormType>(FormType.Login);
   const areAdditionalFieldsRequired = currentForm !== FormType.Login;
@@ -93,6 +95,7 @@ const LoginDialogForm: React.FunctionComponent = () => {
 
   const handleRequestVerificationCode = useCallback(() => {
     dispatch(requestVerificationCode({ context: emailValue }));
+    setCountdown(60);
   }, [dispatch, emailValue]);
 
   const onSubmit = (data: FormFields) => {
@@ -108,6 +111,18 @@ const LoginDialogForm: React.FunctionComponent = () => {
       dispatch(changePassword({ email, verifyCode, password }));
     }
   };
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    }
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [countdown]);
 
   return (
     <>
@@ -143,10 +158,12 @@ const LoginDialogForm: React.FunctionComponent = () => {
                 error={errors.verifyCode?.message}
               />
               <InteractButton
-                text="Verification Code"
+                text={
+                  countdown > 0 ? countdown.toString() : "Verification Code"
+                }
                 method={handleRequestVerificationCode}
                 loading={loading}
-                disabled={!isEmailValid}
+                disabled={!isEmailValid || countdown > 0}
                 variant="contained"
                 sx={{
                   borderRadius: 10,
@@ -156,7 +173,6 @@ const LoginDialogForm: React.FunctionComponent = () => {
                   height: "3rem",
                   fontSize: "0.75rem",
                 }}
-                // size="small"
               />
             </Box>
           )}
