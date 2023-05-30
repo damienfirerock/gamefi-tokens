@@ -106,21 +106,26 @@ export const authOptions = {
         token.id = user.id;
         token.accessToken = user.accessToken;
         token.refreshToken = user.refreshToken;
+        token.loginType = user.loginType;
       }
 
       // Social Login
-      if (account?.accessToken) {
+      if (account) {
         token.accessToken = account.accessToken;
+        token.provider = account.provider;
       }
       return token;
     },
 
     async session(props: { session: any; token: JWT }) {
       const { session, token } = props;
-
       session.user.id = token.id;
       session.accessToken = token.accessToken;
       session.refreshToken = token.refreshToken;
+
+      if (token?.provider) {
+        session.provider = token.provider;
+      }
 
       return session;
     },
