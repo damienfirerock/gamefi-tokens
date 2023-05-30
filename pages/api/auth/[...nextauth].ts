@@ -174,19 +174,3 @@ export const authOptions = {
 };
 
 export default NextAuth(authOptions);
-
-// https://next-auth.js.org/configuration/options
-// No need to store access tokens, can getToken from local backend
-// Can only be properly tested with getUnionAccount endpoint
-
-// import { getToken } from "next-auth/jwt"
-
-// const secret = process.env.NEXTAUTH_SECRET
-
-// export default async function handler(req, res) {
-//   // if using `NEXTAUTH_SECRET` env variable, we detect it, and you won't actually need to `secret`
-//   // const token = await getToken({ req })
-//   const token = await getToken({ req, secret })
-//   console.log("JSON Web Token", token)
-//   res.end()
-// }
