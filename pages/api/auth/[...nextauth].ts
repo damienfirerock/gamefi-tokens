@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { Session, User } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import AppleProvider from "next-auth/providers/apple";
@@ -14,6 +14,7 @@ import {
   XY3BackendResponse,
   XY3BackendLoginSuccess,
 } from "../../../interfaces/XY3BackendResponse";
+import { JWT } from "next-auth/jwt";
 
 const isXY3BackendLoginSuccess = (
   data: XY3BackendResponse
@@ -93,22 +94,27 @@ export const authOptions = {
       },
     },
   },
-  // callbacks: {
-  //   async jwt(token, user) {
-  //     if (user) {
-  //       token.id = user.id;
-  //       token.accessToken = user.accessToken;
-  //       token.refreshToken = user.refreshToken;
-  //     }
-  //     return token;
-  //   },
-  //   async session(session, token) {
-  //     session.user.id = token.id;
-  //     session.accessToken = token.accessToken;
-  //     session.refreshToken = token.refreshToken;
-  //     return session;
-  //   },
-  // },
+  callbacks: {
+    async jwt(props: { token: JWT; user?: any }) {
+      const { token, user } = props;
+      if (user) {
+        token.id = user.id;
+        token.accessToken = user.accessToken;
+        token.refreshToken = user.refreshToken;
+      }
+      return token;
+    },
+
+    async session(props: { session: any; token: JWT }) {
+      const { session, token } = props;
+
+      session.user.id = token.id;
+      session.accessToken = token.accessToken;
+      session.refreshToken = token.refreshToken;
+
+      return session;
+    },
+  },
 };
 
 export default NextAuth(authOptions);
