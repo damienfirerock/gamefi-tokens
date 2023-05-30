@@ -3,9 +3,9 @@ import { Avatar, Box, Typography, TypographyProps } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useSession } from "next-auth/react";
 import { styled } from "@mui/material/styles";
+import { useSelector } from "react-redux";
 
-import useWeb3React from "../../../utils/hooks/web3React/useWeb3React";
-
+import { RootState } from "../../../store";
 import { NAV_TEXT_COLOUR, DETAILS_COLOUR } from "../../../src/theme";
 
 const stringToColour = (string: string) => {
@@ -39,8 +39,8 @@ const Detail = styled(Typography)<TypographyProps>(() => ({
 const GameAccountDetails: React.FunctionComponent = () => {
   const { t } = useTranslation(["common", "airdrop"]);
 
-  const { account } = useWeb3React();
-  const { data: session } = useSession();
+  const authSlice = useSelector((state: RootState) => state.auth);
+  const { session } = authSlice;
 
   return (
     <>
@@ -67,9 +67,9 @@ const GameAccountDetails: React.FunctionComponent = () => {
                 bgcolor: stringToColour(session?.user?.email || ""),
                 marginRight: "1rem",
               }}
-              src="/logo/火元素LOGO.svg"
+              src={session?.user?.image || ""}
             >
-              {session?.user?.email?.split("")[0] || ""}
+              {session?.user?.image ? session?.user?.email?.split("")[0] : ""}
             </Avatar>
             <table>
               <tr>
@@ -87,15 +87,17 @@ const GameAccountDetails: React.FunctionComponent = () => {
                   <Typography variant="body2">{t("common:id")}:</Typography>
                 </td>
                 <td>
-                  <Detail variant="body2">960630 (Mock)</Detail>
+                  <Detail variant="body2">{session.user.id}</Detail>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <Typography variant="body2">{t("common:grade")}:</Typography>
+                  <Typography variant="body2">
+                    {t("common:login-type")}:
+                  </Typography>
                 </td>
                 <td>
-                  <Detail variant="body2">15 (Mock)</Detail>
+                  <Detail variant="body2">{session.provider}</Detail>
                 </td>
               </tr>
             </table>

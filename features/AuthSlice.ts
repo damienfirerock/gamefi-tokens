@@ -131,6 +131,7 @@ export const loginViaSocial = createAsyncThunk(
   }
 );
 
+// Not important yet, since union id already returned on successful signin
 export const getUnionAccount = createAsyncThunk(
   "get/loginViaSocial",
   async (props: { accessToken: string }) => {
@@ -156,7 +157,7 @@ type SliceState = {
   accountDetailsOpen: HTMLButtonElement | null;
   accountDetailsButtonRef: HTMLButtonElement | null;
   loading: boolean;
-  session: Session | null;
+  session: any | null;
   error?: null | string;
   success?: null | string;
 };
