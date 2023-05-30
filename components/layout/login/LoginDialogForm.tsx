@@ -93,9 +93,14 @@ const LoginDialogForm: React.FunctionComponent = () => {
     setCurrentForm(option);
   };
 
-  const handleRequestVerificationCode = useCallback(() => {
-    dispatch(requestVerificationCode({ context: emailValue }));
-    setCountdown(60);
+  const handleRequestVerificationCode = useCallback(async () => {
+    const result = await dispatch(
+      requestVerificationCode({ context: emailValue })
+    );
+    // Only set countdown if request succeeds
+    if (requestVerificationCode.fulfilled.match(result)) {
+      setCountdown(60);
+    }
   }, [dispatch, emailValue]);
 
   const onSubmit = (data: FormFields) => {
