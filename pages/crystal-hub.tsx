@@ -9,6 +9,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ locale }) => ({
     ...(await serverSideTranslations(locale ?? "en", [
       "common",
       "crystal-hub",
+      "success",
     ])),
   },
 });

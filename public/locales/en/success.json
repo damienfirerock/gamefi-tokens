@@ -1,0 +1,7 @@
+{
+  "RequestedVerifyCode": "Verification Code Requested",
+  "RegisteredWithEmail": "Successfully registered with Email",
+  "PasswordChanged": "Successfully updated Password",
+  "EmailLoginSuccess": "Email Login Success",
+  "SocialLoginSuccess": "Social Login Success"
+}

@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Session } from "next-auth/core/types";
 
+// Also serves as a way to check against references for translation in localisation folder
 export enum AuthSuccessMessage {
   RequestedVerifyCode = "RequestedVerifyCode",
   RegisteredWithEmail = "RegisteredWithEmail",

@@ -41,7 +41,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   const { children } = props;
   const { account, activate } = useWeb3React();
   const { checkFRGBalance } = useCommonWeb3Transactions();
-  const { t } = useTranslation("common");
+  const { t } = useTranslation(["common", "success"]);
   const dispatch = useDispatch<AppDispatch>();
   const { data: session, status } = useSession();
   const { locale } = useRouter();
@@ -126,7 +126,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   return (
     <>
       <Head>
-        <title>{t("contracts-explorer")}</title>
+        <title>{t("common:contracts-explorer")}</title>
         <meta property="og:title" content="Airdrop" key="title" />
       </Head>
       {/* Mavbar Men */}
@@ -138,7 +138,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
         {children}
         <LoginDialog />
         <Link href="" locale={locale === "en" ? "zh" : "en"}>
-          {t("language")}
+          {t("common:language")}
         </Link>
         <AlertBar
           severity="warning"
@@ -147,7 +147,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
         />
         <AlertBar
           severity="success"
-          text={success || authSuccess}
+          text={success || t(`success:${authSuccess}`)}
           handleClearAlertSource={handleClearSuccess}
         />
       </StyledContainer>
