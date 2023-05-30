@@ -33,6 +33,8 @@ const AccountOptions: React.FunctionComponent = () => {
   const handleLogOut = () => {
     dispatch(setAccountDetailsOpen(null));
     signOut({ redirect: false });
+    // Alternatively, can use 'signout' page redirects
+    // if the lag in terms of closing account details is an issue
   };
 
   const isLoggedIn = !!session;

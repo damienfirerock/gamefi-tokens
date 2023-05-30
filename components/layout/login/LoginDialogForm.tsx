@@ -35,6 +35,8 @@ interface FormFields {
   repeatPassword: string;
 }
 
+const emailSchema = yup.string().email().required();
+
 const LoginDialogForm: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const authSlice = useSelector((state: RootState) => state.auth);
@@ -75,6 +77,15 @@ const LoginDialogForm: React.FunctionComponent = () => {
   });
 
   const emailValue = watch("email");
+
+  const isEmailValid = useMemo(() => {
+    try {
+      emailSchema.validateSync(emailValue);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }, [emailValue]);
 
   const handleChangeOption = (option: FormType) => {
     setCurrentForm(option);
@@ -135,7 +146,7 @@ const LoginDialogForm: React.FunctionComponent = () => {
                 text="Verification Code"
                 method={handleRequestVerificationCode}
                 loading={loading}
-                disabled={!emailValue}
+                disabled={!isEmailValid}
                 variant="contained"
                 sx={{
                   borderRadius: 10,
