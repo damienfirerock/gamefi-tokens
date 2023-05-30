@@ -94,6 +94,9 @@ export const authOptions = {
       },
     },
   },
+  pages: {
+    signOut: "/", // Prevents redirect to next-auth signout confirmation page
+  },
   callbacks: {
     async jwt(props: { token: JWT; user?: any }) {
       const { token, user } = props;
