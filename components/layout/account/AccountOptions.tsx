@@ -10,7 +10,10 @@ import WalletDetails from "./WalletDetails";
 import { AppDispatch } from "../../../store";
 import useWeb3React from "../../../utils/hooks/web3React/useWeb3React";
 import useActiveWeb3React from "../../../utils/hooks/web3React/useActiveWeb3React";
-import { setDialogOpen } from "../../../features/AuthSlice";
+import {
+  setDialogOpen,
+  setAccountDetailsOpen,
+} from "../../../features/AuthSlice";
 
 // FIXME: Need to double try connect with Metamask on Walletconnect ??
 // FIXME: Metamask Button does not work if not on ChainId
@@ -27,8 +30,9 @@ const AccountOptions: React.FunctionComponent = () => {
     dispatch(setDialogOpen());
   };
 
-  const handleLogOut = async () => {
-    await signOut({ redirect: false });
+  const handleLogOut = () => {
+    dispatch(setAccountDetailsOpen(null));
+    signOut({ redirect: false });
   };
 
   const isLoggedIn = !!session;
