@@ -28,7 +28,7 @@ const AccountOptions: React.FunctionComponent = () => {
   };
 
   const handleLogOut = async () => {
-    await signOut();
+    await signOut({ redirect: false });
   };
 
   const isLoggedIn = !!session;
