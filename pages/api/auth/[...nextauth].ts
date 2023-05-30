@@ -98,12 +98,19 @@ export const authOptions = {
     signOut: "/", // Prevents redirect to next-auth signout confirmation page
   },
   callbacks: {
-    async jwt(props: { token: JWT; user?: any }) {
-      const { token, user } = props;
+    async jwt(props: any) {
+      const { token, user, account } = props;
+
+      // Credentials Login
       if (user) {
         token.id = user.id;
         token.accessToken = user.accessToken;
         token.refreshToken = user.refreshToken;
+      }
+
+      // Social Login
+      if (account?.accessToken) {
+        token.accessToken = account.accessToken;
       }
       return token;
     },
@@ -121,3 +128,19 @@ export const authOptions = {
 };
 
 export default NextAuth(authOptions);
+
+// https://next-auth.js.org/configuration/options
+// No need to store access tokens, can getToken from local backend
+// Can only be properly tested with getUnionAccount endpoint
+
+// import { getToken } from "next-auth/jwt"
+
+// const secret = process.env.NEXTAUTH_SECRET
+
+// export default async function handler(req, res) {
+//   // if using `NEXTAUTH_SECRET` env variable, we detect it, and you won't actually need to `secret`
+//   // const token = await getToken({ req })
+//   const token = await getToken({ req, secret })
+//   console.log("JSON Web Token", token)
+//   res.end()
+// }
