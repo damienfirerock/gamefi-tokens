@@ -205,7 +205,6 @@ const authSlice = createSlice({
       state.loading = false;
     });
     builder.addCase(registerViaEmail.rejected, (state, action) => {
-      // If abortController.abort(), error name will be 'AbortError'
       if (action.error.name !== "AbortError") {
         state.loading = false;
         state.error = action.error.message;
@@ -220,7 +219,6 @@ const authSlice = createSlice({
       state.loading = false;
     });
     builder.addCase(changePassword.rejected, (state, action) => {
-      // If abortController.abort(), error name will be 'AbortError'
       if (action.error.name !== "AbortError") {
         state.loading = false;
         state.error = action.error.message;
@@ -235,7 +233,6 @@ const authSlice = createSlice({
       state.loading = false;
     });
     builder.addCase(loginViaEmail.rejected, (state, action) => {
-      // If abortController.abort(), error name will be 'AbortError'
       if (action.error.name !== "AbortError") {
         state.loading = false;
         state.error = action.error.message;
@@ -250,7 +247,6 @@ const authSlice = createSlice({
       state.loading = false;
     });
     builder.addCase(loginViaSocial.rejected, (state, action) => {
-      // If abortController.abort(), error name will be 'AbortError'
       if (action.error.name !== "AbortError") {
         state.loading = false;
         state.error = action.error.message;

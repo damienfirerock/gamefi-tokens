@@ -1,4 +1,7 @@
-import { XY3BackendResponse } from "../interfaces/XY3BackendResponse";
+import {
+  XY3BackendResponse,
+  XY3BackendError,
+} from "../interfaces/XY3BackendResponse";
 
 export const makeFetchRequestToXY3Backend = async (url: string, body: any) => {
   try {
@@ -9,16 +12,25 @@ export const makeFetchRequestToXY3Backend = async (url: string, body: any) => {
     });
     const response: XY3BackendResponse = await request.json();
 
-    if (response?.code === 500)
-      throw Error(response.reason || response.message);
+    if ("code" in response) {
+      // response is of type XY3BackendError
+      if (response?.code === 500) {
+        // Right now checking for 500 only,
+        // but we can always add checks in the future,
+        // or assume that any response with 'code' is an error response
+        throw response;
+      }
+    }
 
-    return { status: 200, result: { success: true } };
-  } catch (error: any) {
+    // Due to how this is a common helper,
+    // return general response and let respective endpoints handle the data
+    return { status: 200, result: { success: true, data: response } };
+  } catch (error: XY3BackendError | any) {
     return {
-      status: 500,
+      status: error.code || 500,
       result: {
         success: false,
-        error: error.message || "Request Failed",
+        error: error.message || error.message || "Request Failed",
       },
     };
   }
