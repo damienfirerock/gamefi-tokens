@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Session } from "next-auth/core/types";
+import { signIn } from "next-auth/react";
 
 // Also serves as a way to check against references for translation in localisation folder
 export enum AuthSuccessMessage {
@@ -94,21 +95,19 @@ export const changePassword = createAsyncThunk(
 // And can be removed in the future
 export const loginViaEmail = createAsyncThunk(
   "get/loginViaEmail",
-  async (props: { email: string; password: string }) => {
-    const body = JSON.stringify({ ...props });
+  async (props: { email: string; password: string }, thunkAPI) => {
+    // https://next-auth.js.org/getting-started/client#redirects-to-sign-in-page-when-clicked
+    const response = await signIn("credentials", { ...props, redirect: false });
 
-    const response: {
-      success: boolean;
-      error?: any;
-    } = await fetch(`${PROXY_AUTH_ENDPOINT}${EMAIL_LOGIN_PATH}`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body,
-    }).then((res) => res.json());
+    if (!response || !response.ok) {
+      return thunkAPI.rejectWithValue("Login Failed");
+    }
 
-    if (response.error) return Promise.reject(response.error);
+    if (response.error) {
+      return thunkAPI.rejectWithValue(response.error);
+    }
 
-    return response || null;
+    return response;
   }
 );
 
@@ -258,6 +257,7 @@ const authSlice = createSlice({
     });
     builder.addCase(loginViaEmail.fulfilled, (state, action) => {
       state.loading = false;
+      state.dialogOpen = false;
       state.success = AuthSuccessMessage.EmailLoginSuccess;
     });
     builder.addCase(loginViaEmail.rejected, (state, action) => {
