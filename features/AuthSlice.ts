@@ -91,8 +91,6 @@ export const changePassword = createAsyncThunk(
   }
 );
 
-// The following has been integrated into next-auth signin,
-// And can be removed in the future
 export const loginViaEmail = createAsyncThunk(
   "get/loginViaEmail",
   async (props: { email: string; password: string }, thunkAPI) => {
@@ -111,6 +109,7 @@ export const loginViaEmail = createAsyncThunk(
   }
 );
 
+// This can be removed eventually as it is necessary to integrate directly in Next Auth SignIn
 export const loginViaSocial = createAsyncThunk(
   "get/loginViaSocial",
   async (props: { thirdToken: string; loginType: string }) => {
