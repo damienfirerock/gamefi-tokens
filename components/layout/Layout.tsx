@@ -21,6 +21,7 @@ import {
   setLoading,
   setDialogOpen,
   clearError as clearAuthError,
+  clearSuccess as clearAuthSuccess,
 } from "../../features/AuthSlice";
 import { SUPPORTED_WALLETS } from "../../constants/wallets";
 import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
@@ -48,7 +49,11 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const authSlice = useSelector((state: RootState) => state.auth);
-  const { loading: authLoading, error: authError } = authSlice;
+  const {
+    loading: authLoading,
+    error: authError,
+    success: authSuccess,
+  } = authSlice;
 
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { error, success } = transactionSlice;
@@ -56,14 +61,21 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   const accountSlice = useSelector((state: RootState) => state.account);
   const { error: accountError } = accountSlice;
 
-  const handleClearAlert = () => {
+  const handleClearError = () => {
     if (accountError) {
       dispatch(clearAccountError());
-    }
-    if (authError) {
+    } else if (authError) {
       dispatch(clearAuthError());
     } else if (error) {
       dispatch(clearError());
+    }
+  };
+
+  const handleClearSuccess = () => {
+    if (success) {
+      dispatch(clearSuccess());
+    } else if (authSuccess) {
+      dispatch(clearAuthSuccess());
     }
   };
 
@@ -89,7 +101,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
     };
 
     connectWalletOnPageLoad();
-  }, [account]);
+  }, [activate, checkFRGBalance, account]);
 
   // Sets new Session on Session change
   useEffect(() => {
@@ -97,7 +109,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
       dispatch(setSession(session));
       dispatch(setLoading(false));
     }
-  }, [session, status]);
+  }, [dispatch, session, status]);
 
   // Shows LoginDialog for new user
   useEffect(() => {
@@ -109,7 +121,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
         localStorage.setItem("loginPopupShown", "true");
       }
     }
-  }, [session, authLoading]);
+  }, [dispatch, session, authLoading]);
 
   return (
     <>
@@ -131,12 +143,12 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
         <AlertBar
           severity="warning"
           text={error || accountError || authError}
-          handleClearAlertSource={handleClearAlert}
+          handleClearAlertSource={handleClearError}
         />
         <AlertBar
           severity="success"
-          text={success}
-          handleClearAlertSource={() => dispatch(clearSuccess())}
+          text={success || authSuccess}
+          handleClearAlertSource={handleClearSuccess}
         />
       </StyledContainer>
       {/* BottomNavbar only shows on Mobile */}

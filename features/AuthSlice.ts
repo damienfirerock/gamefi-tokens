@@ -1,6 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Session } from "next-auth/core/types";
 
+export enum AuthSuccessMessage {
+  RequestedVerifyCode = "RequestedVerifyCode",
+  RegisteredWithEmail = "RegisteredWithEmail",
+  PasswordChanged = "PasswordChanged",
+  EmailLoginSuccess = "EmailLoginSuccess",
+  SocialLoginSuccess = "SocialLoginSuccess",
+}
+
 // Hides http endpoint as proxy
 // Site is loaded over https and won't allow mixed loading
 const URL_ENDPOINT = "api/proxy-backend";
@@ -143,6 +151,7 @@ type SliceState = {
   loading: boolean;
   session: Session | null;
   error?: null | string;
+  success?: null | string;
 };
 
 const initialState: SliceState = {
@@ -152,6 +161,7 @@ const initialState: SliceState = {
   loading: true,
   session: null,
   error: null,
+  success: null,
 };
 
 const authSlice = createSlice({
@@ -166,6 +176,12 @@ const authSlice = createSlice({
     },
     clearError: (state) => {
       state.error = null;
+    },
+    setSuccess: (state, action) => {
+      state.success = action.payload;
+    },
+    clearSuccess: (state) => {
+      state.success = null;
     },
     setDialogOpen: (state) => {
       state.dialogOpen = true;
@@ -188,6 +204,7 @@ const authSlice = createSlice({
     });
     builder.addCase(requestVerificationCode.fulfilled, (state, action) => {
       state.loading = false;
+      state.success = AuthSuccessMessage.RequestedVerifyCode;
     });
     builder.addCase(requestVerificationCode.rejected, (state, action) => {
       // If abortController.abort(), error name will be 'AbortError'
@@ -203,6 +220,7 @@ const authSlice = createSlice({
     });
     builder.addCase(registerViaEmail.fulfilled, (state, action) => {
       state.loading = false;
+      state.success = AuthSuccessMessage.RegisteredWithEmail;
     });
     builder.addCase(registerViaEmail.rejected, (state, action) => {
       if (action.error.name !== "AbortError") {
@@ -217,6 +235,7 @@ const authSlice = createSlice({
     });
     builder.addCase(changePassword.fulfilled, (state, action) => {
       state.loading = false;
+      state.success = AuthSuccessMessage.PasswordChanged;
     });
     builder.addCase(changePassword.rejected, (state, action) => {
       if (action.error.name !== "AbortError") {
@@ -231,6 +250,7 @@ const authSlice = createSlice({
     });
     builder.addCase(loginViaEmail.fulfilled, (state, action) => {
       state.loading = false;
+      state.success = AuthSuccessMessage.EmailLoginSuccess;
     });
     builder.addCase(loginViaEmail.rejected, (state, action) => {
       if (action.error.name !== "AbortError") {
@@ -245,6 +265,7 @@ const authSlice = createSlice({
     });
     builder.addCase(loginViaSocial.fulfilled, (state, action) => {
       state.loading = false;
+      state.success = AuthSuccessMessage.SocialLoginSuccess;
     });
     builder.addCase(loginViaSocial.rejected, (state, action) => {
       if (action.error.name !== "AbortError") {
@@ -257,6 +278,8 @@ const authSlice = createSlice({
 
 export const {
   clearError,
+  setSuccess,
+  clearSuccess,
   setSession,
   setLoading,
   setDialogOpen,
