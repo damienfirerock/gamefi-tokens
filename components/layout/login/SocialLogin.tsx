@@ -10,7 +10,19 @@ import { AppDispatch, RootState } from "../../../store";
 import { setLoading } from "../../../features/AuthSlice";
 import { WHITE, ALTERNATE_TEXT_COLOR } from "../../../src/theme";
 
-const providers = ["Google", "Facebook", "Apple"];
+enum BACKEND_LOGIN_TYPE {
+  Google = "LT_Google",
+  Facebook = "LT_Facebook",
+  Apple = "LT_Apple",
+}
+
+export const SOCIAL_LOGIN_TYPES: Record<string, string> = {
+  google: BACKEND_LOGIN_TYPE.Google,
+  facebook: BACKEND_LOGIN_TYPE.Facebook,
+  apple: BACKEND_LOGIN_TYPE.Apple,
+};
+
+export const SOCIAL_LOGIN_PROVIDERS = ["google", "facebook", "apple"];
 
 const LOGIN_BUTTON_COLOUR = "#E6E6EE";
 
@@ -30,7 +42,6 @@ const SocialLogin: React.FunctionComponent = () => {
     // NOTE: There is a useEffect in Layout which detects NextAuth Session Changes,
     // and will set Auth Loading to False
   };
-
   return (
     <>
       {/* Social Login Divider */}
@@ -64,7 +75,7 @@ const SocialLogin: React.FunctionComponent = () => {
           marginBottom: "2rem",
         }}
       >
-        {providers.map((provider) => (
+        {SOCIAL_LOGIN_PROVIDERS.map((provider) => (
           <IconButton
             aria-label={`${provider} Login Button`}
             size="small"

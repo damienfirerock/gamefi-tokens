@@ -1,14 +1,21 @@
-import NextAuth, { Session, User } from "next-auth";
+import NextAuth, { Account } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import AppleProvider from "next-auth/providers/apple";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { getSession } from "next-auth/react";
+
+import {
+  SOCIAL_LOGIN_PROVIDERS,
+  SOCIAL_LOGIN_TYPES,
+} from "../../../components/layout/login/SocialLogin";
 
 const NEXT_PUBLIC_LOCAL_BACKEND = process.env.NEXT_PUBLIC_LOCAL_BACKEND;
 
 import {
   PROXY_AUTH_ENDPOINT,
   EMAIL_LOGIN_PATH,
+  SOCIAL_LOGIN_PATH,
 } from "../../../features/AuthSlice";
 import {
   XY3BackendResponse,
@@ -95,6 +102,34 @@ export const authOptions = {
     },
   },
   callbacks: {
+    async signIn(props: { account: any }) {
+      const { account } = props;
+
+      if (SOCIAL_LOGIN_PROVIDERS.includes(account?.provider)) {
+        const body = JSON.stringify({
+          thirdToken: account.access_token,
+          loginType: SOCIAL_LOGIN_TYPES[account?.provider],
+        });
+        const response: {
+          success: boolean;
+          data: XY3BackendResponse;
+          error?: undefined;
+        } = await fetch(
+          `${NEXT_PUBLIC_LOCAL_BACKEND}${PROXY_AUTH_ENDPOINT}${SOCIAL_LOGIN_PATH}`,
+          {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body,
+          }
+        ).then((res) => res.json());
+
+        if (response.error) return false;
+
+        if (response.data) return true;
+      }
+
+      return true;
+    },
     async jwt(props: any) {
       const { token, user, account } = props;
 
@@ -108,7 +143,9 @@ export const authOptions = {
 
       // Social Login
       if (account) {
-        token.accessToken = account.accessToken;
+        if (SOCIAL_LOGIN_PROVIDERS.includes(token.provider)) {
+          token.accessToken = account.access_token;
+        }
         token.provider = account.provider;
       }
       return token;

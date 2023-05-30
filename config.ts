@@ -1,6 +1,7 @@
 // https://www.gimtec.io/articles/process-is-not-defined/
 
 const XY3_BACKEND_URL = process.env.NEXT_PUBLIC_XY3_BACKEND_URL;
+const NEXTAUTH_SECRET = process.env.NEXT_PUBLIC_NEXTAUTH_SECRET;
 
 // Chain ID
 const NETWORK_CHAIN_ID = process.env.NEXT_PUBLIC_NETWORK_CHAIN_ID;
@@ -33,6 +34,7 @@ const CONFIG = {
   ALCHEMY_WEB_SOCKET_PROVIDER,
   DUMMY_KEY,
   XY3_BACKEND_URL,
+  NEXTAUTH_SECRET,
 };
 
 export const ADDRESS_NAMES: Record<string, string> = {};

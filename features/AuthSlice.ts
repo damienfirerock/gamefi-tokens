@@ -23,7 +23,7 @@ const REQUEST_VERIFY_TOKEN_PATH = "/request-verification-code";
 const REGISTER_EMAIL_PATH = "/email-register";
 const CHANGE_PASSWORD_PATH = "/change-password";
 export const EMAIL_LOGIN_PATH = "/email-login";
-const SOCIAL_LOGIN_PATH = "/social-login";
+export const SOCIAL_LOGIN_PATH = "/social-login";
 const GET_ACCOUNT_PATH = "/get-union-account";
 
 // Endpoint is the same regardless of whether verification code is requested for registration or password change
@@ -118,6 +118,7 @@ export const loginViaSocial = createAsyncThunk(
 
     const response: {
       success: boolean;
+      data?: any;
       error?: any;
     } = await fetch(`${PROXY_AUTH_ENDPOINT}${SOCIAL_LOGIN_PATH}`, {
       method: "POST",

@@ -2,10 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import CONFIG from "../../../config";
 
-import {
-  XY3BackendResponse,
-  PLATFORM_ROUTE,
-} from "../../../interfaces/XY3BackendResponse";
+import { PLATFORM_ROUTE } from "../../../interfaces/XY3BackendResponse";
 import { makeFetchRequestToXY3Backend } from "../../../utils/api";
 
 const { XY3_BACKEND_URL } = CONFIG;
