@@ -103,7 +103,7 @@ const LoginDialogForm: React.FunctionComponent = () => {
     }
   }, [dispatch, emailValue]);
 
-  const onSubmit = (data: FormFields) => {
+  const onSubmit = async (data: FormFields) => {
     const { email, verifyCode, password } = data;
     // Repeat password is only for comparison on client,
     // not sent to server
@@ -111,9 +111,21 @@ const LoginDialogForm: React.FunctionComponent = () => {
     if (currentForm === FormType.Login) {
       dispatch(loginViaEmail({ email, password }));
     } else if (currentForm === FormType.Register) {
-      dispatch(registerViaEmail({ email, verifyCode, password }));
+      // For other forms, shift form back to login if
+      // either registration or password change succeeds
+      const result = await dispatch(
+        registerViaEmail({ email, verifyCode, password })
+      );
+      if (registerViaEmail.fulfilled.match(result)) {
+        setCurrentForm(FormType.Login);
+      }
     } else if (currentForm === FormType.ChangePassword) {
-      dispatch(changePassword({ email, verifyCode, password }));
+      const result = await dispatch(
+        changePassword({ email, verifyCode, password })
+      );
+      if (changePassword.fulfilled.match(result)) {
+        setCurrentForm(FormType.Login);
+      }
     }
   };
 

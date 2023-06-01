@@ -136,7 +136,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
         <title>{t("common:contracts-explorer")}</title>
         <meta property="og:title" content="Airdrop" key="title" />
       </Head>
-      {/* Mavbar Men */}
+
       <NavBar />
       <StyledContainer
         maxWidth="lg"
