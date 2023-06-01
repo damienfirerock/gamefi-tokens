@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "@mui/material";
 import { useSession, signOut } from "next-auth/react";
 import { useDispatch } from "react-redux";
+import { useTranslation } from "next-i18next";
 
 import ConnectWalletButtons from "../buttons/ConnectWalletButtons";
 import GameAccountDetails from "./GameAccountDetails";
@@ -12,6 +13,7 @@ import useWeb3React from "../../../utils/hooks/web3React/useWeb3React";
 import useActiveWeb3React from "../../../utils/hooks/web3React/useActiveWeb3React";
 import {
   setDialogOpen,
+  setError,
   setAccountDetailsOpen,
 } from "../../../features/AuthSlice";
 
@@ -23,6 +25,7 @@ const AccountOptions: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { deactivate } = useWeb3React();
   const { account } = useActiveWeb3React();
+  const { t } = useTranslation(["success"]);
 
   const { data: session, status } = useSession();
 
@@ -30,11 +33,15 @@ const AccountOptions: React.FunctionComponent = () => {
     dispatch(setDialogOpen());
   };
 
-  const handleLogOut = () => {
-    dispatch(setAccountDetailsOpen(null));
-    signOut({ redirect: false });
-    // Alternatively, can use 'signout' page redirects
-    // if the lag in terms of closing account details is an issue
+  const handleLogOut = async () => {
+    try {
+      dispatch(setAccountDetailsOpen(null));
+      await signOut({ redirect: false });
+      // Sign out reloads the page,
+      // So unable to show success notification
+    } catch (error) {
+      setError("Logout Failure");
+    }
   };
 
   const isLoggedIn = !!session;

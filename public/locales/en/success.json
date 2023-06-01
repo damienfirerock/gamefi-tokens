@@ -3,5 +3,6 @@
   "RegisteredWithEmail": "Successfully registered with Email",
   "PasswordChanged": "Successfully updated Password",
   "EmailLoginSuccess": "Email Login Success",
-  "SocialLoginSuccess": "Social Login Success"
+  "SocialLoginSuccess": "Social Login Success",
+  "LogoutSuccess": "Logout Success"
 }

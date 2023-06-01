@@ -182,6 +182,9 @@ const authSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
+    setError: (state, action) => {
+      state.error = action.payload;
+    },
     clearError: (state) => {
       state.error = null;
     },
@@ -287,6 +290,7 @@ const authSlice = createSlice({
 
 export const {
   clearError,
+  setError,
   setSuccess,
   clearSuccess,
   setSession,
