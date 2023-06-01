@@ -91,8 +91,8 @@ const SocialLogin: React.FunctionComponent = () => {
               sx={{ width: "1.1rem", height: "1.1rem", position: "relative" }}
             >
               <Image
-                src={`/login-icons/${provider}-Login-Icon.svg`}
-                alt={`${provider} Logo`}
+                src={`/login-icons/${provider}-login-icon.svg`}
+                alt={`${provider} logo`}
                 layout="fill"
               />
               {loading && <StyledCircularProgress size={26} />}
