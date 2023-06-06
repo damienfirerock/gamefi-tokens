@@ -1,9 +1,8 @@
-import NextAuth, { Account } from "next-auth";
+import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import AppleProvider from "next-auth/providers/apple";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getSession } from "next-auth/react";
 
 import {
   SOCIAL_LOGIN_PROVIDERS,

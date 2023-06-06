@@ -52,7 +52,7 @@ const LoginDialogForm: React.FunctionComponent = () => {
       yup.object().shape({
         email: yup.string().required(),
         verifyCode: areAdditionalFieldsRequired
-          ? yup.string().required()
+          ? yup.string().length(6).required()
           : yup.string(),
         password: yup.string().required(),
         repeatPassword: yup
