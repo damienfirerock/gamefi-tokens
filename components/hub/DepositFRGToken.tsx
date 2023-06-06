@@ -23,6 +23,7 @@ import useCommonWeb3Transactions from "../../utils/hooks/useCommonWeb3Transactio
 import { setSuccess } from "../../features/TransactionSlice";
 import { setPendingFrgCrystalBalance } from "../../features/AccountSlice";
 import CONFIG from "../../config";
+import { WHITE } from "../../src/theme";
 
 const { FIRE_ROCK_TOKEN } = CONFIG;
 
@@ -148,6 +149,7 @@ const DepositFRGToken: React.FunctionComponent<{
               InputLabelProps={{ shrink: true }}
               label="$FRG"
               onChange={handleDepositFRGTokenAmounts}
+              InputProps={{ sx: { color: WHITE } }}
             />
             <ArrowRightAltIcon />
             <TextField
@@ -166,6 +168,7 @@ const DepositFRGToken: React.FunctionComponent<{
                   textAlign: "right",
                 },
               }}
+              InputProps={{ sx: { color: WHITE } }}
             />
           </Box>
         </Box>

@@ -26,6 +26,7 @@ import {
   setFrgCrystalBalance,
   setPendingFrgCrystalBalance,
 } from "../../features/AccountSlice";
+import { WHITE } from "../../src/theme";
 
 export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   padding: "0.5rem 0.5rem 1rem 0.5rem",
@@ -162,6 +163,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
               label="FRG Crystal"
               onChange={handleWithdrawFRGCrystalAmounts}
               InputLabelProps={{ shrink: true }}
+              InputProps={{ sx: { color: WHITE } }}
             />
             <ArrowRightAltIcon />
             <TextField
@@ -180,6 +182,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
                   textAlign: "right",
                 },
               }}
+              InputProps={{ sx: { color: WHITE } }}
             />
           </Box>
         </Box>

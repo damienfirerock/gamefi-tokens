@@ -89,8 +89,7 @@ const theme = createTheme({
           color: "black",
           marginBottom: 0,
           "&.Mui-disabled": {
-            backgroundColor: "#e4e4e4", // works
-            // color: "red !important", // FIXME: does not work
+            backgroundColor: "#e4e4e4",
           },
           ".MuiInputAdornment-positionEnd": {
             color: "black",
