@@ -161,20 +161,25 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
               value={withdrawFRGCrystal}
               label="FRG Crystal"
               onChange={handleWithdrawFRGCrystalAmounts}
+              InputLabelProps={{ shrink: true }}
             />
             <ArrowRightAltIcon />
             <TextField
               value={withdrawFRGToken}
               label="$FRG"
               // disabled
-              // InputLabelProps={{ shrink: true }}
-              // InputProps={{
-              //   endAdornment: (
-              //     <InputAdornment position="start">$FRG</InputAdornment>
-              //   ),
-              // }}
-              // FIXME: Unable to change color from before and from createTheme
-              // sx={{ input: { color: "#FFFFFF !important" } }}
+              InputLabelProps={{ shrink: true }}
+              sx={{
+                "& label": {
+                  left: "unset",
+                  right: "1.75rem",
+                  lineHeight: "1.25rem",
+                  transformOrigin: "right",
+                },
+                "& legend": {
+                  textAlign: "right",
+                },
+              }}
             />
           </Box>
         </Box>

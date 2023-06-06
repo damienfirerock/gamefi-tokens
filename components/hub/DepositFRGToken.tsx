@@ -145,6 +145,7 @@ const DepositFRGToken: React.FunctionComponent<{
           >
             <TextField
               value={depositFRGToken}
+              InputLabelProps={{ shrink: true }}
               label="$FRG"
               onChange={handleDepositFRGTokenAmounts}
             />
@@ -153,17 +154,18 @@ const DepositFRGToken: React.FunctionComponent<{
               value={depositFRGCrystal}
               label="FRG Crystal"
               // disabled
-              // InputLabelProps={{ shrink: true }}
-              // InputProps={{
-              //   endAdornment: (
-              //     <InputAdornment
-              //       position="end"
-              //       sx={{ adornedEnd: { color: "black !important" } }}
-              //     >
-              //       FRG Crystal
-              //     </InputAdornment>
-              //   ),
-              // }}
+              InputLabelProps={{ shrink: true }}
+              sx={{
+                "& label": {
+                  left: "unset",
+                  right: "1.75rem",
+                  lineHeight: "1.25rem",
+                  transformOrigin: "right",
+                },
+                "& legend": {
+                  textAlign: "right",
+                },
+              }}
             />
           </Box>
         </Box>
