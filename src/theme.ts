@@ -45,9 +45,9 @@ const theme = createTheme({
       secondary: PRIMARY_COLOR,
     },
     action: {
-      disabledBackground: DISABLED_COLOUR,
+      disabledBackground: SECONDARY_COLOR,
       disabledOpacity: 0,
-      disabled: WHITE,
+      disabled: NAV_TEXT_COLOUR,
     },
   },
   components: {
