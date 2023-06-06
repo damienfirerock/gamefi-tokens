@@ -50,7 +50,7 @@ const LoginDialogForm: React.FunctionComponent = () => {
   const schema = useMemo(
     () =>
       yup.object().shape({
-        email: yup.string().required(),
+        email: yup.string().email().required(),
         verifyCode: areAdditionalFieldsRequired
           ? yup.string().length(6).required()
           : yup.string(),
