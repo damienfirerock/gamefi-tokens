@@ -37,7 +37,7 @@ const PasswordField: React.FunctionComponent<PasswordFieldProps> = ({
           label={label}
           type={showPassword ? "text" : "password"}
           error={Boolean(error)}
-          helperText={error || " "}
+          helperText={error}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">

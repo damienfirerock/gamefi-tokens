@@ -30,7 +30,7 @@ const DefaultField: React.FunctionComponent<DefaultFieldProps> = ({
           label={label}
           type={type}
           error={Boolean(error)}
-          helperText={error || " "}
+          helperText={error}
         />
       )}
     />

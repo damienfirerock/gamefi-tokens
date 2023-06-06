@@ -216,7 +216,7 @@ const LoginDialogForm: React.FunctionComponent = () => {
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
-              marginBottom: "1rem",
+              marginBottom: "0.5rem",
             }}
           >
             <InteractButton
@@ -239,9 +239,15 @@ const LoginDialogForm: React.FunctionComponent = () => {
         )}
 
         {currentForm === FormType.Register && (
-          <Typography variant="caption" sx={{ color: NAV_TEXT_COLOUR }}>
-            By signing up, you agree to the user policy.
-          </Typography>
+          <Box
+            sx={{
+              marginBottom: "1rem",
+            }}
+          >
+            <Typography variant="caption" sx={{ color: NAV_TEXT_COLOUR }}>
+              By signing up, you agree to the user policy.
+            </Typography>
+          </Box>
         )}
 
         {/* Submission Button */}

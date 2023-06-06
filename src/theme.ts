@@ -78,7 +78,7 @@ const theme = createTheme({
           "& label.Mui-disabled": {
             color: DISABLED_COLOUR,
           },
-          marginBottom: "0.2rem",
+          marginBottom: "0.5rem",
         },
       },
     },
