@@ -5,6 +5,7 @@ import {
   Box,
   Card,
   CardProps,
+  Container,
   FormControl,
   InputBase,
   InputBaseProps,
@@ -42,8 +43,7 @@ const SELECTED_COLOUR = "#413D55";
 const MOCK_SERVERS = ["海洋", "正式服1", "测试服1", "YH1", "SG", "A1"];
 
 export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
-  margin: theme.spacing(1),
-  padding: theme.spacing(2),
+  marginBottom: "1rem",
 }));
 
 const StyledInputBase = styled(InputBase)<InputBaseProps>(({ theme }) => ({
@@ -193,96 +193,112 @@ const CrystalHub: React.FunctionComponent = () => {
 
   return (
     <Layout>
-      {/* TODO: Eventually will need to check against account bound wallet from server account details */}
-      {!!account && (
-        <Typography variant="body2" color="primary">
-          Wallet: {account}
-        </Typography>
-      )}
-      {!!walletFRGBalance && (
-        <Typography variant="body2">
-          $FRG: {formatNumberValue(walletFRGBalance)}
-        </Typography>
-      )}
+      <Container maxWidth="md">
+        {/* TODO: Eventually will need to check against account bound wallet from server account details */}
+        {!!account && (
+          <Typography variant="body2" color="primary">
+            Wallet: {account}
+          </Typography>
+        )}
+        {!!walletFRGBalance && (
+          <Typography variant="body2">
+            $FRG: {formatNumberValue(walletFRGBalance)}
+          </Typography>
+        )}
 
-      {/* Server Selection */}
-      <Box sx={{ marginY: 2 }}>
-        <FormControl variant="standard" fullWidth>
-          <InputLabel
-            sx={{
-              color: `${WHITE} !important`,
-            }}
-            shrink={true}
-          >
-            Server
-          </InputLabel>
-          <Select
-            value={selectedServer}
-            label="Server"
-            onChange={handleSelectServer}
-            notched={true}
-            input={<StyledInputBase />}
-            MenuProps={{
-              PaperProps: {
-                sx: {
-                  "& .MuiMenuItem-root": {
-                    "&:active": {
+        {/* Server Selection */}
+        <Box sx={{ marginY: 2 }}>
+          <FormControl variant="standard" fullWidth>
+            <InputLabel
+              sx={{
+                color: `${WHITE} !important`,
+              }}
+              shrink={true}
+            >
+              Server
+            </InputLabel>
+            <Select
+              value={selectedServer}
+              label="Server"
+              onChange={handleSelectServer}
+              notched={true}
+              input={<StyledInputBase />}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    "& .MuiMenuItem-root": {
+                      "&:active": {
+                        bgcolor: SELECTED_COLOUR,
+                      },
+                      "&:focus": {
+                        bgcolor: SELECTED_COLOUR,
+                      },
+                    },
+                    "& .Mui-selected": {
                       bgcolor: SELECTED_COLOUR,
                     },
-                    "&:focus": {
-                      bgcolor: SELECTED_COLOUR,
-                    },
-                  },
-                  "& .Mui-selected": {
-                    bgcolor: SELECTED_COLOUR,
                   },
                 },
-              },
-            }}
-            sx={{
-              "& .MuiSvgIcon-root": {
-                color: WHITE,
-              },
-            }}
-          >
-            {MOCK_SERVERS.map((server) => (
-              <MenuItem key={server} value={server}>
-                {server}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
+              }}
+              sx={{
+                "& .MuiSvgIcon-root": {
+                  color: WHITE,
+                },
+              }}
+            >
+              {MOCK_SERVERS.map((server) => (
+                <MenuItem key={server} value={server}>
+                  {server}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
 
-      <Typography variant="body2">
-        Mock FRG Crystal Balance: {frgCrystalBalance}
-      </Typography>
-      <Typography variant="body2">
-        Mock Pending FRG Crystal Balance: {pendingFrgCrystalBalance}
-      </Typography>
-
-      <StyledCard variant="outlined">
-        <WithdrawFRGCrystal selectedServer={selectedServer} />
-        <DepositFRGToken selectedServer={selectedServer} />
-      </StyledCard>
-
-      {transaction && (
-        <Alert
-          severity={transaction.status === "Success" ? "success" : "info"}
-          sx={{ mb: 10 }}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: "1rem",
+          }}
         >
-          {transaction.createdAt} |{" "}
-          <Link
-            href={getEtherscanLink(transaction.hash, "transaction")}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Typography variant="body2">
+            Mock FRG Crystal Balance:{" "}
+            <Box component="span" sx={{ color: VALUE_COLOUR }}>
+              {frgCrystalBalance}
+            </Box>
+          </Typography>
+          <Typography variant="body2">
+            Mock Pending FRG Crystal Balance:{" "}
+            <Box component="span" sx={{ color: VALUE_COLOUR }}>
+              {pendingFrgCrystalBalance}
+            </Box>
+          </Typography>
+        </Box>
+
+        <StyledCard variant="outlined">
+          <WithdrawFRGCrystal selectedServer={selectedServer} />
+          <DepositFRGToken selectedServer={selectedServer} />
+        </StyledCard>
+
+        {transaction && (
+          <Alert
+            severity={transaction.status === "Success" ? "success" : "info"}
+            sx={{ mb: 10 }}
           >
-            {truncateString(transaction.hash)}
-          </Link>{" "}
-          | {transaction.transactionType} | {transaction.amount} $FRG |{" "}
-          {transaction.status}
-        </Alert>
-      )}
+            {transaction.createdAt} |{" "}
+            <Link
+              href={getEtherscanLink(transaction.hash, "transaction")}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {truncateString(transaction.hash)}
+            </Link>{" "}
+            | {transaction.transactionType} | {transaction.amount} $FRG |{" "}
+            {transaction.status}
+          </Alert>
+        )}
+      </Container>
     </Layout>
   );
 };

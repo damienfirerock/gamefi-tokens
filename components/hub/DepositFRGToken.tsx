@@ -32,7 +32,6 @@ const MOCK_FRG_CRYSTAL_EXCHANGE_RATE = 10;
 
 export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   margin: theme.spacing(1),
-  padding: theme.spacing(2),
 }));
 
 const DepositFRGToken: React.FunctionComponent<{
@@ -157,18 +156,19 @@ const DepositFRGToken: React.FunctionComponent<{
             <ArrowRightAltIcon />
             <TextField
               value={depositFRGCrystal}
-              disabled
-              InputLabelProps={{ shrink: true }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment
-                    position="end"
-                    sx={{ adornedEnd: { color: "black !important" } }}
-                  >
-                    FRG Crystal
-                  </InputAdornment>
-                ),
-              }}
+              label="FRG Crystal"
+              // disabled
+              // InputLabelProps={{ shrink: true }}
+              // InputProps={{
+              //   endAdornment: (
+              //     <InputAdornment
+              //       position="end"
+              //       sx={{ adornedEnd: { color: "black !important" } }}
+              //     >
+              //       FRG Crystal
+              //     </InputAdornment>
+              //   ),
+              // }}
             />
           </Box>
         </Box>

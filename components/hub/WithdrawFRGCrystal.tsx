@@ -28,7 +28,6 @@ import {
 
 export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   margin: theme.spacing(1),
-  padding: theme.spacing(2),
 }));
 
 const WithdrawFRGCrystal: React.FunctionComponent<{
@@ -171,13 +170,14 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
             <ArrowRightAltIcon />
             <TextField
               value={withdrawFRGToken}
-              disabled
-              InputLabelProps={{ shrink: true }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="start">$FRG</InputAdornment>
-                ),
-              }}
+              label="$FRG"
+              // disabled
+              // InputLabelProps={{ shrink: true }}
+              // InputProps={{
+              //   endAdornment: (
+              //     <InputAdornment position="start">$FRG</InputAdornment>
+              //   ),
+              // }}
               // FIXME: Unable to change color from before and from createTheme
               // sx={{ input: { color: "#FFFFFF !important" } }}
             />
