@@ -21,23 +21,23 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 
 import Layout from "../layout/Layout";
+import WithdrawFRGCrystal from "../hub/WithdrawFRGCrystal";
+import DepositFRGToken from "../hub/DepositFRGToken";
+import ExchangeInfo from "../hub/ExchangeInfo";
 
 import { AppDispatch, RootState } from "../../store";
 import { setDialogOpen } from "../../features/AuthSlice";
 import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
 import { setSuccess, clearSuccess } from "../../features/TransactionSlice";
-import WithdrawFRGCrystal from "../hub/WithdrawFRGCrystal";
-import DepositFRGToken from "../hub/DepositFRGToken";
 import { getEtherscanLink } from "../../utils/web3";
 import { truncateString, formatNumberValue } from "../../utils/common";
 import {
   setFrgCrystalBalance,
   setPendingFrgCrystalBalance,
 } from "../../features/AccountSlice";
-import { PAPER_BACKGROUND, PRIMARY_COLOR, WHITE } from "../../src/theme";
+import { PAPER_BACKGROUND, VALUE_COLOUR, WHITE } from "../../src/theme";
 const FireRockGoldJson = require("../../constants/abis/FireRockGold.json");
 
-const VALUE_COLOUR = "#FE5218";
 const SELECTED_COLOUR = "#413D55";
 
 const MOCK_SERVERS = ["海洋", "正式服1", "测试服1", "YH1", "SG", "A1"];
@@ -277,6 +277,7 @@ const CrystalHub: React.FunctionComponent = () => {
         </Box>
 
         <StyledCard variant="outlined">
+          <ExchangeInfo />
           <WithdrawFRGCrystal selectedServer={selectedServer} />
           <DepositFRGToken selectedServer={selectedServer} />
         </StyledCard>

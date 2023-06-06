@@ -141,13 +141,6 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
   return (
     <>
       <StyledCard variant="outlined">
-        <Typography variant="body2">{t("crystal-hub:withdraw")}</Typography>
-        <Typography variant="body2">
-          Mock FRG Crystal to $FRG Exchange Rate - {rate}:1
-        </Typography>
-        <Typography variant="body2">
-          Mock FRG Crystal Exchange Tax Rate: {tax}%
-        </Typography>
         <Box
           sx={{
             display: "flex",

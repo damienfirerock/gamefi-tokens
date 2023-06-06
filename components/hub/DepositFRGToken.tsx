@@ -129,11 +129,6 @@ const DepositFRGToken: React.FunctionComponent<{
   return (
     <>
       <StyledCard variant="outlined">
-        <Typography variant="body2">{t("crystal-hub:deposit")} </Typography>
-        <Typography variant="body2">
-          Mock $FRG to FRG Crystal Exchange Rate - 1:
-          {MOCK_FRG_CRYSTAL_EXCHANGE_RATE}
-        </Typography>
         <Box
           sx={{
             display: "flex",

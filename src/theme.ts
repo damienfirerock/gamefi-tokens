@@ -16,6 +16,7 @@ export const PAPER_BACKGROUND = "#1A1524";
 export const NAV_TEXT_COLOUR = "#8C8A9A";
 export const DETAILS_COLOUR = "#0B0320";
 export const ALTERNATE_TEXT_COLOR = "#D8D8D8";
+export const VALUE_COLOUR = "#FE5218";
 const DISABLED_COLOUR = "#979797";
 
 export const WHITE = "#FFFFFF";
