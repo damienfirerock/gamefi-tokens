@@ -161,6 +161,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
             <TextField
               value={withdrawFRGCrystal}
               label="FRG Crystal"
+              type="number"
               onChange={handleWithdrawFRGCrystalAmounts}
               InputLabelProps={{ shrink: true }}
               InputProps={{ sx: { color: WHITE } }}
@@ -169,6 +170,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
             <TextField
               value={withdrawFRGToken}
               label="$FRG"
+              type="number"
               // disabled
               InputLabelProps={{ shrink: true }}
               sx={{

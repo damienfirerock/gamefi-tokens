@@ -25,6 +25,7 @@ const BlackoutSpots: React.FunctionComponent = () => {
           borderRadius: "1rem",
           top: "-0.75rem",
           left: "-0.75rem",
+          zIndex: 1,
         }}
       />
     </Box>

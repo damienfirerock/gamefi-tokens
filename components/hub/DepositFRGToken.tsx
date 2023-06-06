@@ -148,6 +148,7 @@ const DepositFRGToken: React.FunctionComponent<{
               value={depositFRGToken}
               InputLabelProps={{ shrink: true }}
               label="$FRG"
+              type="number"
               onChange={handleDepositFRGTokenAmounts}
               InputProps={{ sx: { color: WHITE } }}
             />
@@ -155,6 +156,7 @@ const DepositFRGToken: React.FunctionComponent<{
             <TextField
               value={depositFRGCrystal}
               label="FRG Crystal"
+              type="number"
               // disabled
               InputLabelProps={{ shrink: true }}
               sx={{
