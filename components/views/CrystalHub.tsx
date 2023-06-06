@@ -44,6 +44,7 @@ const MOCK_SERVERS = ["海洋", "正式服1", "测试服1", "YH1", "SG", "A1"];
 
 export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   marginBottom: "1rem",
+  borderRadius: "0.5rem",
 }));
 
 const StyledInputBase = styled(InputBase)<InputBaseProps>(({ theme }) => ({

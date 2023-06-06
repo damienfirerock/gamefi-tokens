@@ -72,6 +72,7 @@ const BottomNavbar: React.FunctionComponent<BottomNavbarProps> = (props) => {
         left: 0,
         right: 0,
         borderTop: `${SVG_BACKGROUND} 1px solid`,
+        zIndex: 1,
       }}
     >
       <BottomNavigation

@@ -6,10 +6,13 @@ import { styled } from "@mui/material/styles";
 
 import { RootState } from "../../store";
 
-import { VALUE_COLOUR } from "../../src/theme";
+import { NAV_TEXT_COLOUR, VALUE_COLOUR } from "../../src/theme";
 
 export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
-  marginTop: "1rem",
+  color: NAV_TEXT_COLOUR,
+  paddingTop: "1rem",
+  paddingBottom: "1rem",
+  borderBottom: "1px dashed #979797",
 }));
 
 const ExchangeInfo: React.FunctionComponent = () => {

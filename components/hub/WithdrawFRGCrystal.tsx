@@ -27,7 +27,8 @@ import {
 } from "../../features/AccountSlice";
 
 export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
-  margin: theme.spacing(1),
+  padding: "0.5rem 0.5rem 1rem 0.5rem",
+  borderBottom: "1px dashed #979797",
 }));
 
 const WithdrawFRGCrystal: React.FunctionComponent<{
@@ -145,7 +146,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
           sx={{
             display: "flex",
             justifyContent: "space-around",
-            marginY: 2,
+            marginTop: "0.5rem",
           }}
         >
           <Box

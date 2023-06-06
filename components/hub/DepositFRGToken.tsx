@@ -31,7 +31,7 @@ const FireRockGoldJson = require("../../constants/abis/FireRockGold.json");
 const MOCK_FRG_CRYSTAL_EXCHANGE_RATE = 10;
 
 export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
-  margin: theme.spacing(1),
+  padding: "0.5rem 0.5rem 1rem 0.5rem",
 }));
 
 const DepositFRGToken: React.FunctionComponent<{
@@ -133,7 +133,7 @@ const DepositFRGToken: React.FunctionComponent<{
           sx={{
             display: "flex",
             justifyContent: "space-around",
-            marginY: 2,
+            marginTop: "0.5rem",
           }}
         >
           <Box
