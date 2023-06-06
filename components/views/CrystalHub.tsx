@@ -6,6 +6,8 @@ import {
   Card,
   CardProps,
   FormControl,
+  InputBase,
+  InputBaseProps,
   InputLabel,
   Link,
   MenuItem,
@@ -26,18 +28,39 @@ import { setSuccess, clearSuccess } from "../../features/TransactionSlice";
 import WithdrawFRGCrystal from "../hub/WithdrawFRGCrystal";
 import DepositFRGToken from "../hub/DepositFRGToken";
 import { getEtherscanLink } from "../../utils/web3";
-import { truncateString } from "../../utils/common";
+import { truncateString, formatNumberValue } from "../../utils/common";
 import {
   setFrgCrystalBalance,
   setPendingFrgCrystalBalance,
 } from "../../features/AccountSlice";
+import { PAPER_BACKGROUND, PRIMARY_COLOR, WHITE } from "../../src/theme";
 const FireRockGoldJson = require("../../constants/abis/FireRockGold.json");
+
+const VALUE_COLOUR = "#FE5218";
+const SELECTED_COLOUR = "#413D55";
 
 const MOCK_SERVERS = ["海洋", "正式服1", "测试服1", "YH1", "SG", "A1"];
 
 export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   margin: theme.spacing(1),
   padding: theme.spacing(2),
+}));
+
+const StyledInputBase = styled(InputBase)<InputBaseProps>(({ theme }) => ({
+  "label + &": {
+    marginTop: theme.spacing(3),
+  },
+  "& .MuiInputBase-input": {
+    color: WHITE,
+    backgroundColor: PAPER_BACKGROUND,
+    paddingTop: "0.7rem",
+    paddingBottom: "0.7rem",
+    borderRadius: "0.5rem",
+    "&:focus": {
+      backgroundColor: PAPER_BACKGROUND,
+      borderRadius: "0.5rem",
+    },
+  },
 }));
 
 const CrystalHub: React.FunctionComponent = () => {
@@ -170,27 +193,57 @@ const CrystalHub: React.FunctionComponent = () => {
 
   return (
     <Layout>
-      <Typography variant="h3" sx={{ marginTop: 5 }}>
-        {t("crystal-hub:crystal-hub")}
-      </Typography>
-
-      {session?.user?.email && (
-        <Typography variant="body2">{session.user.email}</Typography>
-      )}
       {/* TODO: Eventually will need to check against account bound wallet from server account details */}
-      {!!account && <Typography variant="body2">Wallet: {account}</Typography>}
+      {!!account && (
+        <Typography variant="body2" color="primary">
+          Wallet: {account}
+        </Typography>
+      )}
       {!!walletFRGBalance && (
-        <Typography variant="body2">$FRG: {walletFRGBalance}</Typography>
+        <Typography variant="body2">
+          $FRG: {formatNumberValue(walletFRGBalance)}
+        </Typography>
       )}
 
       {/* Server Selection */}
       <Box sx={{ marginY: 2 }}>
-        <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel>Server</InputLabel>
+        <FormControl variant="standard" fullWidth>
+          <InputLabel
+            sx={{
+              color: `${WHITE} !important`,
+            }}
+            shrink={true}
+          >
+            Server
+          </InputLabel>
           <Select
             value={selectedServer}
             label="Server"
             onChange={handleSelectServer}
+            notched={true}
+            input={<StyledInputBase />}
+            MenuProps={{
+              PaperProps: {
+                sx: {
+                  "& .MuiMenuItem-root": {
+                    "&:active": {
+                      bgcolor: SELECTED_COLOUR,
+                    },
+                    "&:focus": {
+                      bgcolor: SELECTED_COLOUR,
+                    },
+                  },
+                  "& .Mui-selected": {
+                    bgcolor: SELECTED_COLOUR,
+                  },
+                },
+              },
+            }}
+            sx={{
+              "& .MuiSvgIcon-root": {
+                color: WHITE,
+              },
+            }}
           >
             {MOCK_SERVERS.map((server) => (
               <MenuItem key={server} value={server}>
