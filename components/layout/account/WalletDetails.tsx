@@ -12,6 +12,7 @@ import { truncateString, formatNumberValue } from "../../../utils/common";
 import useActiveWeb3React from "../../../utils/hooks/web3React/useActiveWeb3React";
 import useCommonWeb3Transactions from "../../../utils/hooks/useCommonWeb3Transactions";
 import { setLoading } from "../../../features/AccountSlice";
+import { setSuccess } from "../../../features/TransactionSlice";
 import useSignature from "../../../utils/hooks/useSignature";
 import { SUPPORTED_WALLETS } from "../../../constants/wallets";
 import { DETAILS_COLOUR } from "../../../src/theme";
@@ -42,6 +43,9 @@ const WalletDetails: React.FunctionComponent = () => {
     dispatch(setLoading(true));
 
     const response = await checkSignature(session!.user.email!);
+
+    if (response) dispatch(setSuccess("Wallet bound"));
+
     setSignStatus(!!response);
 
     dispatch(setLoading(false));
