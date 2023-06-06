@@ -4,8 +4,9 @@ import { useTranslation } from "next-i18next";
 import { useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
 
-import { RootState } from "../../store";
+import BlackoutSpots from "./BlackoutSpots";
 
+import { RootState } from "../../store";
 import { NAV_TEXT_COLOUR, VALUE_COLOUR } from "../../src/theme";
 
 export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
@@ -42,6 +43,7 @@ const ExchangeInfo: React.FunctionComponent = () => {
           </Box>
         </Typography>
       </StyledCard>
+      <BlackoutSpots />
     </>
   );
 };

@@ -14,6 +14,7 @@ import { styled } from "@mui/material/styles";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 
 import InteractButton from "../common/InteractButton";
+import BlackoutSpots from "./BlackoutSpots";
 
 import { AppDispatch, RootState } from "../../store";
 import { setLoading } from "../../features/TransactionSlice";
@@ -193,6 +194,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
           </Typography>
         )}
       </StyledCard>
+      <BlackoutSpots />
 
       <Dialog
         open={confirmWithdrawFRGCrystalDialog}

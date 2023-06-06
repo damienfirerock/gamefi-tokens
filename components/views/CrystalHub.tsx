@@ -35,7 +35,12 @@ import {
   setFrgCrystalBalance,
   setPendingFrgCrystalBalance,
 } from "../../features/AccountSlice";
-import { PAPER_BACKGROUND, VALUE_COLOUR, WHITE } from "../../src/theme";
+import {
+  NAV_TEXT_COLOUR,
+  PAPER_BACKGROUND,
+  VALUE_COLOUR,
+  WHITE,
+} from "../../src/theme";
 const FireRockGoldJson = require("../../constants/abis/FireRockGold.json");
 
 const SELECTED_COLOUR = "#413D55";
@@ -261,15 +266,16 @@ const CrystalHub: React.FunctionComponent = () => {
             display: "flex",
             justifyContent: "space-between",
             marginBottom: "1rem",
+            color: NAV_TEXT_COLOUR,
           }}
         >
-          <Typography variant="body2">
+          <Typography variant="caption">
             Mock FRG Crystal Balance:{" "}
             <Box component="span" sx={{ color: VALUE_COLOUR }}>
               {frgCrystalBalance}
             </Box>
           </Typography>
-          <Typography variant="body2">
+          <Typography variant="caption">
             Mock Pending FRG Crystal Balance:{" "}
             <Box component="span" sx={{ color: VALUE_COLOUR }}>
               {pendingFrgCrystalBalance}
