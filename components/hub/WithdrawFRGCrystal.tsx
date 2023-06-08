@@ -65,14 +65,25 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
   const [confirmWithdrawFRGCrystalDialog, setConfirmWithdrawFRGCrystalDialog] =
     useState<boolean>(false);
 
-  const handleWithdrawFRGCrystalAmounts = (
+  const handleWithdrawFRGCrystalToTokenAmounts = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const nextCrystalValue = Number(event.target.value);
     setWithdrawFRGCrystal(nextCrystalValue);
-
     const nextTokenValue = (nextCrystalValue / rate) * (1 - tax / 100);
     setWithdrawFRGToken(nextTokenValue);
+  };
+
+  console.log({ withdrawFRGToken });
+
+  const handleWithdrawFRGTokenToCrystalAmounts = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const nextTokenValue = Number(event.target.value);
+    setWithdrawFRGToken(nextTokenValue);
+
+    const nextCrystalValue = (nextTokenValue * rate) / (1 - tax / 100);
+    setWithdrawFRGCrystal(nextCrystalValue);
   };
 
   const handleWithdrawFRGCrystal = async () => {
@@ -172,18 +183,19 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
             }}
           >
             <TextField
-              value={withdrawFRGCrystal}
+              value={withdrawFRGCrystal || ""}
               label="FRG Crystal"
               type="number"
-              onChange={handleWithdrawFRGCrystalAmounts}
+              onChange={handleWithdrawFRGCrystalToTokenAmounts}
               InputLabelProps={{ shrink: true }}
               inputProps={{ sx: { color: WHITE, padding: "0.7rem" } }}
             />
             <ArrowRightAltIcon sx={{ marginBottom: "1rem" }} />
             <TextField
-              value={withdrawFRGToken}
+              value={withdrawFRGToken || ""}
               label="$FRG"
               type="number"
+              onChange={handleWithdrawFRGTokenToCrystalAmounts}
               InputLabelProps={{ shrink: true }}
               sx={{
                 "& label": {

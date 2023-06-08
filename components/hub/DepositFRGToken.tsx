@@ -65,7 +65,7 @@ const DepositFRGToken: React.FunctionComponent<{
   const [confirmDepositFRGTokenDialog, setConfirmDepositFRGTokenDialog] =
     useState<boolean>(false);
 
-  const handleDepositFRGTokenAmounts = (
+  const handleDepositFRGCrystalToTokenAmounts = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const nextTokenValue = Number(event.target.value);
@@ -73,6 +73,16 @@ const DepositFRGToken: React.FunctionComponent<{
 
     const nextCrystalValue = nextTokenValue * MOCK_FRG_CRYSTAL_EXCHANGE_RATE;
     setDepositFRGCrystal(nextCrystalValue);
+  };
+
+  const handleDepositFRGTokenToCrystalAmounts = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const nextCrystalValue = Number(event.target.value);
+    setDepositFRGCrystal(nextCrystalValue);
+
+    const nextTokenValue = nextCrystalValue / MOCK_FRG_CRYSTAL_EXCHANGE_RATE;
+    setDepositFRGToken(nextTokenValue);
   };
 
   const handleDepositFRGToken = async () => {
@@ -151,18 +161,19 @@ const DepositFRGToken: React.FunctionComponent<{
             }}
           >
             <TextField
-              value={depositFRGToken}
+              value={depositFRGToken || ""}
               InputLabelProps={{ shrink: true }}
               label="$FRG"
               type="number"
-              onChange={handleDepositFRGTokenAmounts}
+              onChange={handleDepositFRGCrystalToTokenAmounts}
               inputProps={{ sx: { color: WHITE, padding: "0.7rem" } }}
             />
             <ArrowRightAltIcon sx={{ marginBottom: "1rem" }} />
             <TextField
-              value={depositFRGCrystal}
+              value={depositFRGCrystal || ""}
               label="FRG Crystal"
               type="number"
+              onChange={handleDepositFRGTokenToCrystalAmounts}
               InputLabelProps={{ shrink: true }}
               sx={{
                 "& label": {
