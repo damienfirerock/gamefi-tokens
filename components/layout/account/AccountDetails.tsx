@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { Button, Drawer, Popover, Typography } from "@mui/material";
-import { useSession } from "next-auth/react";
 import { useDispatch, useSelector } from "react-redux";
 
 import AccountOptions from "./AccountOptions";
@@ -15,10 +14,9 @@ import {
 const AccountDetails: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const buttonRef = useRef(null);
-  const { data: session } = useSession();
 
   const authSlice = useSelector((state: RootState) => state.auth);
-  const { accountDetailsOpen, accountDetailsButtonRef } = authSlice;
+  const { session, accountDetailsOpen, accountDetailsButtonRef } = authSlice;
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     dispatch(setAccountDetailsOpen(event.currentTarget));
@@ -32,10 +30,10 @@ const AccountDetails: React.FunctionComponent = () => {
     dispatch(setDialogOpen());
   };
 
-  // Uses buttonRef as an anchor if Popover is opened from other parts of the webapp
   useEffect(() => {
-    if (buttonRef.current)
+    if (buttonRef.current) {
       dispatch(setAccountDetailsButtonRef(buttonRef.current));
+    }
   }, [buttonRef]);
 
   const open = Boolean(accountDetailsOpen);

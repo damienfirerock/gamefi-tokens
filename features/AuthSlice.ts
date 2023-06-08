@@ -261,7 +261,8 @@ const authSlice = createSlice({
     });
     builder.addCase(loginViaEmail.fulfilled, (state, action) => {
       state.loading = false;
-      state.dialogOpen = false;
+      state.dialogOpen = false; // Does not matter for login social login, as page is reloaded
+      state.accountDetailsOpen = state.accountDetailsButtonRef; // Also does not matter for login social login, as page is reloaded
       state.success = AuthSuccessMessage.EmailLoginSuccess;
     });
     builder.addCase(loginViaEmail.rejected, (state, action) => {
