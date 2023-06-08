@@ -150,7 +150,7 @@ const DepositFRGToken: React.FunctionComponent<{
               label="$FRG"
               type="number"
               onChange={handleDepositFRGTokenAmounts}
-              InputProps={{ sx: { color: WHITE } }}
+              inputProps={{ sx: { color: WHITE, padding: "0.7rem" } }}
             />
             <ArrowRightAltIcon sx={{ marginBottom: "1rem" }} />
             <TextField
@@ -170,7 +170,7 @@ const DepositFRGToken: React.FunctionComponent<{
                   textAlign: "right",
                 },
               }}
-              InputProps={{ sx: { color: WHITE } }}
+              inputProps={{ sx: { color: WHITE, padding: "0.7rem" } }}
             />
           </Box>
         </Box>

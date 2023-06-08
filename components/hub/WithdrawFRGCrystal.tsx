@@ -164,7 +164,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
               type="number"
               onChange={handleWithdrawFRGCrystalAmounts}
               InputLabelProps={{ shrink: true }}
-              InputProps={{ sx: { color: WHITE } }}
+              inputProps={{ sx: { color: WHITE, padding: "0.7rem" } }}
             />
             <ArrowRightAltIcon sx={{ marginBottom: "1rem" }} />
             <TextField
@@ -184,7 +184,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
                   textAlign: "right",
                 },
               }}
-              InputProps={{ sx: { color: WHITE } }}
+              inputProps={{ sx: { color: WHITE, padding: "0.7rem" } }}
             />
           </Box>
         </Box>
