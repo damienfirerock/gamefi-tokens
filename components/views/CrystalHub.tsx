@@ -202,18 +202,34 @@ const CrystalHub: React.FunctionComponent = () => {
       <Container maxWidth="md">
         {/* TODO: Eventually will need to check against account bound wallet from server account details */}
         {!!account && (
-          <Typography variant="body2" color="primary">
-            Wallet: {account}
+          <Typography
+            variant="caption"
+            color="primary"
+            sx={{ display: "block", marginTop: "0.5rem" }}
+          >
+            Wallet: {truncateString(account, 10)}
           </Typography>
         )}
         {!!walletFRGBalance && (
-          <Typography variant="body2">
-            $FRG: {formatNumberValue(walletFRGBalance)}
+          <Typography variant="caption">
+            $FRG:{" "}
+            <Box component="span" sx={{ color: VALUE_COLOUR }}>
+              {formatNumberValue(walletFRGBalance)}
+            </Box>
+          </Typography>
+        )}
+        {!!account && (
+          <Typography
+            variant="caption"
+            sx={{ color: "red", display: "inline-block", marginY: "0.25rem" }}
+          >
+            [Mock] This connected wallet is different from the wallet address
+            bound to your game account.
           </Typography>
         )}
 
         {/* Server Selection */}
-        <Box sx={{ marginY: 2 }}>
+        <Box sx={{ marginBottom: 2 }}>
           <FormControl variant="standard" fullWidth>
             <InputLabel
               sx={{
