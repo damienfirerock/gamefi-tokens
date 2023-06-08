@@ -171,7 +171,6 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
               value={withdrawFRGToken}
               label="$FRG"
               type="number"
-              // disabled
               InputLabelProps={{ shrink: true }}
               sx={{
                 "& label": {

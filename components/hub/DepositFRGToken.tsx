@@ -157,7 +157,6 @@ const DepositFRGToken: React.FunctionComponent<{
               value={depositFRGCrystal}
               label="FRG Crystal"
               type="number"
-              // disabled
               InputLabelProps={{ shrink: true }}
               sx={{
                 "& label": {
@@ -170,7 +169,12 @@ const DepositFRGToken: React.FunctionComponent<{
                   textAlign: "right",
                 },
               }}
-              inputProps={{ sx: { color: WHITE, padding: "0.7rem" } }}
+              inputProps={{
+                sx: {
+                  color: WHITE,
+                  padding: "0.7rem",
+                },
+              }}
             />
           </Box>
         </Box>

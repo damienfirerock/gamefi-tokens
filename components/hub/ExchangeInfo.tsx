@@ -26,7 +26,7 @@ const ExchangeInfo: React.FunctionComponent = () => {
   return (
     <>
       <StyledCard variant="outlined">
-        <Typography variant="body2">
+        <Typography variant="caption" sx={{ display: "block" }}>
           <Box component="span" sx={{ color: VALUE_COLOUR }}>
             {rate}
           </Box>{" "}
@@ -36,7 +36,7 @@ const ExchangeInfo: React.FunctionComponent = () => {
           </Box>{" "}
           $FRG
         </Typography>
-        <Typography variant="body2">
+        <Typography variant="caption" sx={{ display: "block" }}>
           Withdrawal Tax Rate:{" "}
           <Box component="span" sx={{ color: VALUE_COLOUR }}>
             {tax}%
