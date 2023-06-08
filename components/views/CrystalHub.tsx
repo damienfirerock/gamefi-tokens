@@ -6,19 +6,13 @@ import {
   Card,
   CardProps,
   Container,
-  FormControl,
-  FormHelperText,
-  InputBase,
-  InputBaseProps,
-  InputLabel,
   Link,
-  MenuItem,
   Typography,
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { SelectChangeEvent } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 
 import Layout from "../layout/Layout";
@@ -26,10 +20,10 @@ import WithdrawFRGCrystal from "../hub/WithdrawFRGCrystal";
 import DepositFRGToken from "../hub/DepositFRGToken";
 import ExchangeInfo from "../hub/ExchangeInfo";
 import HubWalletDetails from "../hub/HubWalletDetails";
+import ServerSelection from "../hub/ServerSelection";
 
 import { AppDispatch, RootState } from "../../store";
 import { setDialogOpen } from "../../features/AuthSlice";
-import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
 import { setSuccess, clearSuccess } from "../../features/TransactionSlice";
 import { getEtherscanLink } from "../../utils/web3";
 import { truncateString } from "../../utils/common";
@@ -37,39 +31,13 @@ import {
   setFrgCrystalBalance,
   setPendingFrgCrystalBalance,
 } from "../../features/AccountSlice";
-import {
-  NAV_TEXT_COLOUR,
-  PAPER_BACKGROUND,
-  VALUE_COLOUR,
-  WHITE,
-} from "../../src/theme";
+import { NAV_TEXT_COLOUR, VALUE_COLOUR } from "../../src/theme";
 const FireRockGoldJson = require("../../constants/abis/FireRockGold.json");
-
-const SELECTED_COLOUR = "#413D55";
-
-const MOCK_SERVERS = ["海洋", "正式服1", "测试服1", "YH1", "SG", "A1"];
 
 export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   marginBottom: "1rem",
   borderRadius: "0.5rem",
   border: 0,
-}));
-
-const StyledInputBase = styled(InputBase)<InputBaseProps>(({ theme }) => ({
-  "label + &": {
-    marginTop: theme.spacing(3),
-  },
-  "& .MuiInputBase-input": {
-    color: WHITE,
-    backgroundColor: PAPER_BACKGROUND,
-    paddingTop: "0.7rem",
-    paddingBottom: "0.7rem",
-    borderRadius: "0.5rem",
-    "&:focus": {
-      backgroundColor: PAPER_BACKGROUND,
-      borderRadius: "0.5rem",
-    },
-  },
 }));
 
 const CrystalHub: React.FunctionComponent = () => {
@@ -144,7 +112,7 @@ const CrystalHub: React.FunctionComponent = () => {
       while (receipt === null || receipt.confirmations < confirmationsNeeded) {
         dispatch(
           setSuccess(
-            `Waiting 5 more seconds for Txn: ${txHash} as confirmations currently at [${receipt.confirmations}/${confirmationsNeeded}]`
+            `Testing Confirmations: [${receipt.confirmations}/${confirmationsNeeded}]`
           )
         );
         await new Promise((resolve) => setTimeout(resolve, 5000));
@@ -205,57 +173,10 @@ const CrystalHub: React.FunctionComponent = () => {
       <Container maxWidth="sm">
         <HubWalletDetails />
 
-        {/* Server Selection */}
-        <Box sx={{ marginBottom: 2 }}>
-          <FormControl variant="standard" fullWidth error={!selectedServer}>
-            <InputLabel
-              sx={{
-                color: `${WHITE} !important`,
-              }}
-              shrink={true}
-            >
-              Server
-            </InputLabel>
-            <Select
-              value={selectedServer}
-              label="Server"
-              onChange={handleSelectServer}
-              notched={true}
-              input={<StyledInputBase />}
-              MenuProps={{
-                PaperProps: {
-                  sx: {
-                    "& .MuiMenuItem-root": {
-                      "&:active": {
-                        bgcolor: SELECTED_COLOUR,
-                      },
-                      "&:focus": {
-                        bgcolor: SELECTED_COLOUR,
-                      },
-                    },
-                    "& .Mui-selected": {
-                      bgcolor: SELECTED_COLOUR,
-                    },
-                  },
-                },
-              }}
-              sx={{
-                "& .MuiSvgIcon-root": {
-                  color: WHITE,
-                },
-              }}
-            >
-              {MOCK_SERVERS.map((server) => (
-                <MenuItem key={server} value={server}>
-                  {server}
-                </MenuItem>
-              ))}
-            </Select>
-            {!selectedServer && (
-              <FormHelperText>Server selection required</FormHelperText>
-            )}
-          </FormControl>
-        </Box>
+        <ServerSelection
+          selectedServer={selectedServer}
+          handleSelectServer={handleSelectServer}
+        />
 
         <Box
           sx={{
