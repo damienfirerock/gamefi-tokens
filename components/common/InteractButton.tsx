@@ -2,6 +2,7 @@ import React from "react";
 import { Button, ButtonProps } from "@mui/material";
 
 import StyledCircularProgress from "../common/StyledCircularProgress";
+import { PRIMARY_COLOR } from "../../src/theme";
 
 interface InteractButtonProps extends ButtonProps {
   text: string;
@@ -21,7 +22,12 @@ const InteractButton: React.FunctionComponent<InteractButtonProps> = (
       {...rest}
     >
       {text}
-      {loading && <StyledCircularProgress size={24} />}
+      {loading && (
+        <StyledCircularProgress
+          size={24}
+          sx={{ color: PRIMARY_COLOR + "66" }}
+        />
+      )}
     </Button>
   );
 };
