@@ -1,14 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { ethers } from "ethers";
-import {
-  Box,
-  Card,
-  CardProps,
-  Dialog,
-  InputAdornment,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, BoxProps, Dialog, TextField, Typography } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
@@ -31,7 +23,7 @@ const FireRockGoldJson = require("../../constants/abis/FireRockGold.json");
 
 const MOCK_FRG_CRYSTAL_EXCHANGE_RATE = 10;
 
-export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
+export const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   padding: "0.5rem 0.5rem 1rem 0.5rem",
 }));
 
@@ -145,7 +137,7 @@ const DepositFRGToken: React.FunctionComponent<{
 
   return (
     <>
-      <StyledCard variant="outlined">
+      <StyledBox>
         <Box
           sx={{
             display: "flex",
@@ -210,7 +202,7 @@ const DepositFRGToken: React.FunctionComponent<{
             {depositFRGTokenError}
           </Typography>
         )}
-      </StyledCard>
+      </StyledBox>
 
       <Dialog
         open={confirmDepositFRGTokenDialog}

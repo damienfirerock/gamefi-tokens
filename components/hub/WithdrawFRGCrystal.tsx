@@ -1,13 +1,5 @@
 import React, { useState, useMemo } from "react";
-import {
-  Box,
-  Card,
-  CardProps,
-  Dialog,
-  InputAdornment,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, BoxProps, Dialog, TextField, Typography } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
@@ -28,7 +20,7 @@ import {
 } from "../../features/AccountSlice";
 import { WHITE } from "../../src/theme";
 
-export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
+export const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   padding: "0.5rem 0.5rem 1rem 0.5rem",
   borderBottom: "1px dashed #979797",
 }));
@@ -73,8 +65,6 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
     const nextTokenValue = (nextCrystalValue / rate) * (1 - tax / 100);
     setWithdrawFRGToken(nextTokenValue);
   };
-
-  console.log({ withdrawFRGToken });
 
   const handleWithdrawFRGTokenToCrystalAmounts = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -167,7 +157,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
 
   return (
     <>
-      <StyledCard variant="outlined">
+      <StyledBox>
         <Box
           sx={{
             display: "flex",
@@ -227,7 +217,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
             {withdrawFRGCrystalError}
           </Typography>
         )}
-      </StyledCard>
+      </StyledBox>
       <BlackoutSpots />
 
       <Dialog
