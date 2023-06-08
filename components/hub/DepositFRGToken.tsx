@@ -48,6 +48,9 @@ const DepositFRGToken: React.FunctionComponent<{
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { loading } = transactionSlice;
 
+  const authSlice = useSelector((state: RootState) => state.auth);
+  const { session } = authSlice;
+
   const accountSlice = useSelector((state: RootState) => state.account);
   const { walletFRGBalance } = accountSlice;
 
@@ -112,11 +115,14 @@ const DepositFRGToken: React.FunctionComponent<{
   };
 
   const depositFRGTokenError = useMemo(() => {
+    if (!session) return "Please log in with your game account";
+
     if (!account) return "Please connect your wallet";
 
-    if (!selectedServer) return "Please select a server";
+    if (!selectedServer)
+      return "Please select a server from the server field above";
 
-    if (!depositFRGToken) return "Please enter a value";
+    if (!depositFRGToken) return " ";
 
     if (
       !walletFRGBalance ||
@@ -125,7 +131,7 @@ const DepositFRGToken: React.FunctionComponent<{
       return "You don't have that much $FRG";
 
     return null;
-  }, [depositFRGToken, walletFRGBalance, selectedServer, account]);
+  }, [depositFRGToken, walletFRGBalance, selectedServer, account, session]);
 
   return (
     <>
@@ -189,7 +195,7 @@ const DepositFRGToken: React.FunctionComponent<{
           variant="contained"
         />
         {!!depositFRGTokenError && (
-          <Typography variant="body2" sx={{ color: "red" }}>
+          <Typography variant="caption" sx={{ display: "block", color: "red" }}>
             {depositFRGTokenError}
           </Typography>
         )}

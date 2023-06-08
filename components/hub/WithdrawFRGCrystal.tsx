@@ -48,6 +48,9 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
   const transactionSlice = useSelector((state: RootState) => state.transaction);
   const { loading } = transactionSlice;
 
+  const authSlice = useSelector((state: RootState) => state.auth);
+  const { session } = authSlice;
+
   const accountSlice = useSelector((state: RootState) => state.account);
   const { frgCrystalBalance, pendingFrgCrystalBalance } = accountSlice;
 
@@ -122,11 +125,14 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
   };
 
   const withdrawFRGCrystalError = useMemo(() => {
+    if (!session) return "Please log in with your game account";
+
     if (!account) return "Please connect your wallet";
 
-    if (!selectedServer) return "Please select a server";
+    if (!selectedServer)
+      return "Please select a server from the server field above";
 
-    if (!withdrawFRGCrystal) return "Please enter a value";
+    if (!withdrawFRGCrystal) return " ";
 
     if (
       !!frgCrystalBalance &&
@@ -139,7 +145,14 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
       return `Minimum withdrawal amount is ${minimum} FRG Crystal`;
 
     return null;
-  }, [withdrawFRGCrystal, frgCrystalBalance, selectedServer, minimum, account]);
+  }, [
+    withdrawFRGCrystal,
+    frgCrystalBalance,
+    selectedServer,
+    minimum,
+    account,
+    session,
+  ]);
 
   return (
     <>
@@ -198,7 +211,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
           variant="contained"
         />
         {!!withdrawFRGCrystalError && (
-          <Typography variant="body2" sx={{ color: "red" }}>
+          <Typography variant="caption" sx={{ display: "block", color: "red" }}>
             {withdrawFRGCrystalError}
           </Typography>
         )}

@@ -7,6 +7,7 @@ import {
   CardProps,
   Container,
   FormControl,
+  FormHelperText,
   InputBase,
   InputBaseProps,
   InputLabel,
@@ -87,6 +88,8 @@ const CrystalHub: React.FunctionComponent = () => {
   const { data } = hubSlice;
   const { rate } = data!;
 
+  // Simpler to use state to share selectedServer,
+  // Rather than handle yup and conditional schemas
   const [selectedServer, selectServer] = useState<string>("");
   const [transaction, setTransaction] = useState<{
     transactionType: string;
@@ -203,7 +206,7 @@ const CrystalHub: React.FunctionComponent = () => {
 
         {/* Server Selection */}
         <Box sx={{ marginBottom: 2 }}>
-          <FormControl variant="standard" fullWidth>
+          <FormControl variant="standard" fullWidth error={!selectedServer}>
             <InputLabel
               sx={{
                 color: `${WHITE} !important`,
@@ -247,6 +250,9 @@ const CrystalHub: React.FunctionComponent = () => {
                 </MenuItem>
               ))}
             </Select>
+            {!selectedServer && (
+              <FormHelperText>Server selection required</FormHelperText>
+            )}
           </FormControl>
         </Box>
 
