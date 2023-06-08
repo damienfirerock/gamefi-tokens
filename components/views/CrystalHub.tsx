@@ -24,13 +24,14 @@ import Layout from "../layout/Layout";
 import WithdrawFRGCrystal from "../hub/WithdrawFRGCrystal";
 import DepositFRGToken from "../hub/DepositFRGToken";
 import ExchangeInfo from "../hub/ExchangeInfo";
+import HubWalletDetails from "../hub/HubWalletDetails";
 
 import { AppDispatch, RootState } from "../../store";
 import { setDialogOpen } from "../../features/AuthSlice";
 import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
 import { setSuccess, clearSuccess } from "../../features/TransactionSlice";
 import { getEtherscanLink } from "../../utils/web3";
-import { truncateString, formatNumberValue } from "../../utils/common";
+import { truncateString } from "../../utils/common";
 import {
   setFrgCrystalBalance,
   setPendingFrgCrystalBalance,
@@ -72,7 +73,6 @@ const StyledInputBase = styled(InputBase)<InputBaseProps>(({ theme }) => ({
 const CrystalHub: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation("crystal-hub");
-  const { account } = useWeb3React();
 
   const { query } = useRouter();
   const { email, server, type } = query;
@@ -81,8 +81,7 @@ const CrystalHub: React.FunctionComponent = () => {
   const { session, loading: authLoading } = authSlice;
 
   const accountSlice = useSelector((state: RootState) => state.account);
-  const { walletFRGBalance, frgCrystalBalance, pendingFrgCrystalBalance } =
-    accountSlice;
+  const { frgCrystalBalance, pendingFrgCrystalBalance } = accountSlice;
 
   const hubSlice = useSelector((state: RootState) => state.hub);
   const { data } = hubSlice;
@@ -200,40 +199,7 @@ const CrystalHub: React.FunctionComponent = () => {
   return (
     <Layout>
       <Container maxWidth="md">
-        {/* TODO: Eventually will need to check against account bound wallet from server account details */}
-        {!!account && (
-          <Typography
-            variant="caption"
-            color="primary"
-            sx={{ display: "block", marginTop: "0.5rem" }}
-          >
-            Wallet:{" "}
-            <Link
-              href={getEtherscanLink(account, "address")}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {truncateString(account, 6)}
-            </Link>
-          </Typography>
-        )}
-        {!!walletFRGBalance && (
-          <Typography variant="caption">
-            $FRG:{" "}
-            <Box component="span" sx={{ color: VALUE_COLOUR }}>
-              {formatNumberValue(walletFRGBalance)}
-            </Box>
-          </Typography>
-        )}
-        {!!account && (
-          <Typography
-            variant="caption"
-            sx={{ color: "red", display: "inline-block", marginY: "0.25rem" }}
-          >
-            [Mock] This connected wallet is different from the wallet address
-            bound to your game account.
-          </Typography>
-        )}
+        <HubWalletDetails />
 
         {/* Server Selection */}
         <Box sx={{ marginBottom: 2 }}>
