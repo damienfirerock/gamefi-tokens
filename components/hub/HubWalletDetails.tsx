@@ -33,7 +33,7 @@ const HubWalletDetails: React.FunctionComponent = () => {
         </Typography>
       )}
       {!!walletFRGBalance && (
-        <Typography variant="caption">
+        <Typography variant="caption" sx={{ display: "block" }}>
           $FRG:{" "}
           <Box component="span" sx={{ color: VALUE_COLOUR }}>
             {formatNumberValue(walletFRGBalance)}
@@ -44,7 +44,7 @@ const HubWalletDetails: React.FunctionComponent = () => {
       {!!account && (
         <Typography
           variant="caption"
-          sx={{ color: "red", display: "inline-block", marginY: "0.25rem" }}
+          sx={{ color: "red", display: "inline-block" }}
         >
           [Mock] This connected wallet is different from the wallet address
           bound to your game account.
