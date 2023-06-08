@@ -202,7 +202,7 @@ const CrystalHub: React.FunctionComponent = () => {
 
   return (
     <Layout>
-      <Container maxWidth="md">
+      <Container maxWidth="sm">
         <HubWalletDetails />
 
         {/* Server Selection */}
