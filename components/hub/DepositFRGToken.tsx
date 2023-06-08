@@ -1,6 +1,16 @@
 import React, { useState, useMemo } from "react";
 import { ethers } from "ethers";
-import { Box, BoxProps, Dialog, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  BoxProps,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
@@ -209,24 +219,33 @@ const DepositFRGToken: React.FunctionComponent<{
         onClose={() => {
           setConfirmDepositFRGTokenDialog(false);
         }}
+        maxWidth="xs"
       >
-        {`$FRG 将从您的钱包发送到官方游戏钱包：0x1234FIREROCK1234。
+        {" "}
+        <DialogTitle>Deposit</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {`$FRG 将从您的钱包发送到官方游戏钱包：0x1234FIREROCK1234。
 如果 0x1234FIREROCK1234 不是交易的目标地址，请不要确认钱包交易。
-一旦您的转账被确认，我们将自动更新您的游戏帐户中的 FRG Crystal 余额.`}
-        <InteractButton
-          text={t("crystal-hub:deposit")}
-          method={handleDepositFRGToken}
-          loading={loading}
-          variant="contained"
-        />
-        <InteractButton
-          text="Cancel"
-          method={() => {
-            setConfirmDepositFRGTokenDialog(false);
-          }}
-          loading={loading}
-          variant="contained"
-        />
+一旦您的转账被确认，我们将自动更新您的游戏帐户中的 FRG Crystal 余额.`}{" "}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <InteractButton
+            text={t("crystal-hub:deposit")}
+            method={handleDepositFRGToken}
+            loading={loading}
+            variant="contained"
+          />
+          <InteractButton
+            text="Cancel"
+            method={() => {
+              setConfirmDepositFRGTokenDialog(false);
+            }}
+            loading={loading}
+            variant="contained"
+          />
+        </DialogActions>
       </Dialog>
     </>
   );

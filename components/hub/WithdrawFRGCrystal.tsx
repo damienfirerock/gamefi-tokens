@@ -1,5 +1,15 @@
 import React, { useState, useMemo } from "react";
-import { Box, BoxProps, Dialog, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  BoxProps,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { styled } from "@mui/material/styles";
@@ -225,23 +235,31 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
         onClose={() => {
           setConfirmWithdrawFRGCrystalDialog(false);
         }}
+        maxWidth="xs"
       >
-        {`确认将 ${withdrawFRGCrystal} FRG Crystal 提现到 ${withdrawFRGToken} $FRG 吗？ （$FRG
+        <DialogTitle>Withdraw</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {`确认将 ${withdrawFRGCrystal} FRG Crystal 提现到 ${withdrawFRGToken} $FRG 吗？ （$FRG
           将通过链上交易发送到您的绑定钱包`}
-        <InteractButton
-          text={t("crystal-hub:withdraw")}
-          method={handleWithdrawFRGCrystal}
-          loading={loading}
-          variant="contained"
-        />
-        <InteractButton
-          text="Cancel"
-          method={() => {
-            setConfirmWithdrawFRGCrystalDialog(false);
-          }}
-          loading={loading}
-          variant="contained"
-        />
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <InteractButton
+            text={t("crystal-hub:withdraw")}
+            method={handleWithdrawFRGCrystal}
+            loading={loading}
+            variant="contained"
+          />
+          <InteractButton
+            text="Cancel"
+            method={() => {
+              setConfirmWithdrawFRGCrystalDialog(false);
+            }}
+            loading={loading}
+            variant="contained"
+          />
+        </DialogActions>
       </Dialog>
     </>
   );
