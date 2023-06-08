@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import {
-  Alert,
-  Box,
-  Card,
-  CardProps,
-  Container,
-  Link,
-  Typography,
-} from "@mui/material";
+import { Alert, Card, CardProps, Container, Link } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +13,7 @@ import DepositFRGToken from "../hub/DepositFRGToken";
 import ExchangeInfo from "../hub/ExchangeInfo";
 import HubWalletDetails from "../hub/HubWalletDetails";
 import ServerSelection from "../hub/ServerSelection";
+import CrystalDetails from "../hub/CrystalDetails";
 
 import { AppDispatch, RootState } from "../../store";
 import { setDialogOpen } from "../../features/AuthSlice";
@@ -31,10 +24,9 @@ import {
   setFrgCrystalBalance,
   setPendingFrgCrystalBalance,
 } from "../../features/AccountSlice";
-import { NAV_TEXT_COLOUR, VALUE_COLOUR } from "../../src/theme";
 const FireRockGoldJson = require("../../constants/abis/FireRockGold.json");
 
-export const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
+const StyledCard = styled(Card)<CardProps>(() => ({
   marginBottom: "1rem",
   borderRadius: "0.5rem",
   border: 0,
@@ -51,7 +43,7 @@ const CrystalHub: React.FunctionComponent = () => {
   const { session, loading: authLoading } = authSlice;
 
   const accountSlice = useSelector((state: RootState) => state.account);
-  const { frgCrystalBalance, pendingFrgCrystalBalance } = accountSlice;
+  const { frgCrystalBalance } = accountSlice;
 
   const hubSlice = useSelector((state: RootState) => state.hub);
   const { data } = hubSlice;
@@ -178,27 +170,7 @@ const CrystalHub: React.FunctionComponent = () => {
           handleSelectServer={handleSelectServer}
         />
 
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginBottom: "1rem",
-            color: NAV_TEXT_COLOUR,
-          }}
-        >
-          <Typography variant="caption">
-            Mock FRG Crystal Balance:{" "}
-            <Box component="span" sx={{ color: VALUE_COLOUR }}>
-              {frgCrystalBalance}
-            </Box>
-          </Typography>
-          <Typography variant="caption">
-            Mock Pending FRG Crystal Balance:{" "}
-            <Box component="span" sx={{ color: VALUE_COLOUR }}>
-              {pendingFrgCrystalBalance}
-            </Box>
-          </Typography>
-        </Box>
+        <CrystalDetails />
 
         <StyledCard variant="outlined">
           <ExchangeInfo />
