@@ -166,7 +166,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
               InputLabelProps={{ shrink: true }}
               InputProps={{ sx: { color: WHITE } }}
             />
-            <ArrowRightAltIcon />
+            <ArrowRightAltIcon sx={{ marginBottom: "1rem" }} />
             <TextField
               value={withdrawFRGToken}
               label="$FRG"

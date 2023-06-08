@@ -152,7 +152,7 @@ const DepositFRGToken: React.FunctionComponent<{
               onChange={handleDepositFRGTokenAmounts}
               InputProps={{ sx: { color: WHITE } }}
             />
-            <ArrowRightAltIcon />
+            <ArrowRightAltIcon sx={{ marginBottom: "1rem" }} />
             <TextField
               value={depositFRGCrystal}
               label="FRG Crystal"
