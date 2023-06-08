@@ -207,7 +207,14 @@ const CrystalHub: React.FunctionComponent = () => {
             color="primary"
             sx={{ display: "block", marginTop: "0.5rem" }}
           >
-            Wallet: {truncateString(account, 10)}
+            Wallet:{" "}
+            <Link
+              href={getEtherscanLink(account, "address")}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {truncateString(account, 6)}
+            </Link>
           </Typography>
         )}
         {!!walletFRGBalance && (
