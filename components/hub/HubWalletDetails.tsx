@@ -17,38 +17,37 @@ const HubWalletDetails: React.FunctionComponent = () => {
   return (
     <>
       {!!account && (
-        <Typography
-          variant="caption"
-          color="primary"
-          sx={{ display: "block", marginTop: "0.5rem" }}
-        >
-          Wallet:{" "}
-          <Link
-            href={getEtherscanLink(account, "address")}
-            target="_blank"
-            rel="noopener noreferrer"
+        <>
+          <Typography
+            variant="caption"
+            color="primary"
+            sx={{ display: "block", marginTop: "0.5rem" }}
           >
-            {truncateString(account, 6)}
-          </Link>
-        </Typography>
-      )}
-      {!!walletFRGBalance && (
-        <Typography variant="caption" sx={{ display: "block" }}>
-          $FRG:{" "}
-          <Box component="span" sx={{ color: VALUE_COLOUR }}>
-            {formatNumberValue(walletFRGBalance)}
-          </Box>
-        </Typography>
-      )}
-      {/* TODO: Eventually will need to check against account bound wallet from server account details */}
-      {!!account && (
-        <Typography
-          variant="caption"
-          sx={{ color: "red", display: "inline-block" }}
-        >
-          [Mock] This connected wallet is different from the wallet address
-          bound to your game account.
-        </Typography>
+            Wallet:{" "}
+            <Link
+              href={getEtherscanLink(account, "address")}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {truncateString(account, 6)}
+            </Link>
+          </Typography>
+          {!!walletFRGBalance && (
+            <Typography variant="caption" sx={{ display: "block" }}>
+              $FRG:{" "}
+              <Box component="span" sx={{ color: VALUE_COLOUR }}>
+                {formatNumberValue(walletFRGBalance)}
+              </Box>
+            </Typography>
+          )}
+          <Typography
+            variant="caption"
+            sx={{ color: "red", display: "inline-block" }}
+          >
+            [Mock] This connected wallet is different from the wallet address
+            bound to your game account.
+          </Typography>
+        </>
       )}
     </>
   );
