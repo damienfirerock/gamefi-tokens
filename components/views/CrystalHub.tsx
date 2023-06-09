@@ -124,7 +124,8 @@ const CrystalHub: React.FunctionComponent = () => {
 
         setTransaction({
           transactionType:
-            to === "0x2F8C6C5D12391F8D6AcE02A63a579f391F04b40f"
+            to.toLowerCase() ===
+            "0x2F8C6C5D12391F8D6AcE02A63a579f391F04b40f".toLowerCase()
               ? HubTransactionType.Deposit
               : HubTransactionType.Withdrawal,
           hash: event.transactionHash,
