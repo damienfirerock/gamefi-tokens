@@ -15,12 +15,16 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
+import HourglassTopIcon from "@mui/icons-material/HourglassTop";
 
 import { getEtherscanLink } from "../../utils/web3";
 import { truncateString, formatNumberValue } from "../../utils/common";
 import {
   HubTransactionType,
   IHubTransaction,
+  HubTransactionStatus,
 } from "../../interfaces/ITransaction";
 import { NAV_TEXT_COLOUR } from "../../src/theme";
 
@@ -32,9 +36,32 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: "0.7rem",
-    padding: "0.7rem 0 0.7rem",
+    padding: "0.6rem 0 0.6rem",
   },
 }));
+
+const getTransactionStatusIcon = (status: HubTransactionStatus) => {
+  switch (status) {
+    case HubTransactionStatus.Success:
+      return (
+        <CheckIcon
+          sx={{ fontSize: "0.9rem", marginTop: "0.1rem", color: "green" }}
+        />
+      );
+    case HubTransactionStatus.Failure:
+      return (
+        <CloseIcon
+          sx={{ fontSize: "0.9rem", marginTop: "0.1rem", color: "red" }}
+        />
+      );
+    case HubTransactionStatus.Pending:
+      return (
+        <HourglassTopIcon sx={{ fontSize: "0.9rem", marginTop: "0.1rem" }} />
+      );
+    default:
+      return null; // or some default icon
+  }
+};
 
 // const StyledTableRow = styled(TableRow)(({ theme }) => ({
 //   '&:nth-of-type(odd)': {
@@ -113,7 +140,9 @@ const CrystalTransactions: React.FunctionComponent<ICrystalTransactions> = (
                       "-"}
                     {formatNumberValue(Number(row.amount))}
                   </StyledTableCell>
-                  <StyledTableCell align="center">{row.status}</StyledTableCell>
+                  <StyledTableCell align="center">
+                    {getTransactionStatusIcon(row.status)}
+                  </StyledTableCell>
                 </TableRow>
               ))}
             </TableBody>

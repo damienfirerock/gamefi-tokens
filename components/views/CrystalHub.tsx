@@ -26,6 +26,7 @@ import {
 import {
   IHubTransaction,
   HubTransactionType,
+  HubTransactionStatus,
 } from "../../interfaces/ITransaction";
 const FireRockGoldJson = require("../../constants/abis/FireRockGold.json");
 
@@ -59,7 +60,7 @@ const CrystalHub: React.FunctionComponent = () => {
     createdAt: "09 Jun 23",
     hash: "0x7245edfb20b3426741e185a2d20b503e948481d44348ecdc638fa3ed38994aa1",
     server: "测试服1",
-    status: "Success",
+    status: HubTransactionStatus.Success,
     transactionType: HubTransactionType.Withdrawal,
   });
 
@@ -128,7 +129,7 @@ const CrystalHub: React.FunctionComponent = () => {
           hash: event.transactionHash,
           server: selectedServer,
           amount: Number(nextValue) * 10,
-          status: "Pending",
+          status: HubTransactionStatus.Pending,
           createdAt: dayjs(new Date()).format("DD MMM YY"),
         });
 
@@ -151,7 +152,7 @@ const CrystalHub: React.FunctionComponent = () => {
 
         setTransaction((prevState) => {
           if (!prevState) return null;
-          return { ...prevState, status: "Success" };
+          return { ...prevState, status: HubTransactionStatus.Success };
         });
       });
     };
@@ -163,7 +164,7 @@ const CrystalHub: React.FunctionComponent = () => {
       dispatch(clearSuccess()); // Clear any unclosed success messages so they won't re-appear on navigation
     };
   }, [frgCrystalBalance, rate]);
-  console.log({ transaction });
+
   return (
     <Layout>
       <Container maxWidth="sm">

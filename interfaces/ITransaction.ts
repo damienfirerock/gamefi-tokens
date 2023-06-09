@@ -21,11 +21,17 @@ export enum HubTransactionType {
   Deposit = "Deposit",
   Withdrawal = "Withdrawal",
 }
+
+export enum HubTransactionStatus {
+  Success = "Success",
+  Failure = "Failure",
+  Pending = "Pending",
+}
 export interface IHubTransaction {
   transactionType: HubTransactionType;
   hash: string;
   server: string;
   amount: number;
-  status: string;
+  status: HubTransactionStatus;
   createdAt: string;
 }
