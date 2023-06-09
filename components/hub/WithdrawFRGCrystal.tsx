@@ -28,7 +28,7 @@ import {
   setFrgCrystalBalance,
   setPendingFrgCrystalBalance,
 } from "../../features/AccountSlice";
-import { DISABLED_COLOUR, WHITE } from "../../src/theme";
+import { DISABLED_COLOUR, LIGHT_GRAY, WHITE } from "../../src/theme";
 
 export const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   padding: "0.5rem 0.75rem 1.25rem 0.75rem",
@@ -190,8 +190,16 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
               onChange={handleWithdrawFRGCrystalToTokenAmounts}
               InputLabelProps={{ shrink: true }}
               inputProps={{ sx: { color: WHITE, padding: "0.7rem" } }}
+              sx={{
+                "& label": {
+                  color: LIGHT_GRAY,
+                },
+                fieldset: { borderColor: LIGHT_GRAY },
+              }}
             />
-            <ArrowRightAltIcon sx={{ marginBottom: "1rem" }} />
+            <ArrowRightAltIcon
+              sx={{ marginBottom: "1rem", fill: LIGHT_GRAY }}
+            />
             <TextField
               value={withdrawFRGToken || ""}
               label="$FRG"
@@ -204,10 +212,12 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
                   right: "1.75rem",
                   lineHeight: "1.25rem",
                   transformOrigin: "right",
+                  color: LIGHT_GRAY,
                 },
                 "& legend": {
                   textAlign: "right",
                 },
+                fieldset: { borderColor: LIGHT_GRAY },
               }}
               inputProps={{ sx: { color: WHITE, padding: "0.7rem" } }}
             />

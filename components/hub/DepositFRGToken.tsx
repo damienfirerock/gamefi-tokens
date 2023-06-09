@@ -25,7 +25,7 @@ import useCommonWeb3Transactions from "../../utils/hooks/useCommonWeb3Transactio
 import { setSuccess } from "../../features/TransactionSlice";
 import { setPendingFrgCrystalBalance } from "../../features/AccountSlice";
 import CONFIG from "../../config";
-import { WHITE } from "../../src/theme";
+import { LIGHT_GRAY, PRIMARY_COLOR, WHITE } from "../../src/theme";
 
 const { FIRE_ROCK_TOKEN } = CONFIG;
 
@@ -170,24 +170,36 @@ const DepositFRGToken: React.FunctionComponent<{
               type="number"
               onChange={handleDepositFRGCrystalToTokenAmounts}
               inputProps={{ sx: { color: WHITE, padding: "0.7rem" } }}
+              sx={{
+                "& label": {
+                  color: LIGHT_GRAY,
+                },
+                fieldset: { borderColor: LIGHT_GRAY },
+              }}
             />
-            <ArrowRightAltIcon sx={{ marginBottom: "1rem" }} />
+            <ArrowRightAltIcon
+              sx={{ marginBottom: "1rem", fill: LIGHT_GRAY }}
+            />
             <TextField
               value={depositFRGCrystal || ""}
               label="FRG Crystal"
               type="number"
               onChange={handleDepositFRGTokenToCrystalAmounts}
-              InputLabelProps={{ shrink: true }}
+              InputLabelProps={{
+                shrink: true,
+              }}
               sx={{
                 "& label": {
                   left: "unset",
                   right: "1.75rem",
                   lineHeight: "1.25rem",
                   transformOrigin: "right",
+                  color: LIGHT_GRAY,
                 },
                 "& legend": {
                   textAlign: "right",
                 },
+                fieldset: { borderColor: LIGHT_GRAY },
               }}
               inputProps={{
                 sx: {

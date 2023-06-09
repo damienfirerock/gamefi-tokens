@@ -20,6 +20,7 @@ export const VALUE_COLOUR = "#FE5218";
 export const DISABLED_COLOUR = "#979797";
 
 export const WHITE = "#FFFFFF";
+export const LIGHT_GRAY = "#D9D9D966";
 
 const theme = createTheme({
   typography: {
