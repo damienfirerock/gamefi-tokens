@@ -34,7 +34,7 @@ const FireRockGoldJson = require("../../constants/abis/FireRockGold.json");
 const MOCK_FRG_CRYSTAL_EXCHANGE_RATE = 10;
 
 export const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
-  padding: "0.5rem 0.5rem 1rem 0.5rem",
+  padding: "0.5rem 0.5rem 1.25rem 0.5rem",
 }));
 
 const DepositFRGToken: React.FunctionComponent<{
@@ -152,7 +152,8 @@ const DepositFRGToken: React.FunctionComponent<{
           sx={{
             display: "flex",
             justifyContent: "space-around",
-            marginTop: "0.5rem",
+            marginTop: "0.75rem",
+            marginBottom: "0.25rem",
           }}
         >
           <Box
@@ -206,6 +207,7 @@ const DepositFRGToken: React.FunctionComponent<{
           loading={loading}
           disabled={!!depositFRGTokenError}
           variant="contained"
+          fullWidth
         />
         {!!depositFRGTokenError && (
           <Typography variant="caption" sx={{ display: "block", color: "red" }}>

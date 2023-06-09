@@ -31,7 +31,7 @@ import {
 import { DISABLED_COLOUR, WHITE } from "../../src/theme";
 
 export const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
-  padding: "0.5rem 0.5rem 1rem 0.5rem",
+  padding: "0.5rem 0.5rem 1.25rem 0.5rem",
   borderBottom: `1px dashed ${DISABLED_COLOUR}`,
 }));
 
@@ -172,7 +172,8 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
           sx={{
             display: "flex",
             justifyContent: "space-around",
-            marginTop: "0.5rem",
+            marginTop: "0.75rem",
+            marginBottom: "0.25rem",
           }}
         >
           <Box
@@ -221,6 +222,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
           loading={loading}
           disabled={!!withdrawFRGCrystalError}
           variant="contained"
+          fullWidth
         />
         {!!withdrawFRGCrystalError && (
           <Typography variant="caption" sx={{ display: "block", color: "red" }}>
