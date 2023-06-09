@@ -28,11 +28,11 @@ import {
   setFrgCrystalBalance,
   setPendingFrgCrystalBalance,
 } from "../../features/AccountSlice";
-import { WHITE } from "../../src/theme";
+import { DISABLED_COLOUR, WHITE } from "../../src/theme";
 
 export const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   padding: "0.5rem 0.5rem 1rem 0.5rem",
-  borderBottom: "1px dashed #979797",
+  borderBottom: `1px dashed ${DISABLED_COLOUR}`,
 }));
 
 const WithdrawFRGCrystal: React.FunctionComponent<{

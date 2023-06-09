@@ -7,13 +7,17 @@ import { styled } from "@mui/material/styles";
 import BlackoutSpots from "./BlackoutSpots";
 
 import { RootState } from "../../store";
-import { NAV_TEXT_COLOUR, VALUE_COLOUR } from "../../src/theme";
+import {
+  DISABLED_COLOUR,
+  NAV_TEXT_COLOUR,
+  VALUE_COLOUR,
+} from "../../src/theme";
 
 export const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   color: NAV_TEXT_COLOUR,
   paddingTop: "1rem",
   paddingBottom: "1rem",
-  borderBottom: "1px dashed #979797",
+  borderBottom: `1px dashed ${DISABLED_COLOUR}`,
 }));
 
 const ExchangeInfo: React.FunctionComponent = () => {

@@ -26,17 +26,19 @@ import {
   IHubTransaction,
   HubTransactionStatus,
 } from "../../interfaces/ITransaction";
-import { NAV_TEXT_COLOUR } from "../../src/theme";
+import { DISABLED_COLOUR, NAV_TEXT_COLOUR } from "../../src/theme";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.primary.main,
     fontSize: "0.7rem",
     padding: "0.2rem 0 0.2rem",
+    border: 0,
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: "0.7rem",
     padding: "0.6rem 0 0.6rem",
+    borderBottom: `0.5px solid ${DISABLED_COLOUR}20`,
   },
 }));
 
@@ -62,16 +64,6 @@ const getTransactionStatusIcon = (status: HubTransactionStatus) => {
       return null; // or some default icon
   }
 };
-
-// const StyledTableRow = styled(TableRow)(({ theme }) => ({
-//   '&:nth-of-type(odd)': {
-//     backgroundColor: theme.palette.action.hover,
-//   },
-//   // hide last border
-//   '&:last-child td, &:last-child th': {
-//     border: 0,
-//   },
-// }));
 
 interface ICrystalTransactions {
   transaction: IHubTransaction | null;
