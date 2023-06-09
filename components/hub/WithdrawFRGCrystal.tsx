@@ -31,7 +31,7 @@ import {
 import { DISABLED_COLOUR, WHITE } from "../../src/theme";
 
 export const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
-  padding: "0.5rem 0.5rem 1.25rem 0.5rem",
+  padding: "0.5rem 0.75rem 1.25rem 0.75rem",
   borderBottom: `1px dashed ${DISABLED_COLOUR}`,
 }));
 

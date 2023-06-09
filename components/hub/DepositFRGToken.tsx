@@ -34,7 +34,7 @@ const FireRockGoldJson = require("../../constants/abis/FireRockGold.json");
 const MOCK_FRG_CRYSTAL_EXCHANGE_RATE = 10;
 
 export const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
-  padding: "0.5rem 0.5rem 1.25rem 0.5rem",
+  padding: "0.5rem 0.75rem 1.25rem 0.75rem",
 }));
 
 const DepositFRGToken: React.FunctionComponent<{
