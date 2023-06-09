@@ -3,6 +3,7 @@ import {
   Box,
   IconButton,
   Link,
+  Pagination,
   Paper,
   Table,
   TableBody,
@@ -91,55 +92,73 @@ const CrystalTransactions: React.FunctionComponent<ICrystalTransactions> = (
         </IconButton>
       </Box>
       {transaction && (
-        <TableContainer component={Paper} sx={{ marginBottom: "1rem" }}>
-          <Table aria-label="Transactions Table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell align="center">Date</StyledTableCell>
-                <StyledTableCell align="center">Txn Hash</StyledTableCell>
-                <StyledTableCell align="center">Server</StyledTableCell>
-                <StyledTableCell align="center">Crystal</StyledTableCell>
-                <StyledTableCell align="center">Status</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {[
-                transaction,
-                transaction,
-                transaction,
-                transaction,
-                transaction,
-              ].map((row) => (
-                <TableRow
-                  key={row.hash}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <StyledTableCell align="center">
-                    {row.createdAt}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    <Link
-                      href={getEtherscanLink(row.hash, "transaction")}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {truncateString(row.hash)}
-                    </Link>
-                  </StyledTableCell>
-                  <StyledTableCell align="center">{row.server}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    {row.transactionType === HubTransactionType.Withdrawal &&
-                      "-"}
-                    {formatNumberValue(Number(row.amount))}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {getTransactionStatusIcon(row.status)}
-                  </StyledTableCell>
+        <>
+          <TableContainer component={Paper} sx={{ marginBottom: "1rem" }}>
+            <Table aria-label="Transactions Table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell align="center">Date</StyledTableCell>
+                  <StyledTableCell align="center">Txn Hash</StyledTableCell>
+                  <StyledTableCell align="center">Server</StyledTableCell>
+                  <StyledTableCell align="center">Crystal</StyledTableCell>
+                  <StyledTableCell align="center">Status</StyledTableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {[
+                  transaction,
+                  transaction,
+                  transaction,
+                  transaction,
+                  transaction,
+                  transaction,
+                  transaction,
+                  transaction,
+                  transaction,
+                  transaction,
+                ].map((row) => (
+                  <TableRow
+                    key={row.hash}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <StyledTableCell align="center">
+                      {row.createdAt}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      <Link
+                        href={getEtherscanLink(row.hash, "transaction")}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {truncateString(row.hash)}
+                      </Link>
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {row.server}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {row.transactionType === HubTransactionType.Withdrawal &&
+                        "-"}
+                      {formatNumberValue(Number(row.amount))}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {getTransactionStatusIcon(row.status)}
+                    </StyledTableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "1rem",
+            }}
+          >
+            <Pagination count={10} color="primary" size="small" />
+          </Box>
+        </>
       )}
     </>
   );
