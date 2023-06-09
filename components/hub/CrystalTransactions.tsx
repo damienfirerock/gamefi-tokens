@@ -77,22 +77,22 @@ const CrystalTransactions: React.FunctionComponent<ICrystalTransactions> = (
 
   return (
     <>
-      <Box
-        sx={{
-          marginBottom: "0.3rem",
-          color: NAV_TEXT_COLOUR,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="caption">Transactions</Typography>
-        <IconButton aria-label="Refresh Transactions" size="small">
-          <RefreshIcon sx={{ color: NAV_TEXT_COLOUR }} fontSize="small" />
-        </IconButton>
-      </Box>
       {transaction && (
         <>
+          <Box
+            sx={{
+              marginBottom: "0.3rem",
+              color: NAV_TEXT_COLOUR,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="caption">Transactions</Typography>
+            <IconButton aria-label="Refresh Transactions" size="small">
+              <RefreshIcon sx={{ color: NAV_TEXT_COLOUR }} fontSize="small" />
+            </IconButton>
+          </Box>
           <TableContainer component={Paper} sx={{ marginBottom: "1rem" }}>
             <Table aria-label="Transactions Table">
               <TableHead>
