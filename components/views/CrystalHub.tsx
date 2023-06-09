@@ -23,6 +23,10 @@ import {
   setFrgCrystalBalance,
   setPendingFrgCrystalBalance,
 } from "../../features/AccountSlice";
+import {
+  IHubTransaction,
+  HubTransactionType,
+} from "../../interfaces/ITransaction";
 const FireRockGoldJson = require("../../constants/abis/FireRockGold.json");
 
 const StyledCard = styled(Card)<CardProps>(() => ({
@@ -50,18 +54,13 @@ const CrystalHub: React.FunctionComponent = () => {
   // Simpler to use state to share selectedServer,
   // Rather than handle yup and conditional schemas
   const [selectedServer, selectServer] = useState<string>("");
-  const [transaction, setTransaction] = useState<{
-    transactionType: string;
-    hash: string;
-    amount: string;
-    status: string;
-    createdAt: string;
-  } | null>({
-    amount: "119.69800000000001",
-    createdAt: "Fri Jun 09 2023",
-    hash: "0x535cc12efc4b5b6456b9ade4db11e2e68b261b4e3a1cf2542a87455b494c174d",
-    status: "Pending",
-    transactionType: "Withdraw FRG Crystal",
+  const [transaction, setTransaction] = useState<IHubTransaction | null>({
+    amount: 970,
+    createdAt: "09 Jun 23",
+    hash: "0x7245edfb20b3426741e185a2d20b503e948481d44348ecdc638fa3ed38994aa1",
+    server: "测试服1",
+    status: "Success",
+    transactionType: HubTransactionType.Withdrawal,
   });
 
   const handleSelectServer = (event: SelectChangeEvent) => {
@@ -124,10 +123,11 @@ const CrystalHub: React.FunctionComponent = () => {
         setTransaction({
           transactionType:
             to === "0x2F8C6C5D12391F8D6AcE02A63a579f391F04b40f"
-              ? "Deposit $FRG"
-              : "Withdraw FRG Crystal",
+              ? HubTransactionType.Deposit
+              : HubTransactionType.Withdrawal,
           hash: event.transactionHash,
-          amount: nextValue,
+          server: selectedServer,
+          amount: Number(nextValue) * 10,
           status: "Pending",
           createdAt: dayjs(new Date()).format("DD MMM YY"),
         });
@@ -163,7 +163,7 @@ const CrystalHub: React.FunctionComponent = () => {
       dispatch(clearSuccess()); // Clear any unclosed success messages so they won't re-appear on navigation
     };
   }, [frgCrystalBalance, rate]);
-
+  console.log({ transaction });
   return (
     <Layout>
       <Container maxWidth="sm">
