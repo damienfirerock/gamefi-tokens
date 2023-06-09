@@ -21,13 +21,21 @@ export const formatTokenValue = (value: string, decimals: number) => {
 };
 
 export const formatNumberValue = (value: number): string => {
+  let result = "";
   if (value >= 1_000_000) {
-    return (value / 1_000_000).toFixed(2) + "MM";
+    result = (value / 1_000_000).toFixed(2) + "MM";
   } else if (value >= 1_000) {
-    return (value / 1_000).toFixed(2) + "K";
+    result = (value / 1_000).toFixed(2) + "K";
   } else {
-    return value.toFixed(4);
+    result = value.toFixed(4);
   }
+
+  // Remove trailing zeros if there is a decimal point
+  if (result.includes(".")) {
+    result = parseFloat(result).toString();
+  }
+
+  return result;
 };
 
 export const parseTokenValue = (value: string, decimals: number) => {
