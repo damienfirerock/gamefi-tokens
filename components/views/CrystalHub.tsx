@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import { Alert, Card, CardProps, Container, Link } from "@mui/material";
-import { useTranslation } from "next-i18next";
+import { Card, CardProps, Container } from "@mui/material";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
+import dayjs from "dayjs";
 
 import Layout from "../layout/Layout";
 import WithdrawFRGCrystal from "../hub/WithdrawFRGCrystal";
@@ -14,12 +14,11 @@ import ExchangeInfo from "../hub/ExchangeInfo";
 import HubWalletDetails from "../hub/HubWalletDetails";
 import ServerSelection from "../hub/ServerSelection";
 import CrystalDetails from "../hub/CrystalDetails";
+import CrystalTransactions from "../hub/CrystalTransactions";
 
 import { AppDispatch, RootState } from "../../store";
 import { setDialogOpen } from "../../features/AuthSlice";
 import { setSuccess, clearSuccess } from "../../features/TransactionSlice";
-import { getEtherscanLink } from "../../utils/web3";
-import { truncateString } from "../../utils/common";
 import {
   setFrgCrystalBalance,
   setPendingFrgCrystalBalance,
@@ -34,7 +33,6 @@ const StyledCard = styled(Card)<CardProps>(() => ({
 
 const CrystalHub: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { t } = useTranslation("crystal-hub");
 
   const { query } = useRouter();
   const { email, server, type } = query;
@@ -58,7 +56,13 @@ const CrystalHub: React.FunctionComponent = () => {
     amount: string;
     status: string;
     createdAt: string;
-  } | null>(null);
+  } | null>({
+    amount: "119.69800000000001",
+    createdAt: "Fri Jun 09 2023",
+    hash: "0x535cc12efc4b5b6456b9ade4db11e2e68b261b4e3a1cf2542a87455b494c174d",
+    status: "Pending",
+    transactionType: "Withdraw FRG Crystal",
+  });
 
   const handleSelectServer = (event: SelectChangeEvent) => {
     selectServer(event.target.value as string);
@@ -125,7 +129,7 @@ const CrystalHub: React.FunctionComponent = () => {
           hash: event.transactionHash,
           amount: nextValue,
           status: "Pending",
-          createdAt: new Date().toDateString(),
+          createdAt: dayjs(new Date()).format("DD MMM YY"),
         });
 
         await waitForConfirmations(event.transactionHash, 10);
@@ -178,23 +182,7 @@ const CrystalHub: React.FunctionComponent = () => {
           <DepositFRGToken selectedServer={selectedServer} />
         </StyledCard>
 
-        {transaction && (
-          <Alert
-            severity={transaction.status === "Success" ? "success" : "info"}
-            sx={{ mb: 10 }}
-          >
-            {transaction.createdAt} |{" "}
-            <Link
-              href={getEtherscanLink(transaction.hash, "transaction")}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {truncateString(transaction.hash)}
-            </Link>{" "}
-            | {transaction.transactionType} | {transaction.amount} $FRG |{" "}
-            {transaction.status}
-          </Alert>
-        )}
+        <CrystalTransactions transaction={transaction} />
       </Container>
     </Layout>
   );
