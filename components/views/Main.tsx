@@ -174,7 +174,7 @@ const Main: React.FunctionComponent = () => {
               sx={{
                 display: "flex",
                 flexDirection: "column",
-                marginY: 3,
+                marginTop: "1rem",
               }}
             >
               <Typography

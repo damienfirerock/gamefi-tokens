@@ -5,13 +5,12 @@ import { Container, ContainerProps, useMediaQuery } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { useRouter } from "next/router";
 
 import NavBar from "./Navbar";
 import AlertBar from "../common/AlertBar";
 import LoginDialog from "./login/LoginDialog";
 import BottomNavbar from "./BottomNavbar";
+import LanguageSelector from "./LanguageSelector";
 
 import { AppDispatch, RootState } from "../../store";
 import { clearError, clearSuccess } from "../../features/TransactionSlice";
@@ -44,7 +43,6 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   const { t } = useTranslation(["common", "success"]);
   const dispatch = useDispatch<AppDispatch>();
   const { data: session, status } = useSession();
-  const { locale } = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -144,9 +142,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
       >
         {children}
         <LoginDialog />
-        <Link href="" locale={locale === "en" ? "zh" : "en"}>
-          {t("common:language")}
-        </Link>
+        <LanguageSelector />
         <AlertBar
           severity="warning"
           text={error || accountError || authError}
