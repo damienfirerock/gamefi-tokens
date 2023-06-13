@@ -6,6 +6,11 @@ import { useRouter } from "next/router";
 
 import { PRIMARY_COLOR } from "../../src/theme";
 
+const activeStyle = {
+  border: `1px solid ${PRIMARY_COLOR}`,
+  borderRightColor: `${PRIMARY_COLOR} !important`, // overrides MUI default style
+};
+
 const LanguageSelector: React.FunctionComponent = (props) => {
   const { t } = useTranslation(["common", "success"]);
   const { locale } = useRouter();
@@ -13,14 +18,10 @@ const LanguageSelector: React.FunctionComponent = (props) => {
   return (
     <ButtonGroup aria-label="Language" size="small" sx={{ marginY: "1rem" }}>
       <Link href="" locale="en">
-        <Button sx={{ borderColor: locale === "en" ? PRIMARY_COLOR : null }}>
-          English
-        </Button>
+        <Button sx={locale === "en" ? activeStyle : null}>English</Button>
       </Link>
       <Link href="" locale="zh">
-        <Button sx={{ borderColor: locale === "zh" ? PRIMARY_COLOR : null }}>
-          中文
-        </Button>
+        <Button sx={locale === "zh" ? activeStyle : null}>中文</Button>
       </Link>
     </ButtonGroup>
   );
