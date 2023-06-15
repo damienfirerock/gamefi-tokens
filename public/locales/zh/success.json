@@ -1,0 +1,8 @@
+{
+  "RequestedVerifyCode": "成功请求验证码",
+  "RegisteredWithEmail": "成功使用电子邮件注册",
+  "PasswordChanged": "密码已成功更新",
+  "EmailLoginSuccess": "电子邮件登录成功",
+  "SocialLoginSuccess": "社交登录成功",
+  "LogoutSuccess": "登出成功"
+}
