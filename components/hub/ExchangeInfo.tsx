@@ -34,14 +34,14 @@ const ExchangeInfo: React.FunctionComponent = () => {
           <Box component="span" sx={{ color: VALUE_COLOUR }}>
             {rate}
           </Box>{" "}
-          FRG Crystal to{" "}
+          FRG {t("crystal")} {t("to")}{" "}
           <Box component="span" sx={{ color: VALUE_COLOUR }}>
             1
           </Box>{" "}
           $FRG
         </Typography>
         <Typography variant="caption" sx={{ display: "block" }}>
-          Withdrawal Tax Rate:{" "}
+          {t("withdrawal-tax-rate")}:{" "}
           <Box component="span" sx={{ color: VALUE_COLOUR }}>
             {tax}%
           </Box>

@@ -4,5 +4,8 @@
   "withdraw": "提款",
   "wallet": "钱包地址",
   "server": "服务器",
-  "server-required": "需要选择服务器"
+  "server-required": "需要选择服务器",
+  "crystal": "水晶",
+  "to": "兑换",
+  "withdrawal-tax-rate": "提现税率"
 }

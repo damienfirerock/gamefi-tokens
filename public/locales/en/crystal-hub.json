@@ -4,5 +4,8 @@
   "withdraw": "Withdraw",
   "wallet": "Wallet Address",
   "server": "Server",
-  "server-required": "Server selection required"
+  "server-required": "Server selection required",
+  "crystal": "Crystal",
+  "to": "to",
+  "withdrawal-tax-rate": "Withdrawal Tax Rate"
 }
