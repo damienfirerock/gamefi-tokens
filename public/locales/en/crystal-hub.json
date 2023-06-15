@@ -2,5 +2,7 @@
   "crystal-hub": "Crystal Hub",
   "deposit": "Deposit",
   "withdraw": "Withdraw",
-  "wallet": "Wallet Address"
+  "wallet": "Wallet Address",
+  "server": "Server",
+  "server-required": "Server selection required"
 }

@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
+import { useTranslation } from "next-i18next";
 
 import { PAPER_BACKGROUND, WHITE } from "../../src/theme";
 
@@ -40,6 +41,7 @@ interface IServerSelection {
 
 const ServerSelection: React.FunctionComponent<IServerSelection> = (props) => {
   const { selectedServer, handleSelectServer } = props;
+  const { t } = useTranslation("crystal-hub");
 
   return (
     <Box sx={{ marginBottom: 2 }}>
@@ -50,11 +52,11 @@ const ServerSelection: React.FunctionComponent<IServerSelection> = (props) => {
           }}
           shrink={true}
         >
-          Server
+          {t("server")}
         </InputLabel>
         <Select
           value={selectedServer}
-          label="Server"
+          label={t("server")}
           onChange={handleSelectServer}
           notched={true}
           input={<StyledInputBase />}
@@ -88,7 +90,7 @@ const ServerSelection: React.FunctionComponent<IServerSelection> = (props) => {
           ))}
         </Select>
         {!selectedServer && (
-          <FormHelperText>Server selection required</FormHelperText>
+          <FormHelperText>{t("server-required")}</FormHelperText>
         )}
       </FormControl>
     </Box>

@@ -2,5 +2,7 @@
   "crystal-hub": "存取款",
   "deposit": "存款",
   "withdraw": "提款",
-  "wallet": "钱包地址"
+  "wallet": "钱包地址",
+  "server": "服务器",
+  "server-required": "需要选择服务器"
 }
