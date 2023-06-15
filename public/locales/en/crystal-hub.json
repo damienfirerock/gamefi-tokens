@@ -7,5 +7,7 @@
   "server-required": "Server selection required",
   "crystal": "Crystal",
   "to": "to",
-  "withdrawal-tax-rate": "Withdrawal Tax Rate"
+  "withdrawal-tax-rate": "Withdrawal Tax Rate",
+  "crystal-balance": "Mock FRG Crystal Balance",
+  "pending-crystal-balance": "Mock Pending FRG Crystal Balance"
 }

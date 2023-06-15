@@ -7,5 +7,7 @@
   "server-required": "需要选择服务器",
   "crystal": "水晶",
   "to": "兑换",
-  "withdrawal-tax-rate": "提现税率"
+  "withdrawal-tax-rate": "提现税率",
+  "crystal-balance": "模拟FRG水晶余额",
+  "pending-crystal-balance": "模拟待处理的FRG水晶余额"
 }

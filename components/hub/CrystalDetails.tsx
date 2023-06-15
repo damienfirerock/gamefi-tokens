@@ -22,13 +22,13 @@ const CrystalDetails: React.FunctionComponent = () => {
       }}
     >
       <Typography variant="caption">
-        Mock FRG Crystal Balance:{" "}
+        {t("crystal-balance")}:{" "}
         <Box component="span" sx={{ color: VALUE_COLOUR }}>
           {frgCrystalBalance}
         </Box>
       </Typography>
       <Typography variant="caption">
-        Mock Pending FRG Crystal Balance:{" "}
+        {t("pending-crystal-balance")}:{" "}
         <Box component="span" sx={{ color: VALUE_COLOUR }}>
           {pendingFrgCrystalBalance}
         </Box>
