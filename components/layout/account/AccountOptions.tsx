@@ -25,7 +25,7 @@ const AccountOptions: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { deactivate } = useWeb3React();
   const { account } = useActiveWeb3React();
-  const { t } = useTranslation(["success"]);
+  const { t } = useTranslation("account");
 
   const { data: session, status } = useSession();
 
@@ -57,7 +57,7 @@ const AccountOptions: React.FunctionComponent = () => {
         color="secondary"
         fullWidth
       >
-        {isLoggedIn ? "Log Out" : "Log In"}
+        {isLoggedIn ? t("logout") : t("login")}
       </Button>
 
       {account ? (
@@ -70,7 +70,7 @@ const AccountOptions: React.FunctionComponent = () => {
             sx={{ marginY: "0.25rem" }}
             fullWidth
           >
-            Disconnect Wallet
+            {t("disconnect-wallet")}
           </Button>
         </>
       ) : (

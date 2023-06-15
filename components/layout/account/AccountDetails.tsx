@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Button, Drawer, Popover, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "next-i18next";
 
 import AccountOptions from "./AccountOptions";
 
@@ -14,6 +15,7 @@ import {
 const AccountDetails: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const buttonRef = useRef(null);
+  const { t } = useTranslation("account");
 
   const authSlice = useSelector((state: RootState) => state.auth);
   const { session, accountDetailsOpen, accountDetailsButtonRef } = authSlice;
@@ -49,7 +51,7 @@ const AccountDetails: React.FunctionComponent = () => {
         onClick={isLoggedIn ? handleClick : handleOpenLoginDialog}
       >
         <Typography variant="body2">
-          {session?.user.email ?? "Login"}
+          {session?.user.email ?? t("login")}
         </Typography>
       </Button>
       {/* Popover should only show on Medium Screen and Above */}

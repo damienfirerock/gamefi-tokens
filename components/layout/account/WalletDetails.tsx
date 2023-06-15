@@ -130,7 +130,7 @@ const WalletDetails: React.FunctionComponent = () => {
       )}
       {account && (
         <InteractButton
-          text={signStatus ? "Bind New Wallet" : "Bind to Account"}
+          text={signStatus ? t("bind-new-wallet") : t("bind-wallet")}
           method={handleSignature}
           loading={loading}
           variant="contained"

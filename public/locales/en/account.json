@@ -1,4 +1,9 @@
 {
+  "login": "Login",
+  "logout": "Log Out",
+  "disconnect-wallet": "Disconnect Wallet",
+  "bind-wallet": "Bind to Account",
+  "bind-new-wallet": "Bind New Wallet",
   "account-details": "Account Details",
   "address": "Address",
   "id": "ID",
