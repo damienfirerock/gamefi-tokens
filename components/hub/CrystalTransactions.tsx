@@ -19,6 +19,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import HourglassTopIcon from "@mui/icons-material/HourglassTop";
+import { useTranslation } from "next-i18next";
 
 import { getEtherscanLink } from "../../utils/web3";
 import { truncateString, formatNumberValue } from "../../utils/common";
@@ -74,6 +75,7 @@ const CrystalTransactions: React.FunctionComponent<ICrystalTransactions> = (
   props
 ) => {
   const { transaction } = props;
+  const { t } = useTranslation("crystal-hub");
 
   return (
     <>
@@ -88,7 +90,9 @@ const CrystalTransactions: React.FunctionComponent<ICrystalTransactions> = (
               alignItems: "center",
             }}
           >
-            <Typography variant="caption">Transactions</Typography>
+            <Typography variant="caption">
+              {t("transactions.transactions")}
+            </Typography>
             <IconButton aria-label="Refresh Transactions" size="small">
               <RefreshIcon sx={{ color: NAV_TEXT_COLOUR }} fontSize="small" />
             </IconButton>
@@ -97,11 +101,21 @@ const CrystalTransactions: React.FunctionComponent<ICrystalTransactions> = (
             <Table aria-label="Transactions Table">
               <TableHead>
                 <TableRow>
-                  <StyledTableCell align="center">Date</StyledTableCell>
-                  <StyledTableCell align="center">Txn Hash</StyledTableCell>
-                  <StyledTableCell align="center">Server</StyledTableCell>
-                  <StyledTableCell align="center">Crystal</StyledTableCell>
-                  <StyledTableCell align="center">Status</StyledTableCell>
+                  <StyledTableCell align="center">
+                    {t("transactions.date")}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {t("transactions.txn")}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {t("server")}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {t("crystal")}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {t("transactions.status")}
+                  </StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

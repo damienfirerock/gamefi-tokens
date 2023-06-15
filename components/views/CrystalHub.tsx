@@ -55,15 +55,14 @@ const CrystalHub: React.FunctionComponent = () => {
   // Simpler to use state to share selectedServer,
   // Rather than handle yup and conditional schemas
   const [selectedServer, selectServer] = useState<string>("");
-  const [transaction, setTransaction] = useState<IHubTransaction | null>(null);
-  // {
-  //   amount: 970,
-  //   createdAt: "09 Jun 23",
-  //   hash: "0x7245edfb20b3426741e185a2d20b503e948481d44348ecdc638fa3ed38994aa1",
-  //   server: "测试服1",
-  //   status: HubTransactionStatus.Success,
-  //   transactionType: HubTransactionType.Withdrawal,
-  // }
+  const [transaction, setTransaction] = useState<IHubTransaction | null>({
+    amount: 970,
+    createdAt: "09 Jun 23",
+    hash: "0x7245edfb20b3426741e185a2d20b503e948481d44348ecdc638fa3ed38994aa1",
+    server: "测试服1",
+    status: HubTransactionStatus.Success,
+    transactionType: HubTransactionType.Withdrawal,
+  });
 
   const handleSelectServer = (event: SelectChangeEvent) => {
     selectServer(event.target.value as string);

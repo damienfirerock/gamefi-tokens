@@ -10,6 +10,12 @@
   "withdrawal-tax-rate": "提现税率",
   "crystal-balance": "模拟FRG水晶余额",
   "pending-crystal-balance": "模拟待处理的FRG水晶余额",
+  "transactions": {
+    "transactions": "交易记录",
+    "date": "日期",
+    "txn": "交易哈希",
+    "status": "状态"
+  },
   "errors": {
     "login": "请使用您的游戏账户登录",
     "wallet": "请连接您的钱包",

@@ -10,6 +10,12 @@
   "withdrawal-tax-rate": "Withdrawal Tax Rate",
   "crystal-balance": "Mock FRG Crystal Balance",
   "pending-crystal-balance": "Mock Pending FRG Crystal Balance",
+  "transactions": {
+    "transactions": "Transactions",
+    "date": "Date",
+    "txn": "Txn Hash",
+    "status": "Status"
+  },
   "errors": {
     "login": "Please log in with your game account",
     "wallet": "Please connect your wallet",
