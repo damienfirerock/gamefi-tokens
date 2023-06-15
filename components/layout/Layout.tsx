@@ -131,7 +131,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   return (
     <>
       <Head>
-        <title>{t("common:contracts-explorer")}</title>
+        <title>{t("common:xy-3-web-portal")}</title>
         <meta property="og:title" content="Airdrop" key="title" />
       </Head>
 
