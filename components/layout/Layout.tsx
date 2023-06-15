@@ -40,7 +40,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   const { children } = props;
   const { account, activate } = useWeb3React();
   const { checkFRGBalance } = useCommonWeb3Transactions();
-  const { t } = useTranslation(["common", "success"]);
+  const { t } = useTranslation(["common", "success", "failure"]);
   const dispatch = useDispatch<AppDispatch>();
   const { data: session, status } = useSession();
   const theme = useTheme();
@@ -128,6 +128,10 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
     // even if authSuccess is just null
   }, [success, authSuccess]);
 
+  const errorText = useMemo(() => {
+    return error || accountError || authError;
+  }, [error, accountError, authError]);
+
   return (
     <>
       <Head>
@@ -145,7 +149,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
         <LanguageSelector />
         <AlertBar
           severity="warning"
-          text={error || accountError || authError}
+          text={errorText && t(`failure:${errorText}`)}
           handleClearAlertSource={handleClearError}
         />
         <AlertBar
