@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 import { styled } from "@mui/material/styles";
+import { useTranslation } from "next-i18next";
 
 import InteractButton from "../../common/InteractButton";
 
@@ -31,6 +32,7 @@ const WalletDetails: React.FunctionComponent = () => {
   const { checkFRGBalance, checkMaticBalance } = useCommonWeb3Transactions();
   const { checkSignature } = useSignature();
   const { data: session } = useSession();
+  const { t } = useTranslation("account");
 
   const accountSlice = useSelector((state: RootState) => state.account);
   const { walletFRGBalance, walletMaticBalance, loading } = accountSlice;
@@ -44,7 +46,7 @@ const WalletDetails: React.FunctionComponent = () => {
 
     const response = await checkSignature(session!.user.email!);
 
-    if (response) dispatch(setSuccess("Wallet bound"));
+    if (response) dispatch(setSuccess(t("wallet-bound")));
 
     setSignStatus(!!response);
 
@@ -95,8 +97,7 @@ const WalletDetails: React.FunctionComponent = () => {
           variant="caption"
           sx={{ color: "red", display: "inline-block", marginY: "0.25rem" }}
         >
-          [Mock] This connected wallet is different from the wallet address
-          bound to your game account.
+          {t("wallet-different-from-bound")}
         </Typography>
       )}
       {!!account && (

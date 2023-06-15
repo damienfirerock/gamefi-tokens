@@ -37,7 +37,7 @@ const Detail = styled(Typography)<TypographyProps>(() => ({
 }));
 
 const GameAccountDetails: React.FunctionComponent = () => {
-  const { t } = useTranslation(["common", "airdrop"]);
+  const { t } = useTranslation("account");
 
   const authSlice = useSelector((state: RootState) => state.auth);
   const { session } = authSlice;
@@ -46,7 +46,7 @@ const GameAccountDetails: React.FunctionComponent = () => {
     <>
       {session && (
         <>
-          <Typography variant="body2">{t("common:account-details")}</Typography>
+          <Typography variant="body2">{t("account-details")}</Typography>
           <Box
             sx={{
               display: "flex",
@@ -74,9 +74,7 @@ const GameAccountDetails: React.FunctionComponent = () => {
             <table>
               <tr>
                 <td>
-                  <Typography variant="body2">
-                    {t("common:address")}:
-                  </Typography>
+                  <Typography variant="body2">{t("address")}:</Typography>
                 </td>
                 <td>
                   <Detail variant="body2">{session?.user?.email}</Detail>
@@ -84,7 +82,7 @@ const GameAccountDetails: React.FunctionComponent = () => {
               </tr>
               <tr>
                 <td>
-                  <Typography variant="body2">{t("common:id")}:</Typography>
+                  <Typography variant="body2">{t("id")}:</Typography>
                 </td>
                 <td>
                   <Detail variant="body2">{session.user.id}</Detail>
@@ -92,9 +90,7 @@ const GameAccountDetails: React.FunctionComponent = () => {
               </tr>
               <tr>
                 <td>
-                  <Typography variant="body2">
-                    {t("common:login-type")}:
-                  </Typography>
+                  <Typography variant="body2">{t("login-type")}:</Typography>
                 </td>
                 <td>
                   <Detail variant="body2">{session.provider}</Detail>

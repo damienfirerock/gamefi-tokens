@@ -1,3 +1,8 @@
 {
+  "account-details": "Account Details",
+  "address": "Address",
+  "id": "ID",
+  "login-type": "Login Type",
+  "wallet-bound": "Wallet Bound",
   "wallet-different-from-bound": "[Mock] This connected wallet is different from the wallet address bound to your game account."
 }
