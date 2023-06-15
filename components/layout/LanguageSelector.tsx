@@ -1,6 +1,5 @@
 import React from "react";
 import { Button, ButtonGroup } from "@mui/material";
-import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -12,7 +11,6 @@ const activeStyle = {
 };
 
 const LanguageSelector: React.FunctionComponent = (props) => {
-  const { t } = useTranslation(["common", "success"]);
   const { locale } = useRouter();
 
   return (

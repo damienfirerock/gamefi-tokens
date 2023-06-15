@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 import Layout from "../layout/Layout";
 import CONFIG, { CONTRACT_ADDRESSES, ADDRESS_NAMES } from "../../config";
@@ -21,6 +22,7 @@ const DISCORD_LOGO_BACKGROUND = "#5865F2";
 
 const Main: React.FunctionComponent = () => {
   const { t } = useTranslation("main");
+  const { locale } = useRouter();
 
   return (
     <Layout>
@@ -46,7 +48,9 @@ const Main: React.FunctionComponent = () => {
           <a href="/" target="_blank" rel="noopener noreferrer">
             <Image
               alt="Google Play Store Link"
-              src="/main-page/google-play-badge.png"
+              src={`/main-page/google-play-badge${
+                locale === "zh" ? "-zh" : ""
+              }.png`}
               width={147.4}
               height={44}
               style={{ objectFit: "fill" }}
@@ -56,7 +60,9 @@ const Main: React.FunctionComponent = () => {
           <a href="/" target="_blank" rel="noopener noreferrer">
             <Image
               alt="Apple App Store Link"
-              src="/main-page/apple-download-badge.svg"
+              src={`/main-page/apple-download-badge${
+                locale === "zh" ? "-zh" : ""
+              }.svg`}
               width={132}
               height={44}
             />
