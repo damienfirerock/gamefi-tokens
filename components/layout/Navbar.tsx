@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import { useTranslation } from "next-i18next";
 
 import NavBarLink from "./buttons/common/NavBarLink";
 
@@ -18,12 +19,14 @@ import { DEFAULT_BACKGROUND } from "../../src/theme";
 const DynamicAccountDetails = dynamic(() => import("./account/AccountDetails"));
 
 const NAVBAR_LINKS = [
-  { href: "/crystal-hub", text: "Crystal Hub" },
-  { href: "/swap", text: "Swap" },
-  { href: "/", text: "Main" },
+  { href: "/crystal-hub", text: "crystal-hub" },
+  { href: "/swap", text: "swap" },
+  { href: "/", text: "main" },
 ];
 
 const NavBar: React.FunctionComponent = () => {
+  const { t } = useTranslation("common");
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -73,7 +76,7 @@ const NavBar: React.FunctionComponent = () => {
           >
             {NAVBAR_LINKS.map(({ href, text }) => (
               <MenuItem key={text}>
-                <NavBarLink href={href} text={text} />
+                <NavBarLink href={href} text={t(text)} />
               </MenuItem>
             ))}
           </Menu>
@@ -100,7 +103,7 @@ const NavBar: React.FunctionComponent = () => {
             />
           </Box>
           {NAVBAR_LINKS.map(({ href, text }) => (
-            <NavBarLink key={text} href={href} text={text} />
+            <NavBarLink key={text} href={href} text={t(text)} />
           ))}
         </Box>
         <DynamicAccountDetails />

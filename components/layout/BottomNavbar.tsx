@@ -10,6 +10,7 @@ import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlin
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import GppGoodOutlinedIcon from "@mui/icons-material/GppGoodOutlined";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 
 import { NextLinkComposed } from "./buttons/common/NextLinkComposed";
 
@@ -62,6 +63,7 @@ const StyledBottomNavigationAction = styled(
 
 const BottomNavbar: React.FunctionComponent<BottomNavbarProps> = (props) => {
   const { pathname } = useRouter();
+  const { t } = useTranslation("common");
 
   return (
     <Paper
@@ -84,21 +86,21 @@ const BottomNavbar: React.FunctionComponent<BottomNavbarProps> = (props) => {
         }}
       >
         <StyledBottomNavigationAction
-          label="Crystal Hub"
+          label={t("crystal-hub")}
           component={NextLinkComposed}
           to={{ pathname: "/crystal-hub" }}
           icon={<MonetizationOnOutlinedIcon />}
           disableRipple
         />
         <StyledBottomNavigationAction
-          label="Swap"
+          label={t("swap")}
           component={NextLinkComposed}
           to={{ pathname: "/swap" }}
           icon={<CurrencyExchangeIcon />}
           disableRipple
         />
         <StyledBottomNavigationAction
-          label="About"
+          label={t("main")}
           component={NextLinkComposed}
           to={{ pathname: "/" }}
           icon={<GppGoodOutlinedIcon />}
