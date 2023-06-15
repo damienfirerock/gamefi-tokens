@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
-import dayjs from "dayjs";
 
 import Layout from "../layout/Layout";
 import WithdrawFRGCrystal from "../hub/WithdrawFRGCrystal";
@@ -28,6 +27,7 @@ import {
   HubTransactionType,
   HubTransactionStatus,
 } from "../../interfaces/ITransaction";
+import { formatDateWithLocale } from "../../utils/common";
 const FireRockGoldJson = require("../../constants/abis/FireRockGold.json");
 
 const StyledCard = styled(Card)<CardProps>(() => ({
@@ -39,7 +39,7 @@ const StyledCard = styled(Card)<CardProps>(() => ({
 const CrystalHub: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { query } = useRouter();
+  const { query, locale = "en" } = useRouter();
   const { email, server, type } = query;
 
   const authSlice = useSelector((state: RootState) => state.auth);
@@ -57,7 +57,7 @@ const CrystalHub: React.FunctionComponent = () => {
   const [selectedServer, selectServer] = useState<string>("");
   const [transaction, setTransaction] = useState<IHubTransaction | null>({
     amount: 970,
-    createdAt: "09 Jun 23",
+    createdAt: formatDateWithLocale(locale, new Date()),
     hash: "0x7245edfb20b3426741e185a2d20b503e948481d44348ecdc638fa3ed38994aa1",
     server: "测试服1",
     status: HubTransactionStatus.Success,
@@ -131,7 +131,7 @@ const CrystalHub: React.FunctionComponent = () => {
           server: selectedServer,
           amount: Number(nextValue) * 10,
           status: HubTransactionStatus.Pending,
-          createdAt: dayjs(new Date()).format("DD MMM YY"),
+          createdAt: formatDateWithLocale(locale, new Date()),
         });
 
         await waitForConfirmations(event.transactionHash, 10);
