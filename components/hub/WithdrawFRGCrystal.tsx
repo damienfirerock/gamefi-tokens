@@ -136,12 +136,11 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
   };
 
   const withdrawFRGCrystalError = useMemo(() => {
-    if (!session) return "Please log in with your game account";
+    if (!session) return t("errors.login");
 
-    if (!account) return "Please connect your wallet";
+    if (!account) return t("errors.wallet");
 
-    if (!selectedServer)
-      return "Please select a server from the server field above";
+    if (!selectedServer) return t("errors.server");
 
     if (!withdrawFRGCrystal) return " ";
 
@@ -150,13 +149,14 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
       withdrawFRGCrystal &&
       withdrawFRGCrystal > frgCrystalBalance
     )
-      return "You don't have that much FRG Crystal";
+      return t("errors.insufficient-crystals");
 
     if (withdrawFRGCrystal && withdrawFRGCrystal < minimum)
-      return `Minimum withdrawal amount is ${minimum} FRG Crystal`;
+      return t("errors.minimum-withdrawal", { minimum: minimum });
 
     return null;
   }, [
+    t,
     withdrawFRGCrystal,
     frgCrystalBalance,
     selectedServer,
@@ -185,7 +185,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
           >
             <TextField
               value={withdrawFRGCrystal || ""}
-              label="FRG Crystal"
+              label={`FRG ${t("crystal")}`}
               type="number"
               onChange={handleWithdrawFRGCrystalToTokenAmounts}
               InputLabelProps={{ shrink: true }}

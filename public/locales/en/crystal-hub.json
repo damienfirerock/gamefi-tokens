@@ -9,5 +9,14 @@
   "to": "to",
   "withdrawal-tax-rate": "Withdrawal Tax Rate",
   "crystal-balance": "Mock FRG Crystal Balance",
-  "pending-crystal-balance": "Mock Pending FRG Crystal Balance"
+  "pending-crystal-balance": "Mock Pending FRG Crystal Balance",
+  "errors": {
+    "login": "Please log in with your game account",
+    "wallet": "Please connect your wallet",
+    "server": "Please connect your wallet",
+    " ": " ",
+    "insufficient-crystals": "You don't have that many FRG Crystals",
+    "insufficient-tokens": "You don't have that many $FRG tokens",
+    "minimum-withdrawal": "Minimum withdrawal amount is {{minimum}} FRG Crystal"
+  }
 }

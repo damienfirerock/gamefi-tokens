@@ -9,5 +9,13 @@
   "to": "兑换",
   "withdrawal-tax-rate": "提现税率",
   "crystal-balance": "模拟FRG水晶余额",
-  "pending-crystal-balance": "模拟待处理的FRG水晶余额"
+  "pending-crystal-balance": "模拟待处理的FRG水晶余额",
+  "errors": {
+    "login": "请使用您的游戏账户登录",
+    "wallet": "请连接您的钱包",
+    "server": "请选择一个服务器",
+    "insufficient-crystals": "您没有那么多FRG水晶",
+    "insufficient-tokens": "您没有那么多$FRG代币",
+    "minimum-withdrawal": "最低提现金额为{{minimum}}个FRG水晶"
+  }
 }
