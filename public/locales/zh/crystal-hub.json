@@ -1,5 +1,6 @@
 {
   "crystal-hub": "存取款",
   "deposit": "存款",
-  "withdraw": "提款"
+  "withdraw": "提款",
+  "wallet": "钱包地址"
 }

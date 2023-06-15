@@ -11,6 +11,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ locale }) => ({
       "airdrop",
       "success",
       "failure",
+      "account",
     ])),
   },
 });

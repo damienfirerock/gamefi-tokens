@@ -1,5 +1,6 @@
 {
   "crystal-hub": "Crystal Hub",
   "deposit": "Deposit",
-  "withdraw": "Withdraw"
+  "withdraw": "Withdraw",
+  "wallet": "Wallet Address"
 }

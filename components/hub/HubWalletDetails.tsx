@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Link, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
+import { useTranslation } from "next-i18next";
 
 import { RootState } from "../../store";
 import useWeb3React from "../../utils/hooks/web3React/useWeb3React";
@@ -10,6 +11,7 @@ import { VALUE_COLOUR } from "../../src/theme";
 
 const HubWalletDetails: React.FunctionComponent = () => {
   const { account } = useWeb3React();
+  const { t } = useTranslation(["crystal-hub", "account"]);
 
   const accountSlice = useSelector((state: RootState) => state.account);
   const { walletFRGBalance } = accountSlice;
@@ -23,7 +25,7 @@ const HubWalletDetails: React.FunctionComponent = () => {
             color="primary"
             sx={{ display: "block", marginTop: "0.5rem" }}
           >
-            Wallet:{" "}
+            {t("crystal-hub:wallet")}:{" "}
             <Link
               href={getEtherscanLink(account, "address")}
               target="_blank"
@@ -44,8 +46,7 @@ const HubWalletDetails: React.FunctionComponent = () => {
             variant="caption"
             sx={{ color: "red", display: "inline-block" }}
           >
-            [Mock] This connected wallet is different from the wallet address
-            bound to your game account.
+            {t("account:wallet-different-from-bound")}
           </Typography>
         </>
       )}
