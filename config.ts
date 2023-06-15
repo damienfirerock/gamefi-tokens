@@ -39,6 +39,6 @@ const CONFIG = {
 
 export const ADDRESS_NAMES: Record<string, string> = {};
 
-ADDRESS_NAMES[CONTRACT_ADDRESSES.FIRE_ROCK_TOKEN!] = "FireRock Token";
+ADDRESS_NAMES[CONTRACT_ADDRESSES.FIRE_ROCK_TOKEN!] = "$FRG";
 
 export default CONFIG;

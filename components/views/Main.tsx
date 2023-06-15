@@ -20,7 +20,7 @@ const addresses = Object.values(CONTRACT_ADDRESSES);
 const DISCORD_LOGO_BACKGROUND = "#5865F2";
 
 const Main: React.FunctionComponent = () => {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("main");
 
   return (
     <Layout>
@@ -38,11 +38,7 @@ const Main: React.FunctionComponent = () => {
           variant="body2"
           sx={{ marginY: "1rem", textAlign: "justify" }}
         >
-          JoM draws inspiration mainly from Eastern mythology, creating an
-          enormous virtual universe of memorable and unique characters. As the
-          player gains access to more characters over time, they can level up
-          their favourite characters and form the ultimate team to defeat the
-          demons (PvE) or other teams of players (PvP).
+          {t("intro")}
         </Typography>
 
         {/* Install buttons */}
@@ -78,9 +74,9 @@ const Main: React.FunctionComponent = () => {
         >
           <Typography
             variant="body2"
-            sx={{ marginBottom: "1rem", color: NAV_TEXT_COLOUR }}
+            sx={{ marginBottom: "0.75rem", color: NAV_TEXT_COLOUR }}
           >
-            Social Links
+            {t("social-links")}
           </Typography>
 
           <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -159,11 +155,11 @@ const Main: React.FunctionComponent = () => {
         </Card>
 
         <Button variant="contained" fullWidth sx={{ marginY: "1rem" }}>
-          <Typography variant="body2">Help Center</Typography>
+          <Typography variant="body2">{t("help-center")}</Typography>
         </Button>
 
         <Button variant="contained" fullWidth>
-          <Typography variant="body2">Legal and Privacy</Typography>
+          <Typography variant="body2">{t("legal-and-privacy")}</Typography>
         </Button>
 
         {addresses.map((address) => {
@@ -185,7 +181,7 @@ const Main: React.FunctionComponent = () => {
                   justifyContent: "center",
                 }}
               >
-                {ADDRESS_NAMES[address]} Address:
+                {ADDRESS_NAMES[address]} {t("address")}:
               </Typography>
               <Typography variant="body2">
                 <Link
