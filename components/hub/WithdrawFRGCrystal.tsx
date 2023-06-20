@@ -223,7 +223,7 @@ const WithdrawFRGCrystal: React.FunctionComponent<{
             />
           </Box>
         </Box>
-        {/* TODO: Sending of $FRG to wallet upon Mock Deposit */}
+
         <InteractButton
           text={t("crystal-hub:withdraw")}
           method={() => {

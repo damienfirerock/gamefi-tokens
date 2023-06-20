@@ -17,9 +17,7 @@ import {
   setAccountDetailsOpen,
 } from "../../../features/AuthSlice";
 
-// FIXME: Need to double try connect with Metamask on Walletconnect ??
 // FIXME: Metamask Button does not work if not on ChainId
-// TODO: Potential issues in the future as font size between chinese and english text are clearly different
 
 const AccountOptions: React.FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
