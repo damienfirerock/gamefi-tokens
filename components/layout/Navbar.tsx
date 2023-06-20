@@ -7,7 +7,6 @@ import {
   MenuItem,
   Toolbar,
 } from "@mui/material";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
 
@@ -15,14 +14,7 @@ import NavBarLink from "./buttons/common/NavBarLink";
 
 import { DEFAULT_BACKGROUND } from "../../src/theme";
 
-// Decreases First Load from 355kb to 214kb
-const DynamicAccountDetails = dynamic(() => import("./account/AccountDetails"));
-
-const NAVBAR_LINKS = [
-  { href: "/crystal-hub", text: "crystal-hub" },
-  { href: "/swap", text: "swap" },
-  { href: "/", text: "main" },
-];
+const NAVBAR_LINKS = [{ href: "/", text: "main" }];
 
 const NavBar: React.FunctionComponent = () => {
   const { t } = useTranslation("common");
@@ -106,7 +98,6 @@ const NavBar: React.FunctionComponent = () => {
             <NavBarLink key={text} href={href} text={t(text)} />
           ))}
         </Box>
-        <DynamicAccountDetails />
       </Toolbar>
     </AppBar>
   );
