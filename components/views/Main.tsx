@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, CircularProgress, Container, Typography } from "@mui/material";
 import dayjs from "dayjs";
+import Image from "next/image";
 
 import Layout from "../layout/Layout";
 
@@ -60,7 +61,7 @@ const Main: React.FunctionComponent = () => {
     <Layout>
       <Container maxWidth="md">
         <Typography variant="h3" sx={{ marginY: "1rem", textAlign: "justify" }}>
-          Gamefi Token Data {loading && <CircularProgress />}
+          Gamefi Category Data {loading && <CircularProgress />}
         </Typography>
 
         {gamingCategoryData && (
@@ -81,6 +82,14 @@ const Main: React.FunctionComponent = () => {
                 "ddd, MMM D, YYYY h:mm A"
               )}
             </Typography>
+            <Typography sx={{ marginRight: 1 }}>Top Tokens:</Typography>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              {gamingCategoryData.top_3_coins.map((address) => (
+                <Box key={address} sx={{ marginRight: 1 }}>
+                  <Image alt={address} src={address} width={50} height={50} />
+                </Box>
+              ))}
+            </Box>
           </Box>
         )}
       </Container>

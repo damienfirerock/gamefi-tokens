@@ -20,6 +20,12 @@ const nextConfig = {
         port: "",
         pathname: "/api/nft/**",
       },
+      {
+        protocol: "https",
+        hostname: "assets.coingecko.com",
+        port: "",
+        pathname: "/coins/images/**",
+      },
     ],
   },
   i18n,
