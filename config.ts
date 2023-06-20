@@ -1,5 +1,6 @@
 // https://www.gimtec.io/articles/process-is-not-defined/
 
+const COIN_GECKO_API_URL = process.env.NEXT_PUBLIC_COIN_GECKO_API_URL;
 const XY3_BACKEND_URL = process.env.NEXT_PUBLIC_XY3_BACKEND_URL;
 const NEXTAUTH_SECRET = process.env.NEXT_PUBLIC_NEXTAUTH_SECRET;
 
@@ -35,6 +36,7 @@ const CONFIG = {
   DUMMY_KEY,
   XY3_BACKEND_URL,
   NEXTAUTH_SECRET,
+  COIN_GECKO_API_URL,
 };
 
 export const ADDRESS_NAMES: Record<string, string> = {};

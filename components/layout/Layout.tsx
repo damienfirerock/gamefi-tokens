@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Container, ContainerProps, useMediaQuery } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
-import { useSession } from "next-auth/react";
 
 import NavBar from "./Navbar";
 import AlertBar from "../common/AlertBar";
@@ -18,7 +17,6 @@ type LayoutProps = {
 };
 
 const StyledContainer = styled(Container)<ContainerProps>(() => ({
-  textAlign: "center",
   wordWrap: "break-word",
   paddingTop: "4rem",
 }));
@@ -28,7 +26,6 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
 
   const { t } = useTranslation(["common", "success", "failure"]);
   const dispatch = useDispatch<AppDispatch>();
-  const { data: session, status } = useSession();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 

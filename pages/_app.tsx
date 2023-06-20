@@ -4,7 +4,6 @@ import { CacheProvider, EmotionCache } from "@emotion/react";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { Provider } from "react-redux";
 import { appWithTranslation } from "next-i18next";
-import { SessionProvider } from "next-auth/react";
 
 import createEmotionCache from "../utils/createEmotionCache";
 import theme from "../src/theme";
@@ -25,10 +24,8 @@ const MyApp: React.FunctionComponent<MyAppProps> = ({
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={theme}>
         <Provider store={store}>
-          <SessionProvider session={session}>
-            <CssBaseline />
-            <Component {...pageProps} />
-          </SessionProvider>
+          <CssBaseline />
+          <Component {...pageProps} />
         </Provider>
       </ThemeProvider>
     </CacheProvider>

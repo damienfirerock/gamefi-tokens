@@ -1,16 +1,10 @@
-import {
-  XY3BackendResponse,
-  XY3BackendError,
-} from "../interfaces/XY3BackendResponse";
-
-export const makeFetchRequestToXY3Backend = async (url: string, body: any) => {
+export const makeFetchRequestToCoinGecko = async (url: string, body: any) => {
   try {
     const request = await fetch(url, {
-      method: "POST",
+      method: "GET",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify(body),
     });
-    const response: XY3BackendResponse = await request.json();
+    const response = await request.json();
 
     if ("code" in response) {
       // response is of type XY3BackendError
@@ -25,7 +19,7 @@ export const makeFetchRequestToXY3Backend = async (url: string, body: any) => {
     // Due to how this is a common helper,
     // return general response and let respective endpoints handle the data
     return { status: 200, result: { success: true, data: response } };
-  } catch (error: XY3BackendError | any) {
+  } catch (error: any) {
     return {
       status: error.code || 500,
       result: {
