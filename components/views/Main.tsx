@@ -1,26 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { Box, CircularProgress, Container, Typography } from "@mui/material";
-import dayjs from "dayjs";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import Image from "next/image";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridToolbarContainer,
+  GridToolbarQuickFilter,
+  GridToolbarDensitySelector,
+  GridToolbarExport,
+} from "@mui/x-data-grid";
 
 import Layout from "../layout/Layout";
 
-import {
-  COINGECKO_GAMING_CATEGORY_ID,
-  LOCAL_COINGECKO_PATH,
-} from "../../constants/main";
+import { LOCAL_COINGECKO_PATH } from "../../constants/main";
 import { formatNumberValue } from "../../utils/common";
 
-type CategoryInfo = {
-  content: string;
-  id: string;
-  market_cap: number;
-  market_cap_change_24h: number;
-  name: string;
-  top_3_coins: string[];
-  updated_at: string;
-  volume_24h: number;
+const CustomToolBar = () => {
+  return (
+    <GridToolbarContainer sx={{ background: "white", display: "flex" }}>
+      <Box sx={{ flexGrow: 1 }}>
+        <GridToolbarDensitySelector />
+        <GridToolbarExport />
+      </Box>
+      <GridToolbarQuickFilter sx={{ marginBottom: 0 }} />
+    </GridToolbarContainer>
+  );
 };
 
 type GamingTokenInfo = {
@@ -54,29 +58,10 @@ type GamingTokenInfo = {
 
 const Main: React.FunctionComponent = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [gamingCategoryData, setGamingCategoryData] =
-    useState<CategoryInfo | null>(null);
+
   const [gamingTokensData, setGamingTokensData] = useState<
     GamingTokenInfo[] | null
   >(null);
-
-  const getGamingCategoryInfo = async () => {
-    const response: {
-      success: boolean;
-      data: CategoryInfo[];
-    } = await fetch(`${LOCAL_COINGECKO_PATH}/categories-info`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-    }).then((res) => res.json());
-
-    const { data } = response;
-
-    const gamingCategory = data.find(
-      (category) => category.id === COINGECKO_GAMING_CATEGORY_ID
-    );
-
-    if (gamingCategory) setGamingCategoryData(gamingCategory);
-  };
 
   const getGamingTokensInfo = async () => {
     const response: {
@@ -161,7 +146,7 @@ const Main: React.FunctionComponent = () => {
     {
       field: "circulating_supply",
       headerName: "Circulating Supply",
-      width: 160,
+      width: 200,
       renderCell: (params) => formatNumberValue(params.value),
     },
     {
@@ -178,7 +163,18 @@ const Main: React.FunctionComponent = () => {
       <Typography variant="h3" sx={{ marginY: "1rem", textAlign: "justify" }}>
         Gamefi Tokens Data {loading && <CircularProgress />}
       </Typography>
-      <DataGrid rows={gamingTokensData || []} columns={columns} />
+      <DataGrid
+        rows={gamingTokensData || []}
+        columns={columns}
+        rowHeight={75}
+        slots={{ toolbar: CustomToolBar }}
+        slotProps={{
+          toolbar: {
+            showQuickFilter: true,
+            quickFilterProps: { debounceMs: 500 },
+          },
+        }}
+      />
     </Layout>
   );
 };

@@ -58,7 +58,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
   return (
     <>
       <Head>
-        <title>{t("common:xy-3-web-portal")}</title>
+        <title>Gamefi Tokens</title>
         <meta property="og:title" content="Airdrop" key="title" />
       </Head>
 
