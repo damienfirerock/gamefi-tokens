@@ -19,7 +19,6 @@ const CustomToolBar = () => {
   return (
     <GridToolbarContainer sx={{ background: "white", display: "flex" }}>
       <Box sx={{ flexGrow: 1 }}>
-        <GridToolbarDensitySelector />
         <GridToolbarExport />
       </Box>
       <GridToolbarQuickFilter sx={{ marginBottom: 0 }} />
