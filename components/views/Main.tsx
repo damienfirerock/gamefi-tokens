@@ -104,33 +104,81 @@ const Main: React.FunctionComponent = () => {
 
   // const rows = gamingTokensData?.map(() => "lol") || [];
   const columns: GridColDef[] = [
-    { field: "ath", headerName: "ATH" },
-    { field: "atl", headerName: "ATL" },
-    { field: "circulating_supply", headerName: "Circulating Supply" },
-    { field: "current_price", headerName: "Current Price" },
-    { field: "id", headerName: "ID" },
-    { field: "image", headerName: "Image" },
-    { field: "market_cap", headerName: "Market Cap" },
-    { field: "max_supply", headerName: "Max Supply" },
-    { field: "symbol", headerName: "Symbol" },
-    { field: "total_supply", headerName: "Total Supply" },
+    {
+      field: "image",
+      headerName: "Image",
+      width: 70,
+      renderCell: (params) => (
+        <Box sx={{ textAlign: "center", width: "100%" }}>
+          <Box
+            sx={{
+              background: "white",
+              padding: "0.4rem",
+              borderRadius: "50%",
+              display: "inline-flex",
+            }}
+          >
+            <Image
+              alt={params.value}
+              src={params.value}
+              width={35}
+              height={35}
+            />
+          </Box>
+        </Box>
+      ),
+    },
+    {
+      field: "symbol",
+      headerName: "Token",
+      width: 70,
+      renderCell: (params) => params.value.toUpperCase(),
+    },
+    {
+      field: "market_cap",
+      width: 110,
+      headerName: "Market Cap",
+      renderCell: (params) => formatNumberValue(params.value),
+    },
+    {
+      field: "current_price",
+      headerName: "Current Price",
+      width: 160,
+      renderCell: (params) => <Typography>US${params.value}</Typography>,
+    },
+    {
+      field: "ath",
+      headerName: "ATH",
+      width: 160,
+      renderCell: (params) => <Typography>US${params.value}</Typography>,
+    },
+    {
+      field: "atl",
+      headerName: "ATL",
+      width: 160,
+      renderCell: (params) => <Typography>US${params.value}</Typography>,
+    },
+    {
+      field: "circulating_supply",
+      headerName: "Circulating Supply",
+      width: 160,
+      renderCell: (params) => formatNumberValue(params.value),
+    },
+    {
+      field: "max_supply",
+      headerName: "Max Supply",
+      width: 160,
+      renderCell: (params) =>
+        params.value ? formatNumberValue(params.value) : "Infinite",
+    },
   ];
-
-  console.log({ gamingTokensData });
 
   return (
     <Layout>
-      <Container maxWidth="lg">
-        <Box>
-          <Typography
-            variant="h3"
-            sx={{ marginY: "1rem", textAlign: "justify" }}
-          >
-            Gamefi Tokens Data {loading && <CircularProgress />}
-          </Typography>
-          <DataGrid rows={gamingTokensData || []} columns={columns} />
-        </Box>
-      </Container>
+      <Typography variant="h3" sx={{ marginY: "1rem", textAlign: "justify" }}>
+        Gamefi Tokens Data {loading && <CircularProgress />}
+      </Typography>
+      <DataGrid rows={gamingTokensData || []} columns={columns} />
     </Layout>
   );
 };
