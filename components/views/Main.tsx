@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, CircularProgress, Container, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import Image from "next/image";
+import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 
 import Layout from "../layout/Layout";
 
@@ -101,12 +102,25 @@ const Main: React.FunctionComponent = () => {
     getData();
   }, []);
 
+  // const rows = gamingTokensData?.map(() => "lol") || [];
+  const columns: GridColDef[] = [
+    { field: "ath", headerName: "ATH" },
+    { field: "atl", headerName: "ATL" },
+    { field: "circulating_supply", headerName: "Circulating Supply" },
+    { field: "current_price", headerName: "Current Price" },
+    { field: "id", headerName: "ID" },
+    { field: "image", headerName: "Image" },
+    { field: "market_cap", headerName: "Market Cap" },
+    { field: "max_supply", headerName: "Max Supply" },
+    { field: "symbol", headerName: "Symbol" },
+    { field: "total_supply", headerName: "Total Supply" },
+  ];
+
   console.log({ gamingTokensData });
 
   return (
     <Layout>
       <Container maxWidth="lg">
-        {/* {gamingTokensData && ( */}
         <Box>
           <Typography
             variant="h3"
@@ -114,98 +128,8 @@ const Main: React.FunctionComponent = () => {
           >
             Gamefi Tokens Data {loading && <CircularProgress />}
           </Typography>
-          <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-            {gamingTokensData?.map((token) => {
-              const {
-                ath,
-                ath_date,
-                atl,
-                atl_date,
-                circulating_supply,
-                current_price,
-                fully_diluted_valuation,
-                high_24h,
-                id,
-                image,
-                last_updated,
-                low_24h,
-                market_cap,
-                market_cap_change_24h,
-                market_cap_change_percentage_24h,
-                market_cap_rank,
-                max_supply,
-                name,
-                price_change_24h,
-                price_change_percentage_24h,
-                symbol,
-                total_supply,
-                total_volume,
-              } = token;
-
-              return (
-                <Box
-                  key={token.id}
-                  sx={{
-                    display: "inline",
-                    margin: 1,
-                    padding: "1rem",
-                    border: "1px solid white",
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      padding: 1,
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        background: "white",
-                        padding: "0.75rem 0.75rem 0.25rem",
-                        borderRadius: "50%",
-                      }}
-                    >
-                      <Image alt={image} src={image} width={50} height={50} />
-                    </Box>
-                  </Box>
-                  <Typography>Symbol: ${symbol.toUpperCase()}</Typography>
-                  <Typography>
-                    MarketCap: {formatNumberValue(market_cap)}
-                  </Typography>
-                  <Typography>
-                    Circulating Supply: {formatNumberValue(circulating_supply)}
-                  </Typography>
-                  {/* <Typography>
-                      Max Supply: {formatNumberValue(max_supply || 0)}
-                    </Typography> */}
-                  <Typography>Price (Current): US${current_price}</Typography>
-                  <Typography>Price (ATH): US${ath}</Typography>
-                  <Typography>Price (ATL): US${atl}</Typography>{" "}
-                  <Typography>
-                    ATH Date: {dayjs(ath_date).format("MMM D, YYYY h:mm A")}
-                  </Typography>
-                  <Typography>
-                    ATL Date: {dayjs(atl_date).format("MMM D, YYYY h:mm A")}
-                  </Typography>
-                  {/* <Typography>
-                    Volume (24hrs): {formatNumberValue(token.volume_24h)}
-                  </Typography>
-                  <Typography>
-                    MarketCap Change (24hrs):{" "}
-                    {token.market_cap_change_24h.toFixed(2)}%
-                  </Typography>
-                  <Typography>
-                    Updated:{" "}
-                    {dayjs(token.updated_at).format("ddd, MMM D, YYYY h:mm A")}
-                  </Typography>
-                   */}
-                </Box>
-              );
-            })}
-          </Box>
+          <DataGrid rows={gamingTokensData || []} columns={columns} />
         </Box>
-        {/* )} */}
       </Container>
     </Layout>
   );
